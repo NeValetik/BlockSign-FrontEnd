@@ -1,6 +1,6 @@
 "use client"
 
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/FormWrapper";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -40,14 +40,16 @@ const LoginForm = () => {
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-grow gap-4">
         <FormField name="loginName"
-         render={({ field }) => (
-          <FormItem>
-            <FormLabel>Login Name</FormLabel>
-            <FormControl>
-              <InputEmail {...field} />
-            </FormControl>
-          </FormItem>
-        )} />
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Login Name</FormLabel>
+              <FormControl>
+                <InputEmail {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )} 
+        />
         <FormField 
           name="password"
           render={({ field }) => (
@@ -56,16 +58,17 @@ const LoginForm = () => {
               <FormControl>
                 <InputPassword {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )} 
         />
         <FormField name="remember"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Remember</FormLabel>
+            <FormItem className="flex items-center gap-2">
               <FormControl>
                 <Checkbox {...field} />
               </FormControl>
+              <FormLabel>Remember</FormLabel>
             </FormItem>
           )} 
         />
