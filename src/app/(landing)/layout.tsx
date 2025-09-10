@@ -1,24 +1,26 @@
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 
-import "./globals.css";
-import { createReactQueryClient } from "../../../reactQueryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import "../globals.css";
+import Providers from "@/components/Providers";
+import Header from "@/components/MainLayout/Header";
+import Footer from "@/components/MainLayout/Footer";
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+const RootLayout:FC<{
   children: ReactNode;
-}>) {
-
-  const queryClient = createReactQueryClient();
-
+}> = ({
+  children,
+}) =>{
   return (
     <html lang="en">
-      <body>
-        <QueryClientProvider client={queryClient}>
+      <Providers>
+        <Header />
+        <body>
           {children}
-        </QueryClientProvider>
-      </body>
+        </body>
+        <Footer />
+      </Providers>
     </html>
   );
 }
+
+export default RootLayout;

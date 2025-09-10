@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { ComponentProps, FC, ReactNode } from "react"
+import { FC, ReactNode } from "react"
 
 const SeparatorWithText: FC<{
   className?: string
