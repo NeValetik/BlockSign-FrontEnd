@@ -9,7 +9,7 @@ const Footer: FC = () => {
   const year = useMemo(() => new Date().getFullYear(), []);
 
   return (
-    <footer className="text-foreground py-16">
+    <div className="text-foreground py-16">
       <Container className="hidden lg:px-[156px] md:flex md:flex-col gap-[72px]">
         <div>
           <div>
@@ -156,7 +156,7 @@ const Footer: FC = () => {
           © {year} BlockSign. All rights reserved.
         </div>
       </Container>
-    </footer>
+    </div>
   );
 };
 

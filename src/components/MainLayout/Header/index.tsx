@@ -1,4 +1,5 @@
 import Button from "@/components/Form/Button";
+import LanguageSelector from "@/components/LanguageSelector";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -16,12 +17,12 @@ const Header:FC = () => {
       <div
         className="flex items-center gap-5"
       >
+        <LanguageSelector />
         <Link
           href="/register"
         >
           <Button
             variant="ghost"
-            className="cursor-pointer"
           >
             Register
           </Button>
@@ -31,7 +32,6 @@ const Header:FC = () => {
         >
           <Button
             variant="brand"
-            className="cursor-pointer"
           >
             Sign in
           </Button>

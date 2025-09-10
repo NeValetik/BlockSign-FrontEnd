@@ -1,16 +1,30 @@
 "use client"
 
 import { FC, ReactNode } from "react";
-import { createReactQueryClient } from "../../../reactQueryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { LocaleProvider } from "@/contexts/LocaleContext";
+import { createReactQueryClient } from "../../../reactQueryClient";
 
-const Providers: FC<{ children: ReactNode }> = ({ children}) => {
-  const queryClient = createReactQueryClient();
-
+const Providers: FC<
+  { 
+    children: ReactNode, 
+    locale: string, 
+  }
+> = (
+  { 
+    children, 
+    locale, 
+  }
+) => {
+  const client = createReactQueryClient();
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <LocaleProvider
+      defaultLocale={ locale }
+    >
+      <QueryClientProvider client={client}>
+        {children}
+      </QueryClientProvider>
+    </LocaleProvider>
   )
 }
 
