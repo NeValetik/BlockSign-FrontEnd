@@ -5,15 +5,15 @@ import { FC } from "react";
 
 const Header:FC = () => {
   return (
-
     <div
       className="h-20 flex items-center justify-between px-36"
     >
-      <div
+      <Link
+        href="/"
         className="text-3xl"
       >
         BlockSign
-      </div>
+      </Link>
       <div
         className="flex items-center gap-5"
       >
