@@ -1,8 +1,17 @@
-import * as React from "react"
-
 import { cn } from "@/lib/utils"
+import { ComponentProps, FC } from "react"
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+// Import components
+import InputText from "./components/InputText"
+import InputPassword from "./components/InputPassword"
+import InputEmail from "./components/InputEmail"
+import InputFile from "./components/InputFile"
+
+const Input: FC<ComponentProps<"input">> = ({ 
+  className, 
+  type, 
+  ...props 
+}) => {
   return (
     <input
       type={type}
@@ -18,4 +27,4 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   )
 }
 
-export { Input }
+export { Input, InputText, InputPassword, InputEmail, InputFile }
