@@ -3,7 +3,7 @@
 import { ComponentProps, FC } from "react"
 import { Root } from "@radix-ui/react-avatar"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 
 const Avatar:FC<ComponentProps<typeof Root>> = ({
   className,

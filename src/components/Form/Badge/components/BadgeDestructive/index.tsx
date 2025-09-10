@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { Slot } from "@radix-ui/react-slot"
 import { ComponentProps, FC } from "react"
 import { badgeVariants } from "../../index"

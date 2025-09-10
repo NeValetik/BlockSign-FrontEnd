@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { ComponentProps, FC } from "react"
 
 const DropdownMenuShortcut: FC<ComponentProps<"span">> = ({

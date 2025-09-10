@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { Image } from "@radix-ui/react-avatar"
 import { ComponentProps, FC } from "react"
 

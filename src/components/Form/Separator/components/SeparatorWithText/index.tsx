@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { FC, ReactNode } from "react"
 
 const SeparatorWithText: FC<{

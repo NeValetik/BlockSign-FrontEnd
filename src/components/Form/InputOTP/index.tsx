@@ -1,7 +1,7 @@
 "use client"
 
 import { OTPInput } from "input-otp"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { ComponentProps, FC } from "react"
 
 // Import components

@@ -1,7 +1,7 @@
 import { ComponentProps, JSX, useEffect, useRef } from "react"
 import { DayButton, getDefaultClassNames } from "react-day-picker"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import Button from "@/components/Form/Button"
 
 const CalendarDayButton = ({

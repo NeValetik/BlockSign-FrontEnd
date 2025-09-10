@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import useFormField from "../../hooks/useFormField"
 
 const FormMessage = ({ className, ...props }: React.ComponentProps<"p">) => {

@@ -1,4 +1,4 @@
-import { CookieOptions, DEFAULT_OPTIONS } from './cookie-types';
+import { CookieOptions, DEFAULT_OPTIONS } from '../types/cookie-types';
 
 /**
  * Cookie utility functions for BlockSign application
@@ -6,7 +6,7 @@ import { CookieOptions, DEFAULT_OPTIONS } from './cookie-types';
  */
 
 // Re-export types for backward compatibility
-export type { CookieOptions } from './cookie-types';
+export type { CookieOptions } from '../types/cookie-types';
 
 
 

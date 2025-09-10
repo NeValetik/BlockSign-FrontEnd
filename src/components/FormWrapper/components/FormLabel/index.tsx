@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { Label } from "@/components/Form/Label"
 import useFormField from "../../hooks/useFormField"
 

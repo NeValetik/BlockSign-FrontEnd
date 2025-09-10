@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { ComponentProps, FC } from "react"
 
 const InputFile: FC<ComponentProps<"input">> = ({ 

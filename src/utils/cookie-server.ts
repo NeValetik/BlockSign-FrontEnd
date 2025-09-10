@@ -1,7 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers';
-import { CookieOptions, DEFAULT_OPTIONS } from './cookie-types';
+import { CookieOptions, DEFAULT_OPTIONS } from '../types/cookie-types';
 
 /**
  * SERVER-SIDE COOKIE UTILITIES

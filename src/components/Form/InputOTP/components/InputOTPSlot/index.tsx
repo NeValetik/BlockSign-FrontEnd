@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import { OTPInputContext } from "input-otp"
 import { ComponentProps, FC, useContext } from "react"
 

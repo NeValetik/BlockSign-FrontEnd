@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import FormItemContext from "../../contexts/FormItemContext"
 
 const FormItem = ({ className, ...props }: React.ComponentProps<"div">) => {

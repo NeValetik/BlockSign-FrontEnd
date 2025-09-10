@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils/cn"
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 import { ComponentProps, FC } from "react"
 
