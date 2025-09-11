@@ -3,20 +3,24 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputEmail, InputPassword } from "@/components/Form/Input";
-import { Separator, SeparatorWithText } from "@/components/Form/Separator";
+import { InputEmail, InputPassword, InputText } from "@/components/Form/Input";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { IRegisterForm } from "./types";
 
-import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
+import FormPhoneField from "@/components/Form/FormPhoneField";
 import Link from "next/link";
 
 const DefaultValues: IRegisterForm = {
-  loginName: "",
+  fullName: "",
+  email: "",
+  phone: {
+    code: "",
+    number: "",
+  },
   password: "",
-  remember: false,
+  confirmPassword: "",
 }
 
 const RegisterForm = () => {
@@ -24,53 +28,50 @@ const RegisterForm = () => {
     defaultValues: DefaultValues,
     resolver: zodResolver(schema)
   });
+
   const { handleSubmit } = form;
+
   const onSubmit = (data: IRegisterForm) => {
     console.log(data);
   }
+  
   return (
     <Form {...form}>
       <form 
         onSubmit={handleSubmit(onSubmit)} 
         className="flex flex-col flex-grow gap-12"
       >
-        <h2 className="text-3xl font-medium text-center">
-          Register an account
-        </h2>
-        <div className="flex flex-col gap-4">
-          <Button
-            variant="outline"
-            size="sm"
+        <div
+          className="flex flex-col gap-2"
+        >
+          <h2 className="text-3xl font-medium text-center">
+            Create an account
+          </h2>
+          <span
+            className="text-base text-center"
           >
-            <SiFacebook />
-            <span>Sign in with Facebook</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            <SiGoogle />
-            <span>Sign in with Google</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            <SiApple />
-            <span>Sign in with Apple</span>
-          </Button>
-
-        </div>
-        <div>
-          <SeparatorWithText textClassName="text-muted-foreground uppercase text-base">
-            <span>Or</span>
-          </SeparatorWithText>
+            Already have an account?{' '}
+            <Link href="/login">
+              <span className="underline text-brand">Log in</span>
+            </Link> 
+          </span>
         </div>
         <div className="flex flex-col gap-6">
-          <FormField name="loginName"
+          <FormField name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Login Name</FormLabel>
+                <FormLabel>Full Name</FormLabel>
+                <FormControl>
+                  <InputText {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+          <FormField name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email address</FormLabel>
                 <FormControl>
                   <InputEmail {...field} />
                 </FormControl>
@@ -78,52 +79,58 @@ const RegisterForm = () => {
               </FormItem>
             )} 
           />
+          <FormPhoneField name="phone" />
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <FormField 
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <InputPassword {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} 
-              />
-              <Link href="/reset-password" className="underline text-brand text-base w-full flex justify-end">
-                Forgot Password?
-              </Link>
-            </div>
-            <FormField name="remember"
+            <FormField 
+              name="password"
               render={({ field }) => (
-                <FormItem className="flex items-center gap-2">
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Checkbox {...field} />
+                    <InputPassword {...field} />
                   </FormControl>
-                  <FormLabel>Remember</FormLabel>
+                  <FormMessage />
+                </FormItem>
+              )} 
+            />
+            <FormField name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm password</FormLabel>
+                  <FormControl>
+                    <InputPassword {...field} />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )} 
             />
           </div>
           <Button type="submit" variant="brand">
-            Login
+            Sign up
           </Button>
         </div>
-        <Separator />
-        <div className="flex flex-col gap-4 items-center">
-          <span className="font-medium text-2xl">Do not have an account?</span>
+        <div className="flex flex-col gap-4">
+          <span className="font-medium text-2xl text-muted-foreground text-center">Or continue with?</span>
           <Button
             variant="outline"
             size="sm"
-            className="
-              w-full !border-brand text-brand 
-              hover:text-brand-muted 
-              hover:border-brand-muted
-            "
           >
-            Sign up
+            <SiFacebook />
+            <span>Continue with Facebook</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            <SiGoogle />
+            <span>Continue with Google</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            <SiApple />
+            <span>Continue with Apple</span>
           </Button>
         </div>
       </form>

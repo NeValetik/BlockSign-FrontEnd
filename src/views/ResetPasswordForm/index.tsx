@@ -2,32 +2,28 @@
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { InputEmail, InputPassword } from "@/components/Form/Input";
 import { Separator, SeparatorWithText } from "@/components/Form/Separator";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
-import { ILoginForm } from "./types";
+import { IResetPasswordForm } from "./types";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
-import Link from "next/link";
 
-const DefaultValues: ILoginForm = {
-  loginName: "",
+const DefaultValues: IResetPasswordForm = {
+  code: "",
   password: "",
-  remember: false,
+  confirmPassword: "",
 }
 
-const LoginForm = () => {
-  const form = useForm<ILoginForm>({ 
+const RegisterForm = () => {
+  const form = useForm<IResetPasswordForm>({ 
     defaultValues: DefaultValues,
     resolver: zodResolver(schema)
   });
-  
   const { handleSubmit } = form;
-
-  const onSubmit = (data: ILoginForm) => {
+  const onSubmit = (data: IResetPasswordForm) => {
     console.log(data);
   }
   return (
@@ -37,7 +33,7 @@ const LoginForm = () => {
         className="flex flex-col flex-grow gap-12"
       >
         <h2 className="text-3xl font-medium text-center">
-          Login to your account
+          Register an account
         </h2>
         <div className="flex flex-col gap-4">
           <Button
@@ -69,10 +65,10 @@ const LoginForm = () => {
           </SeparatorWithText>
         </div>
         <div className="flex flex-col gap-6">
-          <FormField name="loginName"
+          <FormField name="code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Login Name</FormLabel>
+                <FormLabel>Code</FormLabel>
                 <FormControl>
                   <InputEmail {...field} />
                 </FormControl>
@@ -80,37 +76,32 @@ const LoginForm = () => {
               </FormItem>
             )} 
           />
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <FormField 
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <InputPassword {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} 
-              />
-              <Link href="/reset-password" className="underline text-brand text-base w-full flex justify-end">
-                Forgot Password?
-              </Link>
-            </div>
-            <FormField name="remember"
-              render={({ field }) => (
-                <FormItem className="flex items-center gap-2">
-                  <FormControl>
-                    <Checkbox {...field} />
-                  </FormControl>
-                  <FormLabel>Remember</FormLabel>
-                </FormItem>
-              )} 
-            />
-          </div>
+          <FormField 
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <InputPassword {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+          <FormField 
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <InputPassword {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
           <Button type="submit" variant="brand">
-            Login
+            Reset Password
           </Button>
         </div>
         <Separator />
@@ -133,4 +124,4 @@ const LoginForm = () => {
   )
 }
 
-export default LoginForm;
+export default RegisterForm;
