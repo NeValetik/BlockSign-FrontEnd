@@ -2,7 +2,7 @@
 
 import { FC, ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { LocaleProvider } from "@/contexts/LocaleContext";
+import { LocaleProvider } from "@/contexts/localeContext";
 import { createReactQueryClient } from "../../../reactQueryClient";
 
 const Providers: FC<

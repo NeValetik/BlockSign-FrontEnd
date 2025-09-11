@@ -3,20 +3,15 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { InputEmail, InputPassword } from "@/components/Form/Input";
 import { Separator, SeparatorWithText } from "@/components/Form/Separator";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
+import { schema } from "./schema";
+import { IRegisterForm } from "./types";
 
 import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
 import Link from "next/link";
-
-interface IRegisterForm {
-  loginName: string;
-  password: string;
-  remember: boolean;
-}
 
 const DefaultValues: IRegisterForm = {
   loginName: "",
@@ -24,14 +19,7 @@ const DefaultValues: IRegisterForm = {
   remember: false,
 }
 
-const schema = z.object({
-  loginName: z.string().min(1, { message: "Login name is required" }),
-  password: z.string().min(1, { message: "Password is required" }),
-  remember: z.boolean(),
-})
-
 const RegisterForm = () => {
-
   const form = useForm<IRegisterForm>({ 
     defaultValues: DefaultValues,
     resolver: zodResolver(schema)

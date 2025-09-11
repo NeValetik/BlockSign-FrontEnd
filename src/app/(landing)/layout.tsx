@@ -2,6 +2,7 @@ import { FC, ReactNode } from "react";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
 import { useTranslation } from "@/lib/i18n";
+import { dir } from "i18next";
 
 import "../globals.css";
 import Providers from "@/components/Providers";
@@ -25,7 +26,7 @@ const RootLayout:FC<{
   await useTranslation( cookieLocale, [ 'common' ] );
 
   return (
-    <html lang="en">
+    <html lang="en" dir={dir(cookieLocale)}>
       <body>
         <Providers
           locale={ cookieLocale }
