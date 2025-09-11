@@ -20,10 +20,7 @@ export const UserContextProvider: React.FC<{
   me: UserContextProps['me'];
   children: React.ReactNode;
 }> = ({ children, me }) => {
-  const contextValue = useMemo(
-    () => ({ me }),
-    [me],
-  );
+  const contextValue = useMemo(() => ({ me }), [me]);
 
   return (
     <UserContext.Provider value={contextValue}>

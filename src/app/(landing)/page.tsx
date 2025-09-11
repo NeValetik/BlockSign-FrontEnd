@@ -1,10 +1,17 @@
+'use client'
+
 import { ArrowRight, FileInput } from "lucide-react";
+import { useLocale } from "@/contexts/LocaleContext";
 
 import Container from "@/components/Container";
 import Button from "@/components/Form/Button";
 import Image from "next/image";
+import { useTranslation } from "@/lib/i18n/client";
 
 const LandingPage = () => {
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, [ 'landing' ])
+
   return (
     <Container className="relative px-36 py-20 flex flex-col gap-48 items-center">
       <div className="absolute w-[1248px] h-[1000px] scale-110 -z-10">
@@ -14,18 +21,18 @@ const LandingPage = () => {
         <span
           className="text-5xl"
         >
-          BlockSign
+          {t('landing.title')}
         </span>
         <div className="max-w-[840px] w-full flex flex-col gap-8">
           <span
             className="font-bold text-6xl"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            {t('hero.title')}
           </span>
           <span
             className="text-xl text-muted-foreground"
           >
-            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat.
+            {t('hero.description')}
           </span>
           <div
             className="flex gap-4"
@@ -33,12 +40,12 @@ const LandingPage = () => {
             <Button
               variant="brand"
             >
-              Get started
+              {t('hero.getStarted')}
             </Button>
             <Button
               variant="ghost"
             >
-              Learn more
+              {t('hero.learnMore')}
               <ArrowRight />
             </Button>
           </div>
@@ -49,13 +56,13 @@ const LandingPage = () => {
       >
         <div className="flex flex-col gap items-center max-w-[800px] w-full text-center">
           <span className="text-brand text-base">
-            secure your contracts
+            {t('features.tagline')}
           </span>
           <span className="text-foreground font-bold text-5xl max-w-[500px] w-full">
-            Lorem Ipsum dolor sit amet
+            {t('features.title')}
           </span>
           <span className="text-3xl text-muted-foreground ">
-            Lorem Ipsum dolor sit amet asdasdasdasdasd asdasdasdas asdasdasdasdasdasdasd
+            {t('features.description')}
           </span>
         </div>
         <div className="flex flex-col gap-16 items-center w-full">
@@ -70,14 +77,12 @@ const LandingPage = () => {
                 <div
                   className="font-bold text-2xl"
                 >
-                  Upload protected files 
+                  {t('features.uploadFiles.title')}
                 </div>
                 <div
                   className="text-accent-foreground text-base w-full"
                 >
-                  Morbi viverra dui mi arcu sed. 
-                  Tellus semper adipiscing suspendisse semper morbi. 
-                  Odio urna massa nunc massa.
+                  {t('features.uploadFiles.description')}
                 </div>
               </div>
             </div>
@@ -91,14 +96,12 @@ const LandingPage = () => {
                 <div
                   className="font-bold text-2xl"
                 >
-                  Upload protected files 
+                  {t('features.uploadFiles.title')}
                 </div>
                 <div
                   className="text-accent-foreground text-base w-full"
                 >
-                  Morbi viverra dui mi arcu sed. 
-                  Tellus semper adipiscing suspendisse semper morbi. 
-                  Odio urna massa nunc massa.
+                  {t('features.uploadFiles.description')}
                 </div>
               </div>
             </div>
@@ -114,14 +117,12 @@ const LandingPage = () => {
                 <div
                   className="font-bold text-2xl"
                 >
-                  Upload protected files 
+                  {t('features.uploadFiles.title')}
                 </div>
                 <div
                   className="text-accent-foreground text-base w-full"
                 >
-                  Morbi viverra dui mi arcu sed. 
-                  Tellus semper adipiscing suspendisse semper morbi. 
-                  Odio urna massa nunc massa.
+                  {t('features.uploadFiles.description')}
                 </div>
               </div>
             </div>
@@ -135,14 +136,12 @@ const LandingPage = () => {
                 <div
                   className="font-bold text-2xl"
                 >
-                  Upload protected files 
+                  {t('features.uploadFiles.title')}
                 </div>
                 <div
                   className="text-accent-foreground text-base w-full"
                 >
-                  Morbi viverra dui mi arcu sed. 
-                  Tellus semper adipiscing suspendisse semper morbi. 
-                  Odio urna massa nunc massa.
+                  {t('features.uploadFiles.description')}
                 </div>
               </div>
             </div>
@@ -154,22 +153,20 @@ const LandingPage = () => {
       >
         <div className="flex flex-col gap-6 text-center">
           <div className="font-bold text-6xl">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            {t('cta.title')}
           </div>
           <div className="text-muted-foreground text-xl">
-            Anim aute id magna aliqua ad ad non deserunt sunt. 
-            Qui irure qui lorem cupidatat commodo. Elit sunt amet 
-            fugiat veniam occaecat.
+            {t('cta.description')}
           </div>
         </div>
         <div className="flex justify-center gap-8">
           <Button variant="brand">
-            Get started
+            {t('cta.getStarted')}
           </Button>
           <Button
             variant="ghost"
           >
-            Learn more
+            {t('cta.learnMore')}
             <ArrowRight />
           </Button>
         </div>
