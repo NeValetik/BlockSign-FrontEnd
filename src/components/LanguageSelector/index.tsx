@@ -11,11 +11,17 @@ const LanguageSelector = () => {
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <div className="flex items-center gap-2 cursor-pointer">
-          <Globe className="w-4 h-4" />
+      <DropdownMenuTrigger asChild>
+        <div className="group flex items-center gap-2 cursor-pointer">
+          <Globe className="size-4" />
           <span>{ current.label }</span>
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown 
+            className="
+              size-4 
+              group-data-[state=open]:-rotate-180 transition-transform 
+              duration-200
+            " 
+          />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

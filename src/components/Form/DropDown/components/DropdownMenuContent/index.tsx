@@ -10,7 +10,7 @@ const DropdownMenuContent: FC<ComponentProps<typeof DropdownMenuPrimitive.Conten
   ...props
 }) => {
   return (
-  // <DropdownMenuPrimitive.Portal>
+  <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       data-slot="dropdown-menu-content"
       sideOffset={sideOffset}
@@ -20,7 +20,7 @@ const DropdownMenuContent: FC<ComponentProps<typeof DropdownMenuPrimitive.Conten
       )}
       {...props}
     />
-  // </DropdownMenuPrimitive.Portal>
+  </DropdownMenuPrimitive.Portal>
   )
 }
 

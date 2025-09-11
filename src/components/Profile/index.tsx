@@ -47,15 +47,13 @@ const Profile:FC = () => {
             <DropdownMenuTrigger asChild>
               <ChevronDown 
                 className="
-                  size-4 text-brand cursor-pointer 
-                  data-[state=open]:rotate-180 transition-transform 
-                  duration-150
+                  size-6 text-brand cursor-pointer 
+                  data-[state=open]:-rotate-180 transition-transform 
+                  duration-200
                 " 
               />
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-            >
+            <DropdownMenuContent>
               <DropdownMenuItem>
                 <div className="flex gap-2 items-center text-brand">
                   Logout
