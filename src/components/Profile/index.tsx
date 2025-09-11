@@ -10,10 +10,37 @@ import Avatar from "@/components/Form/Avatar";
 import AvatarFallback from "../Form/Avatar/components/AvatarFallback";
 import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
 import Button from "../Form/Button";
+import { useRouter } from "next/navigation";
 
 const Profile:FC = () => {
   const { me } = useUserContext();
   const nameFallback = getUserShortFromFullName(me?.profile.fullName);
+  const { push } = useRouter();
+   
+  const links = [
+    {
+      key: 'profile',
+      component: (<div> Profile </div>),
+      onClick: () => {push('/profile')},
+    },
+    {
+      key: 'documents',
+      component: (<div> Documents </div>),
+      onClick: () => {push('/documents')},
+    },
+    {
+      key: 'logout',
+      component: (
+        <div className="flex gap-2 items-center text-brand">
+          Logout
+          <LogOut className="text-brand size-4" />
+        </div>
+      ),
+      onClick: () => {handleLogout()},
+    },
+  ]
+
+  const handleLogout = () => { console.log('logout'); }
 
   if (!me) {
     return null;
@@ -54,12 +81,19 @@ const Profile:FC = () => {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem>
-                <div className="flex gap-2 items-center text-brand">
-                  Logout
-                  <LogOut />
-                </div>
-              </DropdownMenuItem>
+              {
+                links.map((link) => {
+                  return (
+                    <DropdownMenuItem 
+                      key={link.key}
+                      onClick={link.onClick} 
+                      className="cursor-pointer"
+                    >
+                      {link.component}
+                    </DropdownMenuItem>
+                  )
+                })
+              }
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
