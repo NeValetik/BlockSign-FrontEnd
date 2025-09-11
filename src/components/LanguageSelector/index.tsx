@@ -1,7 +1,7 @@
 'use client'
 
 import { ChevronDown, Globe } from "lucide-react"
-import { useLocale } from "@/contexts/localeContext";
+import { useLocale } from "@/contexts/LocaleContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../Form/DropDown";
 
 const LanguageSelector = () => {

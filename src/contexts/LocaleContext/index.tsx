@@ -48,17 +48,12 @@ export const LocaleProvider: FC<LocaleProviderProps> = ({ children, defaultLocal
   const contextValue = useMemo( () => ( {
     locale,
     setLocale: ( newLocale: string ) => {
-      // Prevent unnecessary updates
       if (newLocale === locale) return;
       
       setLocale( newLocale );
       try {
-        // Set cookie synchronously for immediate effect
         setCookie( 'locale', newLocale, { expires: 365, path: '/' } );
-        // Change i18next language
       } catch ( e ) {
-        // @note: shouldn't be called on the server, but just in case
-         
         console.error( 'Failed to change locale:', e );
       }
     },
