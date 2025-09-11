@@ -45,7 +45,13 @@ const Profile:FC = () => {
           </Avatar>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <ChevronDown className="size-4 text-brand cursor-pointer data-[state=open]:rotate-180 transition-transform duration-150" />
+              <ChevronDown 
+                className="
+                  size-4 text-brand cursor-pointer 
+                  data-[state=open]:rotate-180 transition-transform 
+                  duration-150
+                " 
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
