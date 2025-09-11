@@ -1,35 +1,21 @@
 'use client'
 
+import { LOCALES } from "@/constants/locales";
 import { setCookie } from "@/utils/cookie";
-import { createContext, FC, useContext, useMemo, useState } from "react";
-
-const Locales = [
-  {
-    label: 'English',
-    key: 'en',
-  },
-  {
-    label: 'Русский',
-    key: 'ru',
-  },
-  {
-    label: 'Română',
-    key: 'ro',
-  },
-];
+import { createContext, FC, useContext, useMemo, useState } from "react"; 
 
 export interface ILocaleContext {
   locale: string
   setLocale: ( locale: string ) => void
-  locales: typeof Locales
-  current: typeof Locales[ 0 ]
+  locales: typeof LOCALES
+  current: typeof LOCALES[ 0 ]
 }
 
 const LocaleContext = createContext<ILocaleContext> ({
   locale: 'en',
   setLocale: () => {},
-  locales: Locales,
-  current: Locales[ 0 ],
+  locales: LOCALES,
+  current: LOCALES[ 0 ],
 })
 
 interface LocaleProviderProps {
@@ -41,7 +27,7 @@ export const LocaleProvider: FC<LocaleProviderProps> = ({ children, defaultLocal
   const [locale, setLocale] = useState(defaultLocale);
 
   const currentLocale = useMemo(
-    () => Locales.find( ( l ) => l.key === locale ) || Locales[ 0 ],
+    () => LOCALES.find( ( l ) => l.key === locale ) || LOCALES[ 0 ],
     [locale],
   );
 
@@ -57,7 +43,7 @@ export const LocaleProvider: FC<LocaleProviderProps> = ({ children, defaultLocal
         console.error( 'Failed to change locale:', e );
       }
     },
-    locales: Locales,
+    locales: LOCALES,
     current: currentLocale,
   } ), [locale, currentLocale] );
   return (
