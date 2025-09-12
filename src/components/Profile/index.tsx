@@ -2,12 +2,12 @@
 
 import { useUserContext } from "@/contexts/userContext";
 import { FC } from "react"
-import { AvatarImage } from "../Form/Avatar/components/AvatarImage";
+import { AvatarImage } from "../Avatar/components/AvatarImage";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "../Form/DropDown";
 import { ChevronDown, LogOut } from "lucide-react";
 
-import Avatar from "@/components/Form/Avatar";
-import AvatarFallback from "../Form/Avatar/components/AvatarFallback";
+import Avatar from "@/components/Avatar";
+import AvatarFallback from "../Avatar/components/AvatarFallback";
 import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
 import Button from "../Form/Button";
 import { useRouter } from "next/navigation";

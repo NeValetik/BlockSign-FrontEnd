@@ -21,7 +21,6 @@ const Providers: FC<
   const client = createReactQueryClient();
   // const me = null; 
   const meZaticika = {
-
     id: '1',
     profile: {
       email: 'test@test.com',

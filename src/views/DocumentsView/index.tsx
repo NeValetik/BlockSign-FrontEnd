@@ -29,10 +29,19 @@ const DocumentsView: FC = () => {
 
   return (
     <div>
-      <Tabs>
-        <TabsList>
+      <Tabs
+        defaultValue={tabs[0].value}
+        className="gap-20"
+      >
+        <TabsList
+          className="w-full gap-2 bg-brand"
+        >
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.value} value={tab.value}>
+            <TabsTrigger 
+              key={tab.value} 
+              value={tab.value} 
+              className="text-brand-foreground data-[state=active]:text-foreground"
+            >
               {tab.labelComponent}
             </TabsTrigger>
           ))}

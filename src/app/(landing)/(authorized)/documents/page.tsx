@@ -1,10 +1,11 @@
+import Container from "@/components/Container";
 import DocumentsView from "@/views/DocumentsView";
 
 const DocumentsPage = () => {
   return (
-    <div>
+    <Container className="md:py-[96px] py-12 lg:px-[340px]">
       <DocumentsView />
-    </div>
+    </Container>
   );
 };
 
