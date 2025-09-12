@@ -2,9 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { FC } from "react";
-import { cn } from '@/utils/cn';
 
-import Link from 'next/link';
 import Container from '@/components/Container';
 import { Tabs, TabsList, TabsTrigger } from '@/components/Tabs';
 
