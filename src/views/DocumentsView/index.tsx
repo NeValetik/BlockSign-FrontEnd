@@ -40,7 +40,7 @@ const DocumentsView: FC = () => {
             <TabsTrigger 
               key={tab.value} 
               value={tab.value} 
-              className="text-brand-foreground data-[state=active]:text-foreground"
+              className="text-brand-foreground data-[state=active]:text-muted-foreground cursor-pointer"
             >
               {tab.labelComponent}
             </TabsTrigger>

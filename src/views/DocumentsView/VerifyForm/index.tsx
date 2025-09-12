@@ -27,10 +27,10 @@ const VerifyForm = () => {
     }
   })
 
-  const { setError, clearErrors } = form;
+  const { setError, clearErrors, setValue } = form;
 
   const handleDrop = (acceptedFiles: File[]) => {
-    console.log(acceptedFiles);
+    setValue('document', acceptedFiles);
     clearErrors('document')
   }
 
