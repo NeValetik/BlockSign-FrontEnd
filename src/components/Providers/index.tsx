@@ -2,6 +2,7 @@
 
 import { FC, ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { CookiesProvider } from "react-cookie";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { createReactQueryClient } from "../../../reactQueryClient";
 import { UserContextProvider } from "@/contexts/userContext";
@@ -30,15 +31,17 @@ const Providers: FC<
     },
   }
   return (
-    <LocaleProvider
-      defaultLocale={ locale }
-    >
-      <UserContextProvider me={meZaticika}>
-        <QueryClientProvider client={client}>
-          {children}
-        </QueryClientProvider>
-      </UserContextProvider>
-    </LocaleProvider>
+    <CookiesProvider>
+      <LocaleProvider
+        defaultLocale={ locale }
+      >
+        <UserContextProvider me={meZaticika}>
+          <QueryClientProvider client={client}>
+            {children}
+          </QueryClientProvider>
+        </UserContextProvider>
+      </LocaleProvider>
+    </CookiesProvider>
   )
 }
 
