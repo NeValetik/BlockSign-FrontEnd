@@ -10,6 +10,10 @@ interface UserContextProps {
       fullName: string;
       avatar: string;
       role: string;
+      phone: {
+        code: string;
+        number: string;
+      };
     }
   } | null;
 }

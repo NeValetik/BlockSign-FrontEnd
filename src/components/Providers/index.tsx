@@ -27,6 +27,10 @@ const Providers: FC<
       fullName: 'Test Test',
       avatar: 'https://placehold.co/600x400',
       role: 'admin',
+      phone: {
+        code: '+373',
+        number: '1234567890',
+      },
     },
   }
   return (
