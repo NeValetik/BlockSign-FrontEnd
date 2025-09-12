@@ -1,23 +1,34 @@
+'use client';
+
+import { DocumentState } from '@/views/PersonalDocumentsView/components/DocumentsList/types';
 import { FC } from 'react';
+
+import DocumentsList from '@/views/PersonalDocumentsView/components/DocumentsList';
+import { DocumentCardProps } from '@/views/PersonalDocumentsView/components/DocumentsList/components/DocumentCard';
+
+const data: DocumentCardProps[] = [
+  {
+    title: 'Document 1',
+    image: '/',
+    state: DocumentState.Pending,
+  },
+  {
+    title: 'Document 2',
+    image: '/',
+    state: DocumentState.Pending,
+  },
+  {
+    title: 'Document 3',
+    image: '/',
+    state: DocumentState.Pending,
+  },
+];
 
 const ProfileDocumentsPage: FC = () => {
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Documents</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Manage your documents and signatures
-        </p>
-      </div>
-      
-      <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Recent Documents</h3>
-        <div className="text-center py-12">
-          <p className="text-gray-500">No documents found</p>
-          <p className="text-sm text-gray-400 mt-1">
-            Your uploaded and signed documents will appear here
-          </p>
-        </div>
+    <div>
+       <div className="border rounded-md p-6">
+        <DocumentsList data={data} maxCards={20} />
       </div>
     </div>
   );

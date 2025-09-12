@@ -1,50 +1,43 @@
+"use client"
+
 import { FC } from 'react';
+import Button from '@/components/Form/Button';
 
 const ProfileSettingsPage: FC = () => {
   return (
-    <div className="space-y-6">
+    <div className="p-6 border rounded-md flex flex-col gap-4">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">Settings</h2>
-        <p className="mt-1 text-sm text-gray-600">
-          Manage your account preferences and security settings
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-6">
-        {/* Account Settings */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Account Settings</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email Notifications</label>
-              <div className="mt-2">
-                <label className="inline-flex items-center">
-                  <input type="checkbox" className="form-checkbox" defaultChecked />
-                  <span className="ml-2 text-sm text-gray-600">Document signing notifications</span>
-                </label>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Language</label>
-              <select className="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                <option>English</option>
-                <option>Romanian</option>
-                <option>Russian</option>
-              </select>
-            </div>
+        <h2 className="text-2xl font-semibold text-foreground mb-1">Protection</h2>
+        <div className="flex flex-col gap-2">
+          <h3 className="text-base font-medium text-foreground">Password</h3>
+          <div>
+            <Button 
+              variant="brand"
+              size="default"
+            >
+              Change password
+            </Button>
           </div>
         </div>
-
-        {/* Security Settings */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Security</h3>
-          <div className="space-y-4">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Change Password
-            </button>
-            <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
-              Enable Two-Factor Authentication
-            </button>
+      </div>
+      <div className="flex flex-col gap-2">
+        <h3 className="text-base font-medium text-foreground">Multi-factor</h3>
+        <div className="flex flex-col gap-2">
+          <div>
+            <Button 
+              variant="brand"
+              size="default"
+            >
+              Confirm phone
+            </Button>
+          </div>
+          <div>
+            <Button 
+              variant="brand"
+              size="default"
+            >
+              Enable authenticator
+            </Button>
           </div>
         </div>
       </div>

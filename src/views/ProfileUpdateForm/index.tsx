@@ -66,7 +66,7 @@ const ProfileUpdateForm: FC = () => {
   }
 
   return (
-    <div className="max-w-md space-y-6">
+    <>
       <div>
         <p className="text-sm text-muted-foreground mb-6">
           Make changes to your account here. Click save when you are done.
@@ -141,7 +141,7 @@ const ProfileUpdateForm: FC = () => {
           </Button>
         </form>
       </Form>
-    </div>
+    </>
   )
 }
 
