@@ -74,7 +74,6 @@ const UploadForm = () => {
           >
             Submit
           </Button>
-          
         </div>
       </form>
     </Form>

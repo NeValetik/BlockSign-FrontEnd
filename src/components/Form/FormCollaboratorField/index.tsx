@@ -52,7 +52,7 @@ const FormCollaboratorField: FC<FormCollaboratorFieldProps> = ({ name }) => {
                       <Button
                         onClick={() => handleRemove(index)}
                         variant="outline"
-                        className="border-brand gap-2"
+                        className="border-destructive text-destructive hover:text-destructive hover:bg-destructive/10 gap-2"
                         type="button"
                       >
                         <Minus />
@@ -69,7 +69,7 @@ const FormCollaboratorField: FC<FormCollaboratorFieldProps> = ({ name }) => {
       <Button 
         onClick={handleAdd}
         variant="outline"
-        className="border-brand gap-2"
+        className="border-brand gap-2 text-muted-foreground"
         type="button"
       >
         <span>Add Collaborator</span>
