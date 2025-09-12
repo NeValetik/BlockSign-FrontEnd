@@ -21,7 +21,7 @@ const Profile:FC = () => {
     {
       key: 'profile',
       component: (<div> Profile </div>),
-      onClick: () => {push('/profile')},
+      onClick: () => {push('/account/profile')},
     },
     {
       key: 'documents',
