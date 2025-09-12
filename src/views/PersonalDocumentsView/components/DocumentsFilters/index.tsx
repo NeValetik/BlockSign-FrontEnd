@@ -1,7 +1,22 @@
-const DocumentsFilters = () => {
+'use client'
+
+import { FC } from "react";
+
+import SearchBar from "@/components/SearchBar";
+import Button from "@/components/Form/Button";
+
+const DocumentsFilters: FC = () => {
+
   return (
-    <div>
-      <h1>Documents Filters</h1>
+    <div
+      className="flex gap-4"
+    >
+      <SearchBar href="/account/documents" />
+      <Button
+        variant="default"
+      >
+        Filters
+      </Button>
     </div>
   );
 };
