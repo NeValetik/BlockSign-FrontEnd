@@ -1,16 +1,18 @@
-'use client'
-
 import { ArrowRight, FileInput } from "lucide-react";
-import { useLocale } from "@/contexts/LocaleContext";
+// import { useLocale } from "@/contexts/LocaleContext";
+import { useTranslation } from "../i18n";
+import { cookies } from "next/headers";
 
 import Container from "@/components/Container";
 import Button from "@/components/Form/Button";
 import Image from "next/image";
-import { useTranslation } from "@/lib/i18n/client";
 
-const LandingPage = () => {
-  const { locale } = useLocale();
-  const { t } = useTranslation(locale, [ 'landing' ])
+const LandingPage = async () => {
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get('locale')?.value || 'en';
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t } = await useTranslation( cookieLocale, [ 'landing' ] );
 
   return (
     <Container className="relative px-36 py-20 flex flex-col gap-48 items-center">
