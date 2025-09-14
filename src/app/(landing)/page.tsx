@@ -10,8 +10,6 @@ import Image from "next/image";
 
 const LandingPage = () => {
   const { locale } = useLocale();
-
-   
   const { t } = useTranslation( locale, [ 'landing' ] );
 
   return (

@@ -8,15 +8,17 @@ import { Separator, SeparatorWithText } from "@/components/Form/Separator";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { ILoginForm } from "./types";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
-import Checkbox from "@/components/Form/Checkbox";
+// import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
-import Link from "next/link";
+// import Link from "next/link";
 
 const DefaultValues: ILoginForm = {
   loginName: "",
-  password: "",
-  remember: false,
+  // password: "",
+  // remember: false,
 }
 
 const LoginForm = () => {
@@ -24,12 +26,34 @@ const LoginForm = () => {
     defaultValues: DefaultValues,
     resolver: zodResolver(schema)
   });
+  const { push } = useRouter();
   
-  const { handleSubmit } = form;
+  const { handleSubmit, setError } = form;
 
-  const onSubmit = (data: ILoginForm) => {
-    console.log(data);
+  const { mutate, isSuccess } = useMutation({
+    mutationFn: async (data: ILoginForm) => {
+      const { loginName: email } = data;
+      const response = await fetch('http://localhost:4000/api/v1/auth/challenge', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      return response;
+    },
+  });
+
+  const onSubmit = async (data: ILoginForm) => {
+    // TODO: handle error
+    await mutate(data);
+    if (isSuccess) {
+      push("/account/profile")
+    } else {
+      setError('loginName', { message: 'Invalid email' });
+    }
   }
+
   return (
     <Form {...form}>
       <form 
@@ -80,7 +104,7 @@ const LoginForm = () => {
               </FormItem>
             )} 
           />
-          <div className="flex flex-col gap-4">
+          {/* <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <FormField 
                 name="password"
@@ -108,7 +132,7 @@ const LoginForm = () => {
                 </FormItem>
               )} 
             />
-          </div>
+          </div> */}
           <Button type="submit" variant="brand">
             Login
           </Button>
@@ -124,6 +148,8 @@ const LoginForm = () => {
               hover:text-brand-muted 
               hover:border-brand-muted
             "
+            type="button"
+            onClick={() => push("/register")}
           >
             Sign up
           </Button>

@@ -7,10 +7,12 @@ import { InputEmail, InputPassword, InputText } from "@/components/Form/Input";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { IRegisterForm } from "./types";
+import { useMutation } from "@tanstack/react-query";
 
 import Button from "@/components/Form/Button";
 import FormPhoneField from "@/components/Form/FormPhoneField";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const DefaultValues: IRegisterForm = {
   fullName: "",
@@ -19,8 +21,8 @@ const DefaultValues: IRegisterForm = {
     code: "",
     number: "",
   },
-  password: "",
-  confirmPassword: "",
+  // password: "",
+  // confirmPassword: "",
 }
 
 const RegisterForm = () => {
@@ -29,10 +31,27 @@ const RegisterForm = () => {
     resolver: zodResolver(schema)
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, setError } = form;
+  const { push } = useRouter();
 
-  const onSubmit = (data: IRegisterForm) => {
-    console.log(data);
+  const { mutate, isSuccess } = useMutation({
+    mutationFn: async (data: IRegisterForm) => {
+      const response = await fetch('http://localhost:4000/api/v1/registration/request', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      return response;
+    },
+  });
+
+  const onSubmit = async (data: IRegisterForm) => {
+    // TODO: handle error
+    await mutate(data);
+    if (isSuccess) {
+      push("/register/confirm-email")
+    } else {
+      setError('email', { message: 'Invalid email' });
+    }
   }
   
   return (
@@ -80,7 +99,7 @@ const RegisterForm = () => {
             )} 
           />
           <FormPhoneField name="phone" />
-          <div className="flex flex-col gap-4">
+          {/* <div className="flex flex-col gap-4">
             <FormField 
               name="password"
               render={({ field }) => (
@@ -104,7 +123,7 @@ const RegisterForm = () => {
                 </FormItem>
               )} 
             />
-          </div>
+          </div> */}
           <Button type="submit" variant="brand">
             Sign up
           </Button>
