@@ -24,11 +24,7 @@ import z from "zod"
 //   });
 
 export const schema = z.object({
-  // fullName: z.string().min(1, { message: "Full name is required" }),
-  email: z.string(),
-  // phone: phoneSchema,
-  // password: passwordSchema,
-  // confirmPassword: z.string(),
+  mnemonic: z.string(),
 })
 // .refine((data) => data.password === data.confirmPassword, {
 //     message: passwordMismatchErrorMessage,

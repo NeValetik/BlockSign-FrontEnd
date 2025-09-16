@@ -2,24 +2,14 @@
 
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/Form/Dropzone";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/FormWrapper";
+import { VerifyFormFields } from "../../types";
 import { useForm } from "react-hook-form";
 
 import FormCollaboratorField from "@/components/Form/FormCollaboratorField";
 import Button from "@/components/Form/Button";
 
-interface Collaborator {
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface VerifyFormFields {
-  document: File[] | undefined;
-  collaborators: Collaborator[] | undefined;
-};
 
 const VerifyForm = () => {
-  
   const form = useForm<VerifyFormFields>({
     defaultValues: {
       document: [],

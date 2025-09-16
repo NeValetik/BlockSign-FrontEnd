@@ -3,13 +3,14 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputEmail, InputPassword } from "@/components/Form/Input";
+import { InputEmail } from "@/components/Form/Input";
 import { Separator, SeparatorWithText } from "@/components/Form/Separator";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { ILoginForm } from "./types";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { fetchFromServer } from "@/utils/fetchFromServer";
 
 // import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
@@ -21,6 +22,10 @@ const DefaultValues: ILoginForm = {
   // remember: false,
 }
 
+interface ChallengeApiResponse {
+  challenge: string;
+}
+
 const LoginForm = () => {
   const form = useForm<ILoginForm>({ 
     defaultValues: DefaultValues,
@@ -30,27 +35,29 @@ const LoginForm = () => {
   
   const { handleSubmit, setError } = form;
 
-  const { mutate, isSuccess } = useMutation({
-    mutationFn: async (data: ILoginForm) => {
+  
+
+  const { mutateAsync } = useMutation<ChallengeApiResponse, Error, ILoginForm>({
+    mutationFn: async (data: ILoginForm): Promise<ChallengeApiResponse> => {
       const { loginName: email } = data;
-      const response = await fetch('http://localhost:4000/api/v1/auth/challenge', {
+      const response = await fetchFromServer('/api/v1/auth/challenge', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
       });
-      return response;
+      return response as ChallengeApiResponse;
     },
   });
 
   const onSubmit = async (data: ILoginForm) => {
-    // TODO: handle error
-    await mutate(data);
-    if (isSuccess) {
-      push("/account/profile")
-    } else {
-      setError('loginName', { message: 'Invalid email' });
+    try {
+      // Call the challenge API
+      const challengeResponse = await mutateAsync(data);
+      push(`/login/mnemonic?challenge=${challengeResponse.challenge}&email=${data.loginName}`);
+    } catch {
+      setError('loginName', { message: 'Authentication failed' });
     }
   }
 

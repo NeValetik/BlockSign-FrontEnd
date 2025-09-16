@@ -3,27 +3,15 @@
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/Form/Dropzone";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
+import { UploadFormFields } from "../../types";
 
 import FormCollaboratorField from "@/components/Form/FormCollaboratorField";
 import Button from "@/components/Form/Button";
-
-interface Collaborator {
-  name: string;
-  email: string;
-  phone: string;
-}
-
-interface UploadFormFields {
-  document: File[] | undefined;
-  collaborators: Collaborator[] | undefined;
-};
-
 
 const UploadForm = () => {
   const form = useForm<UploadFormFields>({
     defaultValues: {
       document: [],
-      collaborators: [{ name: "", email: "", phone: "" }]
     }
   })
 

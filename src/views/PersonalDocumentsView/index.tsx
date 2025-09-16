@@ -13,12 +13,12 @@ const data: DocumentCardProps[] = [
   {
     title: 'Document 2',
     image: '/',
-    state: DocumentState.Pending,
+    state: DocumentState.Signed,
   },
   {
     title: 'Document 3',
     image: '/',
-    state: DocumentState.Pending,
+    state: DocumentState.Rejected,
   },
 ];
 

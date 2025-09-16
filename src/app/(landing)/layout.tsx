@@ -21,7 +21,7 @@ const RootLayout:FC<{
 }) => {
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('locale')?.value || 'en';
-
+  const token = cookieStore.get('accessToken')?.value || '';
   // eslint-disable-next-line react-hooks/rules-of-hooks
   await useTranslation( cookieLocale, [ 'common' ] );
 
@@ -30,6 +30,7 @@ const RootLayout:FC<{
       <body>
         <Providers
           locale={ cookieLocale }
+          token={ token }
         >
           <Header />
             {/* <Suspense fallback={ <div>Loading...</div> }> */}

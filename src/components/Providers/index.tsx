@@ -6,16 +6,20 @@ import { CookiesProvider } from "react-cookie";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { createReactQueryClient } from "../../../reactQueryClient";
 import { UserContextProvider } from "@/contexts/userContext";
+import { TokenContextProvider } from "@/contexts/tokenContext";
+import { Toaster } from "../Sonner";
 
 const Providers: FC<
   { 
     children: ReactNode, 
     locale: string, 
+    token: string,
   }
 > = (
   { 
     children, 
     locale, 
+    token,
   }
 ) => {
   const client = createReactQueryClient();
@@ -26,7 +30,7 @@ const Providers: FC<
       email: 'test@test.com',
       fullName: 'Test Test',
       avatar: 'https://placehold.co/600x400',
-      role: 'admin',
+      role: 'ADMIN',
       phone: {
         code: '+373',
         number: '1234567890',
@@ -35,13 +39,14 @@ const Providers: FC<
   }
   return (
     <CookiesProvider>
-      <LocaleProvider
-        defaultLocale={ locale }
-      >
-        <UserContextProvider me={meZaticika}>
-          <QueryClientProvider client={client}>
-            {children}
-          </QueryClientProvider>
+      <LocaleProvider defaultLocale={ locale }>
+        <UserContextProvider me={ meZaticika }>
+          <TokenContextProvider token={ token }>
+            <QueryClientProvider client={ client }>
+              {children}
+              <Toaster />
+            </QueryClientProvider>
+          </TokenContextProvider>
         </UserContextProvider>
       </LocaleProvider>
     </CookiesProvider>

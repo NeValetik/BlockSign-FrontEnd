@@ -5,33 +5,19 @@ import { FC, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/Form/Input";
 import { AvatarImage } from "@/components/Avatar/components/AvatarImage";
+import { useUserContext } from "@/contexts/userContext";
+import { IProfileUpdateForm } from "./types";
 
 import Avatar from "@/components/Avatar";
 import AvatarFallback from "@/components/Avatar/components/AvatarFallback";
 import FormPhoneField from "@/components/Form/FormPhoneField";
 import Button from "@/components/Form/Button";
-import { useUserContext } from "@/contexts/userContext";
-
-interface FormData {
-  fullName: string;
-  idnp: string;
-  email: string;
-  avatar?: string;
-  phone: {
-    code: string;
-    number: string;
-  };
-}
-
-
-
-// interface ProfileUpdateFormProps {
-// }
+import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
 
 const ProfileUpdateForm: FC = () => {
   const { me } = useUserContext();
 
-  const defaultValues: FormData = useMemo(() => {
+  const defaultValues: IProfileUpdateForm = useMemo(() => {
     if (!me) return {
       fullName: '',
       idnp: '',
@@ -54,14 +40,14 @@ const ProfileUpdateForm: FC = () => {
     }
   }, [ me ]);
 
-  const form = useForm<FormData>({
+  const form = useForm<IProfileUpdateForm>({
     defaultValues: defaultValues,
     resolver: undefined,
   });
 
   const { control, handleSubmit } = form; 
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: IProfileUpdateForm) => {
     console.log(data);
   }
 
@@ -77,7 +63,7 @@ const ProfileUpdateForm: FC = () => {
           <Avatar className="size-16">
             <AvatarImage src={me?.profile.avatar} />
             <AvatarFallback className="bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 text-white font-semibold text-lg">
-              A
+              {getUserShortFromFullName(me?.profile.fullName)}
             </AvatarFallback>
           </Avatar>
         </div>

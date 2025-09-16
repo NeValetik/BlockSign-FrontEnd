@@ -1,19 +1,23 @@
 'use client';
 
 import { FC } from "react";
+import { useUserContext } from "@/contexts/userContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs";
 
-import UploadForm from "./UploadForm";
-import VerifyForm from "./VerifyForm";
+import UploadForm from "./components/UploadForm";
+import VerifyForm from "./components/VerifyForm";
 
 type DocumentViewState = 'upload' | 'verify';
 
 const DocumentsView: FC = () => {
 
+  const { me } = useUserContext();
+
   const tabs: {
     value: DocumentViewState;
     labelComponent: string | React.ReactNode;
     content: React.ReactNode;
+    isAuthorizedAccess?: boolean;
   }[] = [
     {
       value: 'upload',
@@ -23,6 +27,7 @@ const DocumentsView: FC = () => {
     {
       value: 'verify',
       labelComponent: 'Verify',
+      isAuthorizedAccess: true,
       content: <VerifyForm />
     }
   ]
@@ -41,6 +46,7 @@ const DocumentsView: FC = () => {
               key={tab.value} 
               value={tab.value} 
               className="text-brand-foreground data-[state=active]:text-muted-foreground cursor-pointer"
+              disabled={!me && tab.isAuthorizedAccess}
             >
               {tab.labelComponent}
             </TabsTrigger>

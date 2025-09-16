@@ -3,24 +3,25 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputEmail, InputPassword, InputText } from "@/components/Form/Input";
+import { InputEmail } from "@/components/Form/Input";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { IRegisterForm } from "./types";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { fetchFromServer } from "@/utils/fetchFromServer";
 
 import Button from "@/components/Form/Button";
-import FormPhoneField from "@/components/Form/FormPhoneField";
+// import FormPhoneField from "@/components/Form/FormPhoneField";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const DefaultValues: IRegisterForm = {
-  fullName: "",
   email: "",
-  phone: {
-    code: "",
-    number: "",
-  },
+  // fullName: "",
+  // phone: {
+  //   code: "",
+  //   number: "",
+  // },
   // password: "",
   // confirmPassword: "",
 }
@@ -34,10 +35,13 @@ const RegisterForm = () => {
   const { handleSubmit, setError } = form;
   const { push } = useRouter();
 
-  const { mutate, isSuccess } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async (data: IRegisterForm) => {
-      const response = await fetch('http://localhost:4000/api/v1/registration/request', {
+      const response = await fetchFromServer('/api/v1/registration/request/start', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
       });
       return response;
@@ -46,12 +50,14 @@ const RegisterForm = () => {
 
   const onSubmit = async (data: IRegisterForm) => {
     // TODO: handle error
-    await mutate(data);
-    if (isSuccess) {
-      push("/register/confirm-email")
-    } else {
-      setError('email', { message: 'Invalid email' });
-    }
+    await mutateAsync(data, {
+      onSuccess: () => {
+        push(`/register/confirm-email?email=${data.email}`)
+      },
+      onError: () => {
+        setError('email', { message: 'Something went wrong' });
+      }
+    });
   }
   
   return (
@@ -76,7 +82,7 @@ const RegisterForm = () => {
           </span>
         </div>
         <div className="flex flex-col gap-6">
-          <FormField name="fullName"
+          {/* <FormField name="fullName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
@@ -86,7 +92,7 @@ const RegisterForm = () => {
                 <FormMessage />
               </FormItem>
             )} 
-          />
+          /> */}
           <FormField name="email"
             render={({ field }) => (
               <FormItem>
@@ -98,7 +104,7 @@ const RegisterForm = () => {
               </FormItem>
             )} 
           />
-          <FormPhoneField name="phone" />
+          {/* <FormPhoneField name="phone" /> */}
           {/* <div className="flex flex-col gap-4">
             <FormField 
               name="password"
@@ -124,8 +130,8 @@ const RegisterForm = () => {
               )} 
             />
           </div> */}
-          <Button type="submit" variant="brand">
-            Sign up
+          <Button type="submit" variant="brand" disabled={isPending}>
+            {isPending ? 'Sending verification code...' : 'Sign up'}
           </Button>
         </div>
         <div className="flex flex-col gap-4">
