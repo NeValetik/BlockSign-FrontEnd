@@ -9,7 +9,8 @@ import { MnemonicPhraseDisplayProps } from "./types";
 const MnemonicPhraseDisplay = ({ 
   mnemonic, 
   onContinue,
-  showContinueButton = true
+  showContinueButton = true,
+  isLoading
 }: MnemonicPhraseDisplayProps) => {
   const [copied, setCopied] = useState(false);
   
@@ -81,8 +82,10 @@ const MnemonicPhraseDisplay = ({
               onClick={onContinue}
               variant="brand"
               className="w-full"
+              disabled={isLoading}
             >
-              I&lsquo;ve saved my phrase
+              {isLoading && "Loading..."}
+              {!isLoading && "I've saved my phrase"}
             </Button>
           )}
         </div>

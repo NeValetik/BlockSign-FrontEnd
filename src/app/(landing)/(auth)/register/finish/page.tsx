@@ -5,8 +5,9 @@ import { getSignature } from "@/utils/getSignature";
 import { FC } from "react";
 import FinishRegistrationView from "@/views/FinishRegistrationView";
 
-const FinishRegistration:FC<{ searchParams: { token: string }}> = async ( { searchParams } ) => {
+const FinishRegistration:FC<{ searchParams: { token: string, email: string }}> = async ( { searchParams } ) => {
   const token = await searchParams.token;
+  const email = await searchParams.email;
   const { mnemonic, privateKey, publicKey } = await generateKey();
   const { signature: signatureB64}  = await getSignature(privateKey, token);
 
@@ -16,6 +17,7 @@ const FinishRegistration:FC<{ searchParams: { token: string }}> = async ( { sear
       publicKey={publicKey} 
       signature={signatureB64} 
       token={token} 
+      email={email}
     />
   )
 }

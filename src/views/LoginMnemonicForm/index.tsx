@@ -5,13 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputText } from "@/components/Form/Input";
 import { schema } from "./schema";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { fetchFromServer } from "@/utils/fetchFromServer";
-import { getSignature } from "@/utils/getSignature";
-import { setCookie } from "@/utils/cookie";
-import { CompleteApiRequest, ILoginMnemonicForm } from "./types";
-import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
+import { ILoginMnemonicForm } from "./types";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 
 import Button from "@/components/Form/Button";
 
@@ -19,59 +16,45 @@ const DefaultValues: ILoginMnemonicForm = {
   mnemonic: "",
 }
 
-interface CompleteApiResponse {
-  accessToken: string;
-}
-
 const LoginMnemonicForm = () => {
   const form = useForm<ILoginMnemonicForm>({ 
     defaultValues: DefaultValues,
     resolver: zodResolver(schema)
   });
-  const { push } = useRouter();
+  const { push, refresh } = useRouter();
   const searchParams = useSearchParams();
-  const challenge = searchParams.get('challenge');
   const email = searchParams.get('email');
-  if (!challenge || !email) {
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // If no email parameter, redirect to login
+  if (!email) {
     push("/login");
+    return null;
   }
   
   const { handleSubmit, setError } = form;
 
-  const { mutateAsync: mutateCompleteAsync } = useMutation<CompleteApiResponse, Error, CompleteApiRequest>({
-    mutationFn: async (data: CompleteApiRequest): Promise<CompleteApiResponse> => {
-      const response = await fetchFromServer('/api/v1/auth/complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-      return response as CompleteApiResponse;
-    },
-  });
-
   const onSubmit = async (data: ILoginMnemonicForm) => {
+    setIsLoading(true);
     try {
-      // Call the challenge API
-      const pk = await getPkFromMnemonic(data.mnemonic);
-      if (!challenge) {
-        setError('mnemonic', { message: 'Invalid challenge' });
-        return;
-      }
-      const {signature: signatureB64} = await getSignature(pk, challenge);
-      
-      // Call the complete API with typed response
-      const completeResponse = await mutateCompleteAsync({
-        email: email!,
-        challenge: challenge,
-        signatureB64,
+      // Use NextAuth signIn with mnemonic provider
+      const result = await signIn('mnemonic', {
+        email: email,
+        mnemonic: data.mnemonic,
+        redirect: false,
       });
-      
-      setCookie('accessToken', completeResponse.accessToken);
-      push("/account/profile");
+
+      if (result?.error) {
+        setError('mnemonic', { message: 'Authentication failed. Please check your mnemonic phrase.' });
+      } else if (result?.ok) {
+        // Successful authentication, redirect to profile
+        push("/account/profile");
+        refresh();
+      }
     } catch {
-      setError('mnemonic', { message: 'Authentication failed' });
+      setError('mnemonic', { message: 'Authentication failed. Please try again.' });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -97,8 +80,8 @@ const LoginMnemonicForm = () => {
             )} 
           />
          
-          <Button type="submit" variant="brand">
-            Submit
+          <Button type="submit" variant="brand" disabled={isLoading}>
+            {isLoading ? "Authenticating..." : "Submit"}
           </Button>
         </div>
       </form>

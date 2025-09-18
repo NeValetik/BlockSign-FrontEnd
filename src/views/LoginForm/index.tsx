@@ -8,9 +8,9 @@ import { Separator, SeparatorWithText } from "@/components/Form/Separator";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { ILoginForm } from "./types";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { fetchFromServer } from "@/utils/fetchFromServer";
+import { getAuthChallenge } from "@/lib/auth/mnemonicAuth";
+import { useState } from "react";
 
 // import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
@@ -18,12 +18,6 @@ import Button from "@/components/Form/Button";
 
 const DefaultValues: ILoginForm = {
   loginName: "",
-  // password: "",
-  // remember: false,
-}
-
-interface ChallengeApiResponse {
-  challenge: string;
 }
 
 const LoginForm = () => {
@@ -32,32 +26,27 @@ const LoginForm = () => {
     resolver: zodResolver(schema)
   });
   const { push } = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   
   const { handleSubmit, setError } = form;
 
-  
-
-  const { mutateAsync } = useMutation<ChallengeApiResponse, Error, ILoginForm>({
-    mutationFn: async (data: ILoginForm): Promise<ChallengeApiResponse> => {
-      const { loginName: email } = data;
-      const response = await fetchFromServer('/api/v1/auth/challenge', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-      return response as ChallengeApiResponse;
-    },
-  });
-
   const onSubmit = async (data: ILoginForm) => {
+    setIsLoading(true);
     try {
-      // Call the challenge API
-      const challengeResponse = await mutateAsync(data);
-      push(`/login/mnemonic?challenge=${challengeResponse.challenge}&email=${data.loginName}`);
+      // Validate email and get challenge (optional step for UX)
+      const challenge = await getAuthChallenge(data.loginName);
+      
+      if (!challenge) {
+        setError('loginName', { message: 'Invalid email or user not found' });
+        return;
+      }
+      
+      // Redirect to mnemonic form with email parameter
+      push(`/login/mnemonic?email=${encodeURIComponent(data.loginName)}`);
     } catch {
-      setError('loginName', { message: 'Authentication failed' });
+      setError('loginName', { message: 'Authentication failed. Please check your email.' });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -140,8 +129,8 @@ const LoginForm = () => {
               )} 
             />
           </div> */}
-          <Button type="submit" variant="brand">
-            Login
+          <Button type="submit" variant="brand" disabled={isLoading}>
+            {isLoading ? "Checking..." : "Login"}
           </Button>
         </div>
         <Separator />

@@ -28,9 +28,9 @@ const AdminConsolePage = () => {
   const { me } = useUserContext();
   const [ userPendingDecline, setUserPendingDecline ] = useState<string[]>([]);
   const [ userPendingApprove, setUserPendingApprove ] = useState<string[]>([]);
-  const isDev = process.env.NODE_ENV === "development";
+  // const isDev = process.env.NODE_ENV === "development";
 
-  const isAdmin = isDev || me?.profile.role === "ADMIN";
+  const isAdmin = me?.role === "ADMIN";
   const { token } = useTokenContext();
   const queryClient = useQueryClient();
 

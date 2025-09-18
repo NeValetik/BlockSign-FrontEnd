@@ -4,4 +4,5 @@ export interface MnemonicPhraseDisplayProps {
   onContinue?: () => void;
   showBackButton?: boolean;
   showContinueButton?: boolean;
+  isLoading?: boolean;
 }

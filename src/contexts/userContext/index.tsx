@@ -2,19 +2,15 @@
 
 import { createContext, useContext, useMemo } from "react";
 
-interface UserContextProps {
+export interface UserContextProps {
   me: {
+    role: string;
+    email: string;
     id: string;
-    profile: {
-      email: string;
-      fullName: string;
-      avatar: string;
-      role: string;
-      phone: {
-        code: string;
-        number: string;
-      };
-    }
+    createdAt: Date;
+    fullName: string;
+    status: string;
+    updatedAt: Date;
   } | null;
 }
 

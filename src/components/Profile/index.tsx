@@ -5,17 +5,23 @@ import { FC } from "react"
 import { AvatarImage } from "../Avatar/components/AvatarImage";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "../Form/DropDown";
 import { ChevronDown, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 import Avatar from "@/components/Avatar";
 import AvatarFallback from "../Avatar/components/AvatarFallback";
 import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
 import Button from "../Form/Button";
-import { useRouter } from "next/navigation";
 
 const Profile:FC = () => {
   const { me } = useUserContext();
-  const nameFallback = getUserShortFromFullName(me?.profile.fullName);
+  const nameFallback = getUserShortFromFullName(me?.fullName);
   const { push } = useRouter();
+  const isAdmin = me?.role === "ADMIN";
+
+  const handleLogout = () => {
+    signOut({ redirect: true, callbackUrl: '/' });
+  }
    
   const links = [
     {
@@ -28,6 +34,13 @@ const Profile:FC = () => {
       component: (<div> Documents </div>),
       onClick: () => {push('/documents')},
     },
+    ...(isAdmin ? [
+      {
+        key: 'admin',
+        component: (<div> Admin Console </div>),
+        onClick: () => {push('/adminconsole')},
+      },
+    ] : []),
     {
       key: 'logout',
       component: (
@@ -36,11 +49,9 @@ const Profile:FC = () => {
           <LogOut className="text-brand size-4" />
         </div>
       ),
-      onClick: () => {handleLogout()},
+      onClick: handleLogout,
     },
   ]
-
-  const handleLogout = () => { console.log('logout'); }
 
   if (!me) {
     return null;
@@ -52,10 +63,10 @@ const Profile:FC = () => {
     >
       <div className="flex flex-col gap-1 items-end">
         <div className="font-semibold text-sm">
-          {me.profile.fullName}
+          {me.fullName}
         </div>
         <div className="text-muted-foreground text-sm">
-          {me.profile.email}
+          {me.email}
         </div>
       </div>
       <div className="flex gap-10 items-center">
@@ -64,7 +75,7 @@ const Profile:FC = () => {
             className="size-10"
           >
             <AvatarImage
-              src={ me.profile.avatar }
+              src=""
             />
             <AvatarFallback>
               { nameFallback }
@@ -100,7 +111,7 @@ const Profile:FC = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={ ()=>{} }
+          onClick={ handleLogout }
           className="gap-2"
         >
           <LogOut />

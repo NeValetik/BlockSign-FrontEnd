@@ -29,13 +29,13 @@ const ProfileUpdateForm: FC = () => {
       },
     }
     return {
-      fullName: me.profile.fullName,
+      fullName: me.fullName,
       idnp: '',
-      email: me.profile.email,
-      avatar: me.profile.avatar,
+      email: me.email,
+      avatar: "",
       phone: {
-        code: me.profile.phone.code,
-        number: me.profile.phone.number,
+        code: '+373',
+        number: '',
       },
     }
   }, [ me ]);
@@ -61,9 +61,9 @@ const ProfileUpdateForm: FC = () => {
         <div className="mb-6">
           <h3 className="text-sm font-medium mb-3">Avatar</h3>
           <Avatar className="size-16">
-            <AvatarImage src={me?.profile.avatar} />
+            <AvatarImage src={""} />
             <AvatarFallback className="bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 text-white font-semibold text-lg">
-              {getUserShortFromFullName(me?.profile.fullName)}
+              {getUserShortFromFullName(me?.fullName)}
             </AvatarFallback>
           </Avatar>
         </div>

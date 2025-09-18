@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 import { Metadata } from "next";
 import { useTranslation } from "../../lib/i18n";
 import { dir } from "i18next";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@/lib/auth/authConfig";
+import { fetchFromServer } from "@/utils/fetchFromServer";
 
 import "../globals.css";
 import Providers from "@/components/Providers";
@@ -21,7 +24,23 @@ const RootLayout:FC<{
 }) => {
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('locale')?.value || 'en';
-  const token = cookieStore.get('accessToken')?.value || '';
+  const session = await getServerSession(authConfig);
+  const token = session?.user?.token?.accessToken;
+  let me = null;
+  try {
+    if (token) {
+      const resp = await fetchFromServer(`/api/v1/user/me`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      me = resp.user;
+    }
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+  }
   // eslint-disable-next-line react-hooks/rules-of-hooks
   await useTranslation( cookieLocale, [ 'common' ] );
 
@@ -30,7 +49,9 @@ const RootLayout:FC<{
       <body>
         <Providers
           locale={ cookieLocale }
-          token={ token }
+          token={ token || '' }
+          session={ session }
+          me={ me }
         >
           <Header />
             {/* <Suspense fallback={ <div>Loading...</div> }> */}

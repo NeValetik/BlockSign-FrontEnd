@@ -12,7 +12,6 @@ type DocumentViewState = 'upload' | 'verify';
 const DocumentsView: FC = () => {
 
   const { me } = useUserContext();
-
   const tabs: {
     value: DocumentViewState;
     labelComponent: string | React.ReactNode;
