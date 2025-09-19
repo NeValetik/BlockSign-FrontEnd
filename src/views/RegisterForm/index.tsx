@@ -49,13 +49,21 @@ const RegisterForm = () => {
   });
 
   const onSubmit = async (data: IRegisterForm) => {
-    // TODO: handle error
     await mutateAsync(data, {
       onSuccess: () => {
         push(`/register/confirm-email?email=${data.email}`)
       },
-      onError: () => {
-        setError('email', { message: 'Something went wrong' });
+      onError: (error: any) => {
+        // Handle specific error cases
+        if (error?.status === 409) {
+          setError('email', { message: 'Email already exists. Please use a different email address.' });
+        } else if (error?.status === 400) {
+          setError('email', { message: 'Invalid email format. Please check your email address.' });
+        } else if (error?.status === 429) {
+          setError('email', { message: 'Too many requests. Please try again later.' });
+        } else {
+          setError('email', { message: 'Registration failed. Please try again.' });
+        }
       }
     });
   }
@@ -98,7 +106,7 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Email address</FormLabel>
                 <FormControl>
-                  <InputEmail {...field} />
+                  <InputEmail {...field} placeholder="Enter your email address" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -79,7 +79,7 @@ const ProfileUpdateForm: FC = () => {
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Account name"
+                    placeholder="Enter your full name"
                     {...field}
                   />
                 </FormControl>
@@ -94,7 +94,7 @@ const ProfileUpdateForm: FC = () => {
                 <FormLabel>Idnp</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="1273651672"
+                    placeholder="Enter your IDNP (13 digits)"
                     {...field}
                   />
                 </FormControl>
@@ -110,7 +110,7 @@ const ProfileUpdateForm: FC = () => {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="email@example.com"
+                    placeholder="Enter your email address"
                     {...field}
                   />
                 </FormControl>
@@ -123,7 +123,7 @@ const ProfileUpdateForm: FC = () => {
             variant="brand"
             type="submit" 
           >
-            Save changed
+Save changes
           </Button>
         </form>
       </Form>

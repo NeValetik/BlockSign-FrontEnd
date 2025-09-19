@@ -73,7 +73,7 @@ const LoginMnemonicForm = () => {
               <FormItem>
                 <FormLabel>Mnemonic phrase</FormLabel>
                 <FormControl>
-                  <InputText {...field} />
+                  <InputText {...field} placeholder="Enter your 12-word mnemonic phrase" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

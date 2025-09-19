@@ -134,7 +134,7 @@ const RegisterIdentityForm = () => {
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <InputText {...field} />
+                  <InputText {...field} placeholder="Enter your full name" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -148,7 +148,7 @@ const RegisterIdentityForm = () => {
                 <FormControl>
                   <InputText 
                     {...field} 
-                    placeholder="12366127364"
+                    placeholder="Enter your 13-digit IDNP"
                     maxLength={13}
                   />
                 </FormControl>

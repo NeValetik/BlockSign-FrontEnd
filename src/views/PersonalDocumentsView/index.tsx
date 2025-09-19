@@ -6,18 +6,18 @@ import DocumentsList from "./components/DocumentsList";
 
 const data: DocumentCardProps[] = [
   {
-    title: 'Document 1',
-    image: '/',
+    title: 'Contract Agreement',
+    image: '/static/file.svg',
     state: DocumentState.Pending,
   },
   {
-    title: 'Document 2',
-    image: '/',
+    title: 'Terms of Service',
+    image: '/static/file.svg',
     state: DocumentState.Signed,
   },
   {
-    title: 'Document 3',
-    image: '/',
+    title: 'Privacy Policy',
+    image: '/static/file.svg',
     state: DocumentState.Rejected,
   },
 ];
