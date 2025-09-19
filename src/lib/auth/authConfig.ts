@@ -46,19 +46,17 @@ interface User {
   };
 }
 
-async function refreshAccessToken(token: CustomJWT): Promise<CustomJWT> {
+const refreshAccessToken = async (token: CustomJWT): Promise<CustomJWT> => {
   try {
-    // NextAuth JWT callback runs server-side, so we can use server environment variables
-    const apiUrl = process.env.API_URL || 'http://localhost:4000';
+    const apiUrl = process.env.API_URL;
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'X-Auth-Type': 'nextauth',
     };
 
-    // If we have a refresh token, send it in Authorization header
     if (token.refreshToken) {
-      headers['Authorization'] = `Bearer ${token.refreshToken}`;
+      headers.cookie = `refresh_token=${token.refreshToken}`;
     } 
 
     const response = await fetch(`${apiUrl}/api/v1/auth/refresh`, {
@@ -78,7 +76,7 @@ async function refreshAccessToken(token: CustomJWT): Promise<CustomJWT> {
       ...token,
       accessToken: data.accessToken,
       refreshToken: data.refreshToken || token.refreshToken, // Use new refresh token if provided
-      expiresAt: Date.now() + (15 * 60 * 1000), // 15 minutes from now
+      expiresAt: Date.now() + (14 * 60 * 1000), // 15 minutes from now
       error: null,
     };
   } catch (error) {
@@ -115,7 +113,7 @@ export const authConfig:NextAuthOptions = {
           const token = {
             accessToken: authResult.accessToken,
             refreshToken: authResult.refreshToken,
-            expiresIn: 15 * 60 // 15 minutes in seconds
+            expiresIn: 14 * 60 // 15 minutes in seconds
           }
 
           return {
@@ -163,7 +161,7 @@ export const authConfig:NextAuthOptions = {
         customToken.user = user as User;
         customToken.accessToken = (user as User)?.token?.accessToken;
         customToken.refreshToken = (user as User)?.token?.refreshToken;
-        customToken.expiresAt = Date.now() + (15 * 60 * 1000); // 15 minutes from now instead of using expiresIn
+        customToken.expiresAt = Date.now() + (14 * 60 * 1000); // 15 minutes from now instead of using expiresIn
         customToken.error = null;
       }
       
@@ -186,7 +184,7 @@ export const authConfig:NextAuthOptions = {
         token: {
           accessToken: customToken.accessToken || '',
           refreshToken: customToken.refreshToken || '',
-          expiresIn: 15 * 60 // 15 minutes in seconds
+          expiresIn: 14 * 60// 15 minutes in seconds
         },
       };
       
