@@ -6,6 +6,7 @@ export interface IRegisterIdentityForm {
     code: string;
     number: string;
   };
+  username: string;
   // birthDate: string;
   // selfie: File | undefined;
 }

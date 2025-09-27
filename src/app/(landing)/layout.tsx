@@ -37,6 +37,7 @@ const RootLayout:FC<{
         },
       });
       me = resp.user;
+      console.log(me);
     }
   } catch (error) {
     console.error('Error fetching user profile:', error);

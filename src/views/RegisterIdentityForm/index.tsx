@@ -32,6 +32,7 @@ const RegisterIdentityForm = () => {
       code: "",
       number: "",
     },
+    username: "",
     // birthDate: "",
     // selfie: undefined,
   }
@@ -63,8 +64,8 @@ const RegisterIdentityForm = () => {
   });
 
   const onSubmit = async (data: IRegisterIdentityForm) => {
-    const { idnp, email, fullName, phone } = data;
-    await mutateAsync({ idnp, email, fullName, phone }, {
+    const { idnp, email, fullName, phone, username } = data;
+    await mutateAsync({ idnp, email, fullName, phone, username }, {
       onSuccess: () => {
         setIsSuccess(true);
       },
@@ -135,6 +136,17 @@ const RegisterIdentityForm = () => {
                 <FormLabel>Full Name</FormLabel>
                 <FormControl>
                   <InputText {...field} placeholder="Enter your full name" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+          <FormField name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <InputText {...field} placeholder="test_username1234" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -13,6 +13,11 @@ export const schema = z.object({
     .regex(/^\d{13}$/, { message: idnpErrorMessage }),
   fullName: z.string().min(1, { message: "Full name is required" }),
   phone: phoneSchema,
+  username: z.string()
+    .min(3, "Username must be at least 3 characters long")
+    .max(50, "Username must be less than 50 characters")
+    .regex(/^[a-zA-Z0-9._-]+$/, "Username must contain only letters, numbers, dots, and dashes" )
+    .transform(val => val.toLowerCase()),
   // birthDate: z
   //   .string()
   //   .min(1, { message: birthDateErrorMessage }),

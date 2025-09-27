@@ -39,6 +39,7 @@ interface User {
   name: string;
   image?: string;
   loginName?: string;
+  username?: string;
   token?: {
     accessToken: string;
     refreshToken: string; 

@@ -75,15 +75,12 @@ export async function authenticateWithMnemonic(
       },
       body: JSON.stringify(completeRequest),
     }) as { accessToken: string, refreshToken: string, user: { id: string, email: string, name: string } };
+    console.log(authResponse);
 
     // Return user data in NextAuth expected format
     return {
       accessToken: authResponse.accessToken,
-      user: {
-        id: email, // Using email as ID, adjust based on your backend response
-        email: email,
-        name: email.split('@')[0], // Extract username from email as default name
-      },
+      user: authResponse.user,
       refreshToken: authResponse.refreshToken,
     };
 

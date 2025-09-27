@@ -53,6 +53,7 @@ const RegisterForm = () => {
       onSuccess: () => {
         push(`/register/confirm-email?email=${data.email}`)
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (error: any) => {
         // Handle specific error cases
         if (error?.status === 409) {
