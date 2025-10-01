@@ -1,7 +1,6 @@
 import { FC, ReactNode } from "react";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
-import { useTranslation } from "../../lib/i18n";
 import { dir } from "i18next";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/lib/auth/authConfig";
@@ -42,8 +41,6 @@ const RootLayout:FC<{
   } catch (error) {
     console.error('Error fetching user profile:', error);
   }
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  await useTranslation( cookieLocale, [ 'common' ] );
 
   return (
     <html lang="en" dir={dir(cookieLocale)}>

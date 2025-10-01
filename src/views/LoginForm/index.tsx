@@ -14,6 +14,9 @@ import { useState } from "react";
 
 // import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
+import Link from "next/link";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 // import Link from "next/link";
 
 const DefaultValues: ILoginForm = {
@@ -27,7 +30,8 @@ const LoginForm = () => {
   });
   const { push } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale);
   const { handleSubmit, setError } = form;
 
   const onSubmit = async (data: ILoginForm) => {
@@ -64,22 +68,22 @@ const LoginForm = () => {
             variant="outline"
             size="sm"
           >
-            <SiFacebook />
-            <span>Sign in with Facebook</span>
+            <SiFacebook className="size-5" />
+            <span>{t('auth.login.social.facebook')}</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
-            <SiGoogle />
-            <span>Sign in with Google</span>
+            <SiGoogle className="size-5" />
+            <span>{t('auth.login.social.google')}</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
-            <SiApple />
-            <span>Sign in with Apple</span>
+            <SiApple className="size-5" />
+            <span>{t('auth.login.social.apple')}</span>
           </Button>
 
         </div>
@@ -92,7 +96,7 @@ const LoginForm = () => {
           <FormField name="loginName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Login Name</FormLabel>
+                <FormLabel>{t('auth.login.email')}</FormLabel>
                 <FormControl>
                   <InputEmail {...field} placeholder="Enter your email address" />
                 </FormControl>
@@ -130,25 +134,29 @@ const LoginForm = () => {
             />
           </div> */}
           <Button type="submit" variant="brand" disabled={isLoading}>
-            {isLoading ? "Checking..." : "Login"}
+            {isLoading ? "Checking..." : t('auth.login.submit')}
           </Button>
         </div>
         <Separator />
         <div className="flex flex-col gap-4 items-center">
-          <span className="font-medium text-2xl">Do not have an account?</span>
-          <Button
-            variant="outline"
-            size="sm"
-            className="
-              w-full !border-brand text-brand 
-              hover:text-brand-muted 
-              hover:border-brand-muted
-            "
-            type="button"
-            onClick={() => push("/register")}
+          <span className="font-medium text-2xl">{t('auth.login.noAccount')}{' '}</span>
+          <Link
+            href="/register" 
+            className="flex flex-col w-full items-center"
           >
-            Sign up
-          </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="
+                w-full !border-brand text-brand 
+                hover:text-brand-muted 
+                hover:border-brand-muted
+              "
+              type="button"
+            >
+              {t('auth.login.signUp')}
+            </Button>
+          </Link>
         </div>
       </form>
     </Form>
