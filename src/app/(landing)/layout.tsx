@@ -2,6 +2,9 @@ import { FC, ReactNode } from "react";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
 import { dir } from "i18next";
+import { getServerSession } from "next-auth";
+import { authConfig } from "@/lib/auth/authConfig";
+import { fetchFromServer } from "@/utils/fetchFromServer";
 
 import "../globals.css";
 import Providers from "@/components/Providers";
@@ -20,15 +23,38 @@ const RootLayout:FC<{
 }) => {
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('locale')?.value || 'en';
+  const session = await getServerSession(authConfig);
+  const token = session?.user?.token?.accessToken;
+  let me = null;
+  try {
+    if (token) {
+      const resp = await fetchFromServer(`/api/v1/user/me`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      me = resp.user;
+      console.log(me);
+    }
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+  }
 
   return (
     <html lang="en" dir={dir(cookieLocale)}>
       <body>
         <Providers
           locale={ cookieLocale }
+          token={ token || '' }
+          session={ session }
+          me={ me }
         >
           <Header />
-            {children}
+            {/* <Suspense fallback={ <div>Loading...</div> }> */}
+          { children }
+            {/* </Suspense> */}
           <Footer />
         </Providers>
       </body>

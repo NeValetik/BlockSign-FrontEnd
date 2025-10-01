@@ -6,23 +6,50 @@ import { schema } from "./schema";
 import { IConfirmEmailForm } from "./types";
 import { Form, FormControl, FormField, FormItem } from "@/components/FormWrapper";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/Form/InputOTP";
+import { useMutation } from "@tanstack/react-query";
+import { fetchFromServer } from "@/utils/fetchFromServer";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import Button from "@/components/Form/Button";
 
-const DefaultValues: IConfirmEmailForm = {
-  code: "",
-}
 
 const ConfirmEmailForm = () => {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  
+  const defaultValues: IConfirmEmailForm = {
+    code: "",
+    email: email || "",
+  }
   const form = useForm<IConfirmEmailForm>({ 
-    defaultValues: DefaultValues,
+    defaultValues: defaultValues,
     resolver: zodResolver(schema)
   });
-  
-  const { handleSubmit } = form;
+  const { push } = useRouter();
+  const { handleSubmit, setError } = form;
 
-  const onSubmit = (data: IConfirmEmailForm) => {
-    console.log(data);
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (data: IConfirmEmailForm) => {
+      const response = await fetchFromServer('/api/v1/registration/request/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      return response;
+    },
+  });
+
+  const onSubmit = async (data: IConfirmEmailForm) => {
+    await mutateAsync(data, {
+      onSuccess: () => {
+        push(`/register/identity?email=${email}`);
+      },
+      onError: () => {
+        setError('code', { message: 'Invalid code' });
+      }
+    });
   }
 
   return (
@@ -37,7 +64,7 @@ const ConfirmEmailForm = () => {
           <span className="text-3xl font-medium">Confirm your email</span>
           <span className="max-w-[510px] text-muted-foreground text-pretty">
             To finish the first step registration write the code sent 
-            to email <span className="text-brand">&lt;email@example.com&gt;</span>
+            to email <span className="text-brand">&lt;{email}&gt;</span>
           </span>
         </div>
         <FormField 
@@ -69,8 +96,9 @@ const ConfirmEmailForm = () => {
           variant="brand"
           className="w-[210px]"
           type="submit"
+          disabled={isPending}
         >
-          Confirm
+          {isPending ? 'Confirming...' : 'Confirm'}
         </Button>
       </form>
     </Form>

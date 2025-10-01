@@ -17,7 +17,7 @@ const DefaultValues: IResetPasswordForm = {
   confirmPassword: "",
 }
 
-const RegisterForm = () => {
+const ResetPasswordForm = () => {
   const form = useForm<IResetPasswordForm>({ 
     defaultValues: DefaultValues,
     resolver: zodResolver(schema)
@@ -33,7 +33,7 @@ const RegisterForm = () => {
         className="flex flex-col flex-grow gap-12"
       >
         <h2 className="text-3xl font-medium text-center">
-          Register an account
+          Reset your password
         </h2>
         <div className="flex flex-col gap-4">
           <Button
@@ -41,21 +41,21 @@ const RegisterForm = () => {
             size="sm"
           >
             <SiFacebook />
-            <span>Sign in with Facebook</span>
+            <span>Reset with Facebook</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
             <SiGoogle />
-            <span>Sign in with Google</span>
+            <span>Reset with Google</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
             <SiApple />
-            <span>Sign in with Apple</span>
+            <span>Reset with Apple</span>
           </Button>
 
         </div>
@@ -70,7 +70,7 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Code</FormLabel>
                 <FormControl>
-                  <InputEmail {...field} />
+                  <InputEmail {...field} placeholder="Enter verification code" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -82,19 +82,19 @@ const RegisterForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <InputPassword {...field} />
+                  <InputPassword {...field} placeholder="Enter new password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )} 
           />
           <FormField 
-            name="password"
+            name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <InputPassword {...field} />
+                  <InputPassword {...field} placeholder="Confirm new password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,7 +106,7 @@ const RegisterForm = () => {
         </div>
         <Separator />
         <div className="flex flex-col gap-4 items-center">
-          <span className="font-medium text-2xl">Do not have an account?</span>
+          <span className="font-medium text-2xl">Remember your password?</span>
           <Button
             variant="outline"
             size="sm"
@@ -116,7 +116,7 @@ const RegisterForm = () => {
               hover:border-brand-muted
             "
           >
-            Sign up
+            Back to Login
           </Button>
         </div>
       </form>
@@ -124,4 +124,4 @@ const RegisterForm = () => {
   )
 }
 
-export default RegisterForm;
+export default ResetPasswordForm;

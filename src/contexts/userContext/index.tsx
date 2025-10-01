@@ -2,15 +2,15 @@
 
 import { createContext, useContext, useMemo } from "react";
 
-interface UserContextProps {
+export interface UserContextProps {
   me: {
+    role: string;
+    email: string;
     id: string;
-    profile: {
-      email: string;
-      fullName: string;
-      avatar: string;
-      role: string;
-    }
+    createdAt: Date;
+    fullName: string;
+    status: string;
+    updatedAt: Date;
   } | null;
 }
 
@@ -20,10 +20,7 @@ export const UserContextProvider: React.FC<{
   me: UserContextProps['me'];
   children: React.ReactNode;
 }> = ({ children, me }) => {
-  const contextValue = useMemo(
-    () => ({ me }),
-    [me],
-  );
+  const contextValue = useMemo(() => ({ me }), [me]);
 
   return (
     <UserContext.Provider value={contextValue}>

@@ -1,14 +1,21 @@
-'use client';
+'use client'
+
 
 import { ArrowRight, Shield, CheckCircle, Lock, Users, Globe, Zap, Star, Award } from "lucide-react";
+import { useLocale } from "@/contexts/LocaleContext";
+import { useTranslation } from "../../lib/i18n/client";
 
 import Container from "@/components/Container";
 import Button from "@/components/Form/Button";
 import Image from "next/image";
-import { useClientTranslation } from "@/hooks/useLocale";
 
 const LandingPage = () => {
-  const { t } = useClientTranslation();
+  const { locale } = useLocale();
+  const { t } = useTranslation( locale, [ 'landing' ] );
+  const stars = Array.from({ length: 5 }, (_, i) => (
+    <Star key={i} className="size-4 fill-yellow-400 text-yellow-400" />
+  ))
+
   return (
     <Container className="relative px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 sm:py-12 md:py-16 lg:py-20 flex flex-col gap-16 sm:gap-20 md:gap-24 lg:gap-32 xl:gap-40 items-center">
       {/* Background with mobile optimization */}
@@ -20,7 +27,6 @@ const LandingPage = () => {
             width={1200} 
             height={1000} 
             className="w-full h-full object-cover"
-            priority
           />
         </div>
         {/* Gradient overlay for better text readability */}
@@ -48,21 +54,21 @@ const LandingPage = () => {
         
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md sm:max-w-none sm:w-auto mb-8">
-            <Button
-              variant="brand"
+          <Button
+            variant="brand"
             size="lg"
             className="w-full sm:w-auto px-8 py-4 text-lg font-semibold"
-            >
+          >
             {t('landing.hero.cta.primary')}
             <ArrowRight className="ml-2" />
-            </Button>
-            <Button
+          </Button>
+          <Button
             variant="outline"
             size="lg"
             className="w-full sm:w-auto px-8 py-4 text-lg"
-            >
+          >
             {t('landing.hero.cta.secondary')}
-            </Button>
+          </Button>
         </div>
         
         {/* Trust Indicators */}
@@ -95,9 +101,9 @@ const LandingPage = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 w-full max-w-7xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 w-full">
           {/* Feature 1 */}
-          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50 hover:border-brand/30 transition-all duration-300">
+          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="text-brand-foreground w-14 h-14 flex items-center justify-center bg-brand rounded-2xl shadow-lg">
               <Lock className="size-7"/>
             </div>
@@ -112,7 +118,7 @@ const LandingPage = () => {
           </div>
           
           {/* Feature 2 */}
-          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50 hover:border-brand/30 transition-all duration-300">
+          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="text-brand-foreground w-14 h-14 flex items-center justify-center bg-brand rounded-2xl shadow-lg">
               <CheckCircle className="size-7"/>
             </div>
@@ -127,7 +133,7 @@ const LandingPage = () => {
           </div>
           
           {/* Feature 3 */}
-          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50 hover:border-brand/30 transition-all duration-300">
+          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="text-brand-foreground w-14 h-14 flex items-center justify-center bg-brand rounded-2xl shadow-lg">
               <Shield className="size-7"/>
             </div>
@@ -142,7 +148,7 @@ const LandingPage = () => {
           </div>
           
           {/* Feature 4 */}
-          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50 hover:border-brand/30 transition-all duration-300">
+          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="text-brand-foreground w-14 h-14 flex items-center justify-center bg-brand rounded-2xl shadow-lg">
               <Users className="size-7"/>
             </div>
@@ -157,7 +163,7 @@ const LandingPage = () => {
           </div>
           
           {/* Feature 5 */}
-          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50 hover:border-brand/30 transition-all duration-300">
+          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="text-brand-foreground w-14 h-14 flex items-center justify-center bg-brand rounded-2xl shadow-lg">
               <Globe className="size-7"/>
             </div>
@@ -172,7 +178,7 @@ const LandingPage = () => {
           </div>
           
           {/* Feature 6 */}
-          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50 hover:border-brand/30 transition-all duration-300">
+          <div className="flex flex-col gap-4 sm:gap-6 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="text-brand-foreground w-14 h-14 flex items-center justify-center bg-brand rounded-2xl shadow-lg">
               <Zap className="size-7"/>
             </div>
@@ -184,10 +190,9 @@ const LandingPage = () => {
                 {t('landing.features.security.description')}
               </p>
               </div>
-                </div>
-                </div>
-              </div>
-      
+            </div>
+          </div>
+        </div>
       {/* Testimonials Section */}
       <div className="flex flex-col gap-12 sm:gap-16 items-center w-full">
         <div className="flex flex-col gap-4 sm:gap-6 items-center max-w-4xl w-full text-center">
@@ -206,9 +211,7 @@ const LandingPage = () => {
           {/* Testimonial 1 */}
           <div className="flex flex-col gap-4 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="flex items-center gap-1 mb-2">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="size-4 fill-yellow-400 text-yellow-400" />
-              ))}
+              {stars}
             </div>
             <p className="text-muted-foreground text-sm sm:text-base leading-relaxed italic">
               &ldquo;{t('landing.testimonials.testimonial1')}&rdquo;
@@ -227,9 +230,7 @@ const LandingPage = () => {
           {/* Testimonial 2 */}
           <div className="flex flex-col gap-4 p-6 sm:p-8 bg-card/50 rounded-2xl border border-border/50">
             <div className="flex items-center gap-1 mb-2">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="size-4 fill-yellow-400 text-yellow-400" />
-              ))}
+              
             </div>
             <p className="text-muted-foreground text-sm sm:text-base leading-relaxed italic">
               &ldquo;{t('landing.testimonials.testimonial2')}&rdquo;

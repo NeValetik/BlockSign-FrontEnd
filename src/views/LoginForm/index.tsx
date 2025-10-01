@@ -3,150 +3,163 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputEmail, InputPassword } from "@/components/Form/Input";
-import { SeparatorWithText } from "@/components/Form/Separator";
-import { SiApple, SiGoogle } from '@icons-pack/react-simple-icons';
+import { InputEmail } from "@/components/Form/Input";
+import { Separator, SeparatorWithText } from "@/components/Form/Separator";
+import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { ILoginForm } from "./types";
+import { useRouter } from "next/navigation";
+import { getAuthChallenge } from "@/lib/auth/mnemonicAuth";
+import { useState } from "react";
 
-import Checkbox from "@/components/Form/Checkbox";
+// import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
 import Link from "next/link";
-import { useClientTranslation } from "@/hooks/useLocale";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
+// import Link from "next/link";
 
 const DefaultValues: ILoginForm = {
   loginName: "",
-  password: "",
-  remember: false,
 }
 
 const LoginForm = () => {
-  const { t } = useClientTranslation();
   const form = useForm<ILoginForm>({ 
     defaultValues: DefaultValues,
     resolver: zodResolver(schema)
   });
-  
-  const { handleSubmit } = form;
+  const { push } = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale);
+  const { handleSubmit, setError } = form;
 
-  const onSubmit = (data: ILoginForm) => {
-    console.log(data);
+  const onSubmit = async (data: ILoginForm) => {
+    setIsLoading(true);
+    try {
+      // Validate email and get challenge (optional step for UX)
+      const challenge = await getAuthChallenge(data.loginName);
+      
+      if (!challenge) {
+        setError('loginName', { message: 'Invalid email or user not found' });
+        return;
+      }
+      
+      // Redirect to mnemonic form with email parameter
+      push(`/login/mnemonic?email=${encodeURIComponent(data.loginName)}`);
+    } catch {
+      setError('loginName', { message: 'Authentication failed. Please check your email.' });
+    } finally {
+      setIsLoading(false);
+    }
   }
-  
+
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
-            {t('auth.login.title')}
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {t('auth.login.subtitle')}
-          </p>
-        </div>
-
-        <Form {...form}>
-          <form 
-            onSubmit={handleSubmit(onSubmit)} 
-            className="space-y-6"
+    <Form {...form}>
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className="flex flex-col flex-grow gap-12"
+      >
+        <h2 className="text-3xl font-medium text-center">
+          Login to your account
+        </h2>
+        <div className="flex flex-col gap-4">
+          <Button
+            variant="outline"
+            size="sm"
           >
-            <div className="space-y-3">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full h-12"
-              >
-                <SiGoogle className="size-5" />
-                <span>{t('auth.login.social.google')}</span>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full h-12"
-              >
-                <SiApple className="size-5" />
-                <span>{t('auth.login.social.apple')}</span>
-              </Button>
-            </div>
+            <SiFacebook className="size-5" />
+            <span>{t('auth.login.social.facebook')}</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            <SiGoogle className="size-5" />
+            <span>{t('auth.login.social.google')}</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            <SiApple className="size-5" />
+            <span>{t('auth.login.social.apple')}</span>
+          </Button>
 
-            <div className="relative">
-              <SeparatorWithText textClassName="text-muted-foreground text-sm">
-                <span>{t('auth.login.or')}</span>
-              </SeparatorWithText>
-            </div>
-
-            <div className="space-y-4">
-              <FormField 
-                name="loginName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('auth.login.email')}</FormLabel>
-                    <FormControl>
-                      <InputEmail {...field} className="h-12" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} 
-              />
-              
+        </div>
+        <div>
+          <SeparatorWithText textClassName="text-muted-foreground uppercase text-base">
+            <span>Or</span>
+          </SeparatorWithText>
+        </div>
+        <div className="flex flex-col gap-6">
+          <FormField name="loginName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('auth.login.email')}</FormLabel>
+                <FormControl>
+                  <InputEmail {...field} placeholder="Enter your email address" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+          {/* <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               <FormField 
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('auth.login.password')}</FormLabel>
+                    <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <InputPassword {...field} className="h-12" />
+                      <InputPassword {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )} 
               />
-
-              <div className="flex items-center justify-between">
-                <FormField 
-                  name="remember"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center space-x-2">
-                      <FormControl>
-                        <Checkbox {...field} />
-                      </FormControl>
-                      <FormLabel className="text-sm">{t('auth.login.remember')}</FormLabel>
-                    </FormItem>
-                  )} 
-                />
-                <Link 
-                  href="/reset-password" 
-                  className="text-sm text-brand hover:text-brand/80 transition-colors"
-                >
-                  {t('auth.login.forgot')}
-                </Link>
-              </div>
-
-              <Button 
-                type="submit" 
-                variant="brand" 
-                size="lg"
-                className="w-full h-12 text-base font-semibold"
-              >
-                {t('auth.login.submit')}
-              </Button>
+              <Link href="/reset-password" className="underline text-brand text-base w-full flex justify-end">
+                Forgot Password?
+              </Link>
             </div>
-
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground">
-                {t('auth.login.noAccount')}{' '}
-                <Link 
-                  href="/register" 
-                  className="text-brand hover:text-brand/80 font-semibold transition-colors"
-                >
-                  {t('auth.login.signUp')}
-                </Link>
-              </p>
-            </div>
-          </form>
-        </Form>
-      </div>
-    </div>
+            <FormField name="remember"
+              render={({ field }) => (
+                <FormItem className="flex items-center gap-2">
+                  <FormControl>
+                    <Checkbox {...field} />
+                  </FormControl>
+                  <FormLabel>Remember</FormLabel>
+                </FormItem>
+              )} 
+            />
+          </div> */}
+          <Button type="submit" variant="brand" disabled={isLoading}>
+            {isLoading ? "Checking..." : t('auth.login.submit')}
+          </Button>
+        </div>
+        <Separator />
+        <div className="flex flex-col gap-4 items-center">
+          <span className="font-medium text-2xl">{t('auth.login.noAccount')}{' '}</span>
+          <Link
+            href="/register" 
+            className="flex flex-col w-full items-center"
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className="
+                w-full !border-brand text-brand 
+                hover:text-brand-muted 
+                hover:border-brand-muted
+              "
+              type="button"
+            >
+              {t('auth.login.signUp')}
+            </Button>
+          </Link>
+        </div>
+      </form>
+    </Form>
   )
 }
 

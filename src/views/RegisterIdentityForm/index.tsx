@@ -6,37 +6,114 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { InputText, InputFile } from "@/components/Form/Input";
 import { schema } from "./schema";
 import { IRegisterIdentityForm } from "./types";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { fetchFromServer } from "@/utils/fetchFromServer";
+import { useMutation } from "@tanstack/react-query";
+import { Check } from "lucide-react";
 
 import Button from "@/components/Form/Button";
 import DatePicker from "@/components/Form/DatePicker";
+import FormPhoneField from "@/components/Form/FormPhoneField";
+import Link from "next/link";
 
-const DefaultValues: IRegisterIdentityForm = {
-  idnp: "",
-  birthDate: "",
-  selfie: undefined,
-}
 
 const RegisterIdentityForm = () => {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  // const { push } = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const defaultValues: IRegisterIdentityForm = {
+    idnp: "",
+    email: email || "",
+    fullName: "",
+    phone: {
+      code: "",
+      number: "",
+    },
+    username: "",
+    // birthDate: "",
+    // selfie: undefined,
+  }
+  
   const form = useForm<IRegisterIdentityForm>({ 
-    defaultValues: DefaultValues,
+    defaultValues: defaultValues,
     resolver: zodResolver(schema)
   });
 
-  const { handleSubmit, setValue } = form;
+  const { 
+    handleSubmit, 
+    // setValue,
+    setError
+  } = form;
 
-  const onSubmit = (data: IRegisterIdentityForm) => {
-    console.log(data);
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (data: IRegisterIdentityForm) => {
+      const { phone, ...rest } = data;
+      const body = {...rest, phone: `${phone.code}${phone.number}`}
+      const response = await fetchFromServer('/api/v1/registration/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      return response;
+    },
+  });
+
+  const onSubmit = async (data: IRegisterIdentityForm) => {
+    const { idnp, email, fullName, phone, username } = data;
+    await mutateAsync({ idnp, email, fullName, phone, username }, {
+      onSuccess: () => {
+        setIsSuccess(true);
+      },
+      onError: () => {
+        setError('idnp', { message: 'Invalid IDNP' });
+      }
+    });
   }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setValue("selfie", file);
-    }
+  const handleFileChange = () => {
+    // const file = event.target.files?.[0];
+    // if (file) {
+    //   setValue("selfie", file);
+    // }
   }
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  if (isSuccess) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <div className="bg-green-100 border border-green-200 rounded-lg p-6 max-w-md w-full">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-1">
+              <Check className="text-white size-4" />
+            </div>
+            <div className="flex-1">
+              <p className="text-brand-muted font-medium text-base leading-relaxed">
+                Thank you for completing the registration form! Your request will be processed within 1 business day. 
+                You will receive an additional message regarding account activation via email.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-8 text-center max-w-md">
+          <p className="text-foreground mb-4">
+            In the meantime, we encourage you to explore the <Link href="/"><span className="text-brand font-medium">Landing</span></Link>
+          </p>
+          
+          <p className="text-foreground">
+            If you wish to verify your account status or have additional questions, please contact us using the contact details 
+            in the <Link href="/"><span className="text-brand font-medium">Contact</span></Link> section.
+          </p>
+        </div>
+      </div>
+    )
+  }
   
   return (
     <Form {...form}>
@@ -53,6 +130,29 @@ const RegisterIdentityForm = () => {
         </div>
         
         <div className="flex flex-col gap-6">
+          <FormField name="fullName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full Name</FormLabel>
+                <FormControl>
+                  <InputText {...field} placeholder="Enter your full name" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+          <FormField name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <InputText {...field} placeholder="test_username1234" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} 
+          />
+          <FormPhoneField name="phone" />
           <FormField name="idnp"
             render={({ field }) => (
               <FormItem>
@@ -60,7 +160,7 @@ const RegisterIdentityForm = () => {
                 <FormControl>
                   <InputText 
                     {...field} 
-                    placeholder="12366127364"
+                    placeholder="Enter your 13-digit IDNP"
                     maxLength={13}
                   />
                 </FormControl>
@@ -119,8 +219,8 @@ const RegisterIdentityForm = () => {
           <span className="text-sm">
             The credentials are only used to verify the identity, then they are deleted
           </span>
-          <Button type="submit" variant="brand">
-            Confirm
+          <Button type="submit" variant="brand" disabled={isPending}>
+            {isPending ? "Confirming..." : "Confirm"}
           </Button>
         </div>
       </form>

@@ -2,30 +2,32 @@
 
 import { useUserContext } from "@/contexts/userContext";
 import { FC } from "react"
-import { AvatarImage } from "../Form/Avatar/components/AvatarImage";
+import { AvatarImage } from "../Avatar/components/AvatarImage";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuTrigger } from "../Form/DropDown";
-import { ChevronDown, LogOut, User, FileText, Settings } from "lucide-react";
-
-import Avatar from "@/components/Form/Avatar";
-import AvatarFallback from "../Form/Avatar/components/AvatarFallback";
-import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
+import { ChevronDown, FileText, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+
+import Avatar from "@/components/Avatar";
+import AvatarFallback from "../Avatar/components/AvatarFallback";
+import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
+import Button from "../Form/Button";
 
 const Profile:FC = () => {
   const { me } = useUserContext();
-  const nameFallback = getUserShortFromFullName(me?.profile.fullName);
+  const nameFallback = getUserShortFromFullName(me?.fullName);
   const { push } = useRouter();
+  const isAdmin = me?.role === "ADMIN";
+
+  const handleLogout = () => {
+    signOut({ redirect: true, callbackUrl: '/' });
+  }
    
   const links = [
     {
       key: 'profile',
-      component: (
-        <div className="flex items-center gap-2">
-          <User className="size-4" />
-          <span>Profile</span>
-        </div>
-      ),
-      onClick: () => {push('/profile')},
+      component: (<div> Profile </div>),
+      onClick: () => {push('/account/profile')},
     },
     {
       key: 'documents',
@@ -37,16 +39,13 @@ const Profile:FC = () => {
       ),
       onClick: () => {push('/documents')},
     },
-    {
-      key: 'settings',
-      component: (
-        <div className="flex items-center gap-2">
-          <Settings className="size-4" />
-          <span>Settings</span>
-        </div>
-      ),
-      onClick: () => {push('/settings')},
-    },
+    ...(isAdmin ? [
+      {
+        key: 'admin',
+        component: (<div> Admin Console </div>),
+        onClick: () => {push('/adminconsole')},
+      },
+    ] : []),
     {
       key: 'logout',
       component: (
@@ -55,75 +54,91 @@ const Profile:FC = () => {
           <span>Logout</span>
         </div>
       ),
-      onClick: () => {handleLogout()},
+      onClick: handleLogout,
     },
   ]
-
-  const handleLogout = () => { 
-    console.log('logout'); 
-    // Add actual logout logic here
-  }
 
   if (!me) {
     return null;
   }
   
   return (
-    <div className="flex items-center gap-3">
-      {/* Desktop Profile */}
-      <div className="hidden md:flex items-center gap-3">
-        <div className="flex flex-col items-end text-right">
-          <div className="font-semibold text-sm text-foreground">
-            {me.profile.fullName}
+    <div>
+      <div className="hidden md:flex gap-2.5">
+        <div className="flex flex-col gap-1 items-end">
+          <div className="font-semibold text-sm">
+            {me.fullName}
           </div>
-          <div className="text-muted-foreground text-xs">
-            {me.profile.email}
+          <div className="text-muted-foreground text-sm">
+            {me.email}
           </div>
         </div>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent transition-colors">
-              <Avatar className="size-8">
-                <AvatarImage src={me.profile.avatar} />
-                <AvatarFallback className="text-xs">
-                  {nameFallback}
-                </AvatarFallback>
-              </Avatar>
-              <ChevronDown className="size-4 text-muted-foreground data-[state=open]:rotate-180 transition-transform duration-200" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48">
-            {links.map((link) => (
-              <DropdownMenuItem 
-                key={link.key}
-                onClick={link.onClick} 
-                className="cursor-pointer"
-              >
-                {link.component}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex gap-10 items-center">
+          <div className="flex gap-3 items-center">
+            <Avatar
+              className="size-10"
+            >
+              <AvatarImage
+                src=""
+              />
+              <AvatarFallback>
+                { nameFallback }
+              </AvatarFallback>
+            </Avatar>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <ChevronDown 
+                  className="
+                    size-6 text-brand cursor-pointer 
+                    data-[state=open]:-rotate-180 transition-transform 
+                    duration-200
+                  " 
+                />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {
+                  links.map((link) => {
+                    return (
+                      <DropdownMenuItem 
+                        key={link.key}
+                        onClick={link.onClick} 
+                        className="cursor-pointer"
+                      >
+                        {link.component}
+                      </DropdownMenuItem>
+                    )
+                  })
+                }
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={ handleLogout }
+            className="gap-2"
+          >
+            <LogOut />
+            Exit
+          </Button>
+        </div>
       </div>
-
-      {/* Mobile Profile */}
       <div className="md:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent transition-colors">
               <Avatar className="size-8">
-                <AvatarImage src={me.profile.avatar} />
+                <AvatarImage src="" />
                 <AvatarFallback className="text-xs">
                   {nameFallback}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start">
                 <div className="font-semibold text-sm text-foreground">
-                  {me.profile.fullName.split(' ')[0]}
+                  {me.fullName}
                 </div>
                 <div className="text-muted-foreground text-xs">
-                  {me.profile.email.split('@')[0]}
+                  {me.email}
                 </div>
               </div>
               <ChevronDown className="size-4 text-muted-foreground data-[state=open]:rotate-180 transition-transform duration-200 ml-auto" />
@@ -133,10 +148,10 @@ const Profile:FC = () => {
             {/* User Info Header */}
             <div className="px-3 py-2 border-b border-border">
               <div className="font-semibold text-sm text-foreground">
-                {me.profile.fullName}
+                {me.fullName}
               </div>
               <div className="text-muted-foreground text-xs">
-                {me.profile.email}
+                {me.email}
               </div>
             </div>
             

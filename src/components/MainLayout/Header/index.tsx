@@ -8,11 +8,11 @@ import LanguageSelector from "@/components/LanguageSelector";
 import Link from "next/link";
 import Profile from "@/components/Profile";
 import { Menu, X, Globe } from "lucide-react";
-import { useClientTranslation } from "@/hooks/useLocale";
+import { useTranslation } from "@/lib/i18n/client";
 
 const Header:FC = () => {
   const { me } = useUserContext();
-  const { t } = useClientTranslation();
+  const { t } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -124,7 +124,6 @@ const Header:FC = () => {
         <div className="md:hidden border-t border-border bg-background">
           <div className="px-4 py-6 space-y-4">
             <div className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent transition-colors">
-              <Globe className="size-4" />
               <LanguageSelector />
             </div>
             

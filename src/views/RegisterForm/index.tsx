@@ -3,24 +3,27 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputEmail, InputPassword, InputText } from "@/components/Form/Input";
+import { InputEmail } from "@/components/Form/Input";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { IRegisterForm } from "./types";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { fetchFromServer } from "@/utils/fetchFromServer";
 
 import Button from "@/components/Form/Button";
-import FormPhoneField from "@/components/Form/FormPhoneField";
+// import FormPhoneField from "@/components/Form/FormPhoneField";
 import Link from "next/link";
 
 const DefaultValues: IRegisterForm = {
-  fullName: "",
   email: "",
-  phone: {
-    code: "",
-    number: "",
-  },
-  password: "",
-  confirmPassword: "",
+  // fullName: "",
+  // phone: {
+  //   code: "",
+  //   number: "",
+  // },
+  // password: "",
+  // confirmPassword: "",
 }
 
 const RegisterForm = () => {
@@ -29,10 +32,41 @@ const RegisterForm = () => {
     resolver: zodResolver(schema)
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, setError } = form;
+  const { push } = useRouter();
 
-  const onSubmit = (data: IRegisterForm) => {
-    console.log(data);
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (data: IRegisterForm) => {
+      const response = await fetchFromServer('/api/v1/registration/request/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      return response;
+    },
+  });
+
+  const onSubmit = async (data: IRegisterForm) => {
+    await mutateAsync(data, {
+      onSuccess: () => {
+        push(`/register/confirm-email?email=${data.email}`)
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onError: (error: any) => {
+        // Handle specific error cases
+        if (error?.status === 409) {
+          setError('email', { message: 'Email already exists. Please use a different email address.' });
+        } else if (error?.status === 400) {
+          setError('email', { message: 'Invalid email format. Please check your email address.' });
+        } else if (error?.status === 429) {
+          setError('email', { message: 'Too many requests. Please try again later.' });
+        } else {
+          setError('email', { message: 'Registration failed. Please try again.' });
+        }
+      }
+    });
   }
   
   return (
@@ -57,7 +91,7 @@ const RegisterForm = () => {
           </span>
         </div>
         <div className="flex flex-col gap-6">
-          <FormField name="fullName"
+          {/* <FormField name="fullName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Full Name</FormLabel>
@@ -67,20 +101,20 @@ const RegisterForm = () => {
                 <FormMessage />
               </FormItem>
             )} 
-          />
+          /> */}
           <FormField name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email address</FormLabel>
                 <FormControl>
-                  <InputEmail {...field} />
+                  <InputEmail {...field} placeholder="Enter your email address" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )} 
           />
-          <FormPhoneField name="phone" />
-          <div className="flex flex-col gap-4">
+          {/* <FormPhoneField name="phone" /> */}
+          {/* <div className="flex flex-col gap-4">
             <FormField 
               name="password"
               render={({ field }) => (
@@ -104,9 +138,9 @@ const RegisterForm = () => {
                 </FormItem>
               )} 
             />
-          </div>
-          <Button type="submit" variant="brand">
-            Sign up
+          </div> */}
+          <Button type="submit" variant="brand" disabled={isPending}>
+            {isPending ? 'Sending verification code...' : 'Sign up'}
           </Button>
         </div>
         <div className="flex flex-col gap-4">

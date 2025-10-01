@@ -28,10 +28,7 @@ i18next
       lookupCookie: cookieName,
     },
     preload: runsOnServerSide ? languages : [],
-    react: {
-      useSuspense: false, // Prevents hydration issues
-    },
-  });
+  }); 
 
 export function useTranslation(lng?: string, ns?: string | string[], options?: object) {
   const [cookies, setCookie] = useCookies([cookieName]);
