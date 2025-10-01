@@ -1,7 +1,6 @@
 import { FC, ReactNode } from "react";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
-import { useTranslation } from "@/lib/i18n";
 import { dir } from "i18next";
 
 import "../globals.css";
@@ -21,9 +20,6 @@ const RootLayout:FC<{
 }) => {
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('locale')?.value || 'en';
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  await useTranslation( cookieLocale, [ 'common' ] );
 
   return (
     <html lang="en" dir={dir(cookieLocale)}>
