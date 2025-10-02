@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/Form/Input";
 import Button from "@/components/Form/Button";
-import { setCookie } from "@/utils/cookie";
 import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -41,12 +40,8 @@ const MnemonicDialog = ({ isOpen, onClose, onPrivateKeyGenerated }: MnemonicDial
       const privateKey = await getPkFromMnemonic(data.mnemonic);
       
       // Store private key in cookie (secure, httpOnly would be better but this is client-side)
-      setCookie('privateKey', privateKey, {
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7,
-      });
-      
+      localStorage.setItem('privateKey', privateKey);
+
       // Call the callback with the private key
       onPrivateKeyGenerated(privateKey);
       

@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import DocumentCard from "./components/DocumentCard";
 import { useUserContext } from "@/contexts/userContext";
 import { fetchFromServer } from "@/utils/fetchFromServer";
-import { getCookie } from "@/utils/cookie";
 import { useTokenContext } from "@/contexts/tokenContext";
 import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
 import { Document } from "./components/DocumentCard";
@@ -73,7 +72,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   }
 
   useEffect(()=>{
-    const pk = getCookie("privateKey")
+    const pk = localStorage.getItem("privateKey")
     if (pk) {
       setPrivateKey(pk)
     }

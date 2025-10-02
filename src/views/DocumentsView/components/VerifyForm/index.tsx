@@ -169,9 +169,9 @@ const VerifyForm = () => {
               </span>
             </div>
             
-            <div>
+            <div className="flex flex-wrap items-start gap-2">
               <span className="font-medium">File Hash:</span>
-              <code className="ml-2 px-2 py-1 bg-gray-100 rounded text-sm">
+              <code className="px-2 py-1 bg-gray-100 rounded text-sm break-all">
                 {verificationResult.sha256Hex}
               </code>
             </div>

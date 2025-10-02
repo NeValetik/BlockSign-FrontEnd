@@ -12,7 +12,6 @@ import { useMutation } from "@tanstack/react-query";
 import { fetchFromServer } from "@/utils/fetchFromServer";
 import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
 import { sha256Hex } from "@/utils/sha256Hex";
-import { getCookie } from "@/utils/cookie";
 import { toast } from "sonner";
 import { useTokenContext } from "@/contexts/tokenContext";
 
@@ -39,7 +38,7 @@ const UploadForm = () => {
 
   // Check for private key cookie on component mount
   useEffect(() => {
-    const existingPrivateKey = getCookie('privateKey');
+    const existingPrivateKey = localStorage.getItem('privateKey');
     if (existingPrivateKey) {
       setPrivateKey(existingPrivateKey);
     }
@@ -106,9 +105,7 @@ const UploadForm = () => {
 
   const onSubmit = async (data: UploadFormFields) => {
     // Check if private key exists, if not show mnemonic dialog
-    console.log('privateKey', privateKey);
     if (!privateKey) {
-      console.log('privateKey not found');
       setShowMnemonicDialog(true);
       return;
     }

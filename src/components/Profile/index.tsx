@@ -21,6 +21,7 @@ const Profile:FC = () => {
 
   const handleLogout = () => {
     signOut({ redirect: true, callbackUrl: '/' });
+    localStorage.removeItem('privateKey');
   }
    
   const links = [

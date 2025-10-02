@@ -12,7 +12,6 @@ import { useState } from "react";
 
 import Button from "@/components/Form/Button";
 import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
-import { setCookie } from "@/utils/cookie";
 
 const DefaultValues: ILoginMnemonicForm = {
   mnemonic: "",
@@ -46,11 +45,7 @@ const LoginMnemonicForm = () => {
         redirect: false,
       });
       const privateKey = await getPkFromMnemonic(data.mnemonic);
-      await setCookie('privateKey', privateKey, {
-        secure: true,
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 7,
-      });
+      await localStorage.setItem('privateKey', privateKey);
 
 
       if (result?.error) {
