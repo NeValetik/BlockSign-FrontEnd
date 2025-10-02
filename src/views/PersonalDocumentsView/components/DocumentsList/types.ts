@@ -1,6 +1,6 @@
 export enum DocumentState {
-  Pending = 'pending',
-  Signed = 'signed',
-  Rejected = 'rejected',
-  Expired = 'expired',
+  Pending = 'PENDING',
+  Signed = 'SIGNED',
+  Rejected = 'REJECTED',
+  Expired = 'EXPIRED',
 }

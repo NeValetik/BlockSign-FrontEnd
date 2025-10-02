@@ -10,6 +10,7 @@ import { TokenContextProvider } from "@/contexts/tokenContext";
 import { Toaster } from "../Sonner";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
+import { DocumentsContextProps, DocumentsContextProvider } from "@/contexts/documentsContext";
 
 const Providers: FC<
   { 
@@ -18,6 +19,7 @@ const Providers: FC<
     token: string,
     session: Session | null,
     me: UserContextProps['me'],
+    documents: DocumentsContextProps['documents'],
   }
 > = (
   { 
@@ -25,7 +27,8 @@ const Providers: FC<
     locale, 
     token,
     session,
-    me
+    me,
+    documents,
   }
 ) => {
   const client = createReactQueryClient();
@@ -37,10 +40,12 @@ const Providers: FC<
         <LocaleProvider defaultLocale={ locale }>
           <UserContextProvider me={ me }>
             <TokenContextProvider token={ token }>
-              <QueryClientProvider client={ client }>
-                {children}
-                <Toaster />
-              </QueryClientProvider>
+              <DocumentsContextProvider documents={ documents }>
+                <QueryClientProvider client={ client }>
+                  {children}
+                  <Toaster />
+                </QueryClientProvider>
+              </DocumentsContextProvider>
             </TokenContextProvider>
           </UserContextProvider>
         </LocaleProvider>
