@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputEmail } from "@/components/Form/Input";
 import { Separator, SeparatorWithText } from "@/components/Form/Separator";
-import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
+import { SiApple, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { ILoginForm } from "./types";
 import { useRouter } from "next/navigation";
@@ -66,21 +66,14 @@ const LoginForm = () => {
         <div className="flex flex-col gap-4">
           <Button
             variant="outline"
-            size="sm"
-          >
-            <SiFacebook className="size-5" />
-            <span>{t('auth.login.social.facebook')}</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
+            size="lg"
           >
             <SiGoogle className="size-5" />
             <span>{t('auth.login.social.google')}</span>
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="lg"
           >
             <SiApple className="size-5" />
             <span>{t('auth.login.social.apple')}</span>
@@ -133,7 +126,7 @@ const LoginForm = () => {
               )} 
             />
           </div> */}
-          <Button type="submit" variant="brand" disabled={isLoading}>
+          <Button type="submit" variant="brand" disabled={isLoading} size="lg">
             {isLoading ? "Checking..." : t('auth.login.submit')}
           </Button>
         </div>
@@ -146,7 +139,7 @@ const LoginForm = () => {
           >
             <Button
               variant="outline"
-              size="sm"
+              size="lg"
               className="
                 w-full !border-brand text-brand 
                 hover:text-brand-muted 

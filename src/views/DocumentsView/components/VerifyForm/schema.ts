@@ -1,12 +1,7 @@
 import z from "zod";
 
 const schema = z.object({
-  document: z.array(z.instanceof(File)),
-  collaborators: z.array(z.object({
-    name: z.string(),
-    email: z.string(),
-    phone: z.string(),
-  })),
+  document: z.array(z.instanceof(File)).min(1, "Please upload a document to verify"),
 })
 
 export default schema;
