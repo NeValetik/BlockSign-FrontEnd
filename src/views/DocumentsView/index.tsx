@@ -21,12 +21,12 @@ const DocumentsView: FC = () => {
     {
       value: 'upload',
       labelComponent: 'Upload',
+      isAuthorizedAccess: true,
       content: <UploadForm />
     },
     {
       value: 'verify',
       labelComponent: 'Verify',
-      isAuthorizedAccess: true,
       content: <VerifyForm />
     }
   ]
@@ -34,7 +34,7 @@ const DocumentsView: FC = () => {
   return (
     <div>
       <Tabs
-        defaultValue={tabs[0].value}
+        defaultValue={tabs[1].value}
         className="gap-20"
       >
         <TabsList

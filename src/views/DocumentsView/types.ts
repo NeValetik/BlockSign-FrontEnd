@@ -1,14 +1,13 @@
 export interface Collaborator {
-  name: string;
-  email: string;
-  phone: string;
+  username: string;
 }
 
 export interface VerifyFormFields {
-  document: File[] | undefined;
-  collaborators: Collaborator[] | undefined;
+  document: File[];
 };
 
 export interface UploadFormFields {
-  document: File[] | undefined;
+  document: File[];
+  collaborators: Collaborator[];
+  docTitle: string;
 };

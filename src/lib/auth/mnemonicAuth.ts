@@ -3,6 +3,7 @@
 import { fetchFromServer } from "@/utils/fetchFromServer";
 import { getSignature } from "@/utils/getSignature";
 import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
+// import { setCookie } from "@/utils/cookie";
 
 export interface MnemonicAuthCredentials {
   email: string;
