@@ -6,7 +6,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import schema from "./schema";
-import { z } from "zod";
 
 import Button from "@/components/Form/Button";
 import { Label } from "@/components/Form/Label";
@@ -14,6 +13,8 @@ import { useMutation } from "@tanstack/react-query";
 import { fetchFromServer } from "@/utils/fetchFromServer";
 import { toast } from "sonner";
 import { useState } from "react";
+import { useTokenContext } from "@/contexts/tokenContext";
+import { VerifyFormFields } from "../../types";
 
 
 interface VerificationResult {
@@ -53,10 +54,9 @@ interface VerificationResult {
 
 const VerifyForm = () => {
   const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
+  const { token } = useTokenContext();
   
-  type FormData = z.infer<typeof schema>;
-  
-  const form = useForm<FormData>({
+  const form = useForm<VerifyFormFields>({
     resolver: zodResolver(schema),
     defaultValues: {
       document: [],
@@ -72,7 +72,7 @@ const VerifyForm = () => {
   }
 
   const { mutateAsync: verifyDocument, isPending } = useMutation({
-    mutationFn: async (data: FormData) => {
+    mutationFn: async (data: VerifyFormFields) => {
       const { document } = data;
       
       // Create FormData for file upload
@@ -82,6 +82,9 @@ const VerifyForm = () => {
       const response = await fetchFromServer('/api/v1/user/documents/verify', {
         method: 'POST',
         body: formData,
+        headers: {
+          "Authorization": `Bearer ${token}`  
+        }
       });
       
       return response as VerificationResult;
@@ -99,7 +102,7 @@ const VerifyForm = () => {
     }
   });
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: VerifyFormFields) => {
     try {
       await verifyDocument(data);
     } catch (error) {
