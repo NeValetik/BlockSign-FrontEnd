@@ -26,6 +26,7 @@ const RootLayout:FC<{
   const session = await getServerSession(authConfig);
   const token = session?.user?.token?.accessToken;
   let me = null;
+  let documents = null;
   try {
     if (token) {
       const resp = await fetchFromServer(`/api/v1/user/me`, {
@@ -36,6 +37,7 @@ const RootLayout:FC<{
         },
       });
       me = resp.user;
+      documents = resp.documents;
       console.log(me);
     }
   } catch (error) {
@@ -50,6 +52,7 @@ const RootLayout:FC<{
           token={ token || '' }
           session={ session }
           me={ me }
+          documents={ documents }
         >
           <Header />
             {/* <Suspense fallback={ <div>Loading...</div> }> */}

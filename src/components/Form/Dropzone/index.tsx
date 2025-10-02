@@ -152,11 +152,13 @@ export const DropzoneContent = ({
 export type DropzoneEmptyStateProps = {
   children?: ReactNode;
   className?: string;
+  text?: ReactNode;
 };
 
 export const DropzoneEmptyState = ({
   children,
   className,
+  text
 }: DropzoneEmptyStateProps) => {
   const { src, accept, maxSize, minSize, maxFiles } = useDropzoneContext();
 
@@ -189,7 +191,12 @@ export const DropzoneEmptyState = ({
         <UploadIcon size={16} />
       </div>
       <p className="my-2 w-full truncate text-wrap font-medium text-sm">
-        Upload {maxFiles === 1 ? 'a file' : 'files'}
+        {!!text && ( 
+          <div>{text}</div> 
+        )}
+        {!text && (
+          <p>Upload {maxFiles === 1 ? 'a file' : 'files'}</p>
+        )}
       </p>
       <p className="w-full truncate text-wrap text-muted-foreground text-xs">
         Drag and drop or click to upload
