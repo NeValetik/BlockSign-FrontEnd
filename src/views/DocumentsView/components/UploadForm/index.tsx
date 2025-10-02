@@ -155,7 +155,7 @@ const UploadForm = () => {
                   <Dropzone
                     accept={{ 'application/pdf': [] }}
                     maxFiles={1}
-                    maxSize={1024 * 1024 * 10}
+                    maxSize={1024 * 1024 * 500}
                     minSize={1024}
                     onDrop={handleDrop}
                     onError={() => { setError('document', { message: 'Only PDF files are allowed' }); } }
