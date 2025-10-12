@@ -29,16 +29,28 @@ const RootLayout:FC<{
   let documents = null;
   try {
     if (token) {
-      const resp = await fetchFromServer(`/api/v1/user/me`, {
+      let resp = null;
+      resp = await fetchFromServer(`/api/v1/user/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
       });
-      me = resp.user;
-      documents = resp.documents;
-      console.log(me);
+      if (!resp.user) {
+        resp = await fetchFromServer(`/api/v1/admin/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        me = resp.admin;
+        // documents = resp.documents;
+      } else {
+        me = resp.user;
+        documents = resp.documents;
+      }
     }
   } catch (error) {
     console.error('Error fetching user profile:', error);
