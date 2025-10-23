@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "home": "Acasă",
+    "documents": "Documente",
+    "account": "Cont",
+    "login": "Autentificare",
+    "register": "Înregistrare",
+    "logout": "Deconectare"
+  },
+  "home": {
+    "title": "Verificare Securizată a Documentelor",
+    "subtitle": "Autentificare și semnături digitale pe blockchain",
+    "cta": "Începe Acum",
+    "contact": "Contactează-ne",
+    "features": {
+      "verify": "Verifică documente instant folosind tehnologia blockchain",
+      "sign": "Semnături digitale cu valoare legală",
+      "secure": "Criptare de nivel militar pentru documentele tale"
+    }
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Parolă",
+    "confirmPassword": "Confirmă Parola",
+    "fullName": "Nume Complet",
+    "phone": "Număr de Telefon",
+    "idnp": "IDNP",
+    "birthDate": "Data Nașterii",
+    "forgotPassword": "Ai uitat parola?",
+    "noAccount": "Nu ai un cont?",
+    "hasAccount": "Ai deja un cont?",
+    "signIn": "Autentificare",
+    "signUp": "Înregistrare",
+    "continueWithGoogle": "Continuă cu Google",
+    "verifyEmail": "Verifică Email",
+    "verificationCode": "Introdu codul de 6 cifre",
+    "uploadSelfie": "Încarcă Selfie",
+    "pendingApproval": "În Așteptarea Aprobării",
+    "approvalMessage": "Contul tău așteaptă aprobarea adminului. Vei fi notificat prin email.",
+    "finish": "Finalizează"
+  },
+  "documents": {
+    "upload": "Încarcă Document",
+    "dragDrop": "Trage și lasă documentul aici",
+    "or": "sau",
+    "browse": "Caută Fișiere",
+    "verify": "Verifică Document",
+    "create": "Creează Document",
+    "history": "Istoric Documente",
+    "pending": "Documente În Așteptare",
+    "search": "Caută documente...",
+    "filter": "Filtrează",
+    "hash": "Hash",
+    "status": "Status",
+    "date": "Dată",
+    "size": "Dimensiune",
+    "preview": "Previzualizare",
+    "sign": "Semnează",
+    "verified": "Verificat",
+    "notFound": "Document negăsit pe blockchain",
+    "verifying": "Se verifică pe blockchain..."
+  },
+  "account": {
+    "personalInfo": "Informații Personale",
+    "security": "Securitate",
+    "settings": "Setări",
+    "organization": "Organizație",
+    "changePassword": "Schimbă Parola",
+    "enableMFA": "Activează Autentificarea cu Doi Factori",
+    "verifyPhone": "Verifică Numărul de Telefon",
+    "hashingAlgorithm": "Algoritm de Hash",
+    "language": "Limbă",
+    "theme": "Temă",
+    "light": "Luminoasă",
+    "dark": "Întunecată"
+  },
+  "common": {
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "confirm": "Confirmă",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "loading": "Se încarcă...",
+    "success": "Succes",
+    "error": "Eroare"
+  }
+}

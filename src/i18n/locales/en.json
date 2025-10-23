@@ -1,0 +1,87 @@
+{
+  "nav": {
+    "home": "Home",
+    "documents": "Documents",
+    "account": "Account",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Secure Document Verification",
+    "subtitle": "Blockchain-powered document authentication and digital signatures",
+    "cta": "Get Started",
+    "contact": "Contact Us",
+    "features": {
+      "verify": "Verify documents instantly using blockchain technology",
+      "sign": "Digital signatures with legal validity",
+      "secure": "Military-grade encryption for your documents"
+    }
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "idnp": "IDNP",
+    "birthDate": "Date of Birth",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "continueWithGoogle": "Continue with Google",
+    "verifyEmail": "Verify Email",
+    "verificationCode": "Enter 6-digit code",
+    "uploadSelfie": "Upload Selfie",
+    "pendingApproval": "Pending Admin Approval",
+    "approvalMessage": "Your account is pending admin approval. You will be notified via email.",
+    "finish": "Finish"
+  },
+  "documents": {
+    "upload": "Upload Document",
+    "dragDrop": "Drag and drop your document here",
+    "or": "or",
+    "browse": "Browse Files",
+    "verify": "Verify Document",
+    "create": "Create Document",
+    "history": "Document History",
+    "pending": "Pending Documents",
+    "search": "Search documents...",
+    "filter": "Filter",
+    "hash": "Hash",
+    "status": "Status",
+    "date": "Date",
+    "size": "Size",
+    "preview": "Preview",
+    "sign": "Sign",
+    "verified": "Verified",
+    "notFound": "Document not found on blockchain",
+    "verifying": "Verifying on blockchain..."
+  },
+  "account": {
+    "personalInfo": "Personal Information",
+    "security": "Security",
+    "settings": "Settings",
+    "organization": "Organization",
+    "changePassword": "Change Password",
+    "enableMFA": "Enable Two-Factor Authentication",
+    "verifyPhone": "Verify Phone Number",
+    "hashingAlgorithm": "Hashing Algorithm",
+    "language": "Language",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error"
+  }
+}
