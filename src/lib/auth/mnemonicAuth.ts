@@ -3,6 +3,7 @@
 import { fetchFromServer } from "@/utils/fetchFromServer";
 import { getSignature } from "@/utils/getSignature";
 import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
+// import { setCookie } from "@/utils/cookie";
 
 export interface MnemonicAuthCredentials {
   email: string;
@@ -76,6 +77,7 @@ export async function authenticateWithMnemonic(
       body: JSON.stringify(completeRequest),
     }) as { accessToken: string, refreshToken: string, user: { id: string, email: string, name: string } };
     console.log(authResponse);
+    console.log(authResponse.user);
 
     // Return user data in NextAuth expected format
     return {

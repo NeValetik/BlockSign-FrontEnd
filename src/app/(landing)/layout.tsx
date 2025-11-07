@@ -1,7 +1,6 @@
 import { FC, ReactNode } from "react";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
-import { useTranslation } from "../../lib/i18n";
 import { dir } from "i18next";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/lib/auth/authConfig";
@@ -27,23 +26,35 @@ const RootLayout:FC<{
   const session = await getServerSession(authConfig);
   const token = session?.user?.token?.accessToken;
   let me = null;
+  let documents = null;
   try {
     if (token) {
-      const resp = await fetchFromServer(`/api/v1/user/me`, {
+      let resp = null;
+      resp = await fetchFromServer(`/api/v1/user/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
       });
-      me = resp.user;
-      console.log(me);
+      if (!resp.user) {
+        resp = await fetchFromServer(`/api/v1/admin/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        me = resp.admin;
+        // documents = resp.documents;
+      } else {
+        me = resp.user;
+        documents = resp.documents;
+      }
     }
   } catch (error) {
     console.error('Error fetching user profile:', error);
   }
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  await useTranslation( cookieLocale, [ 'common' ] );
 
   return (
     <html lang="en" dir={dir(cookieLocale)}>
@@ -53,6 +64,7 @@ const RootLayout:FC<{
           token={ token || '' }
           session={ session }
           me={ me }
+          documents={ documents }
         >
           <Header />
             {/* <Suspense fallback={ <div>Loading...</div> }> */}

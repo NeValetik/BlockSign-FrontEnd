@@ -25,7 +25,7 @@ const DocumentStateTag: FC<DocumentStateTagProps> = ({ state }) => {
         "rounded-md px-2 py-1 text-sm text-brand-foreground"
       )}
     >
-      <span>{state}</span>
+      <span>{state.toLocaleLowerCase()}</span>
     </div>
   )
 }

@@ -1,11 +1,12 @@
 'use client';
 
 import { FC } from "react";
-import CollaboratorInput from "./components/CollaboratorInput";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import Button from "../Button";
 import { Minus, Plus } from "lucide-react";
+
+import CollaboratorInput from "./components/CollaboratorInput";
+import Button from "../Button";
 
 interface FormCollaboratorFieldProps {
   name: string;
@@ -25,7 +26,7 @@ const FormCollaboratorField: FC<FormCollaboratorFieldProps> = ({ name }) => {
   }
 
   const handleAdd = () => {
-    append({ name: "", email: "", phone: "" });
+    append({ username: "" });
   }
   
   return (
@@ -35,7 +36,7 @@ const FormCollaboratorField: FC<FormCollaboratorFieldProps> = ({ name }) => {
           <FormField
             control={control}
             key={field.id}
-            name={`${name}.${index}`}
+            name={`${name}.${index}.username`}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Collaborator</FormLabel>

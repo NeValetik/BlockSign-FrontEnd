@@ -11,6 +11,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 import Button from "@/components/Form/Button";
+import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
 
 const DefaultValues: ILoginMnemonicForm = {
   mnemonic: "",
@@ -43,6 +44,9 @@ const LoginMnemonicForm = () => {
         mnemonic: data.mnemonic,
         redirect: false,
       });
+      const privateKey = await getPkFromMnemonic(data.mnemonic);
+      await localStorage.setItem('privateKey', privateKey);
+
 
       if (result?.error) {
         setError('mnemonic', { message: 'Authentication failed. Please check your mnemonic phrase.' });

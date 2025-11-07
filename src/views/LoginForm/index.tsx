@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputEmail } from "@/components/Form/Input";
 import { Separator, SeparatorWithText } from "@/components/Form/Separator";
-import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
+import { SiApple, SiGoogle } from '@icons-pack/react-simple-icons';
 import { schema } from "./schema";
 import { ILoginForm } from "./types";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,9 @@ import { useState } from "react";
 
 // import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Form/Button";
+import Link from "next/link";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 // import Link from "next/link";
 
 const DefaultValues: ILoginForm = {
@@ -27,7 +30,8 @@ const LoginForm = () => {
   });
   const { push } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale);
   const { handleSubmit, setError } = form;
 
   const onSubmit = async (data: ILoginForm) => {
@@ -62,24 +66,17 @@ const LoginForm = () => {
         <div className="flex flex-col gap-4">
           <Button
             variant="outline"
-            size="sm"
+            size="lg"
           >
-            <SiFacebook />
-            <span>Sign in with Facebook</span>
+            <SiGoogle className="size-5" />
+            <span>{t('auth.login.social.google')}</span>
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="lg"
           >
-            <SiGoogle />
-            <span>Sign in with Google</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            <SiApple />
-            <span>Sign in with Apple</span>
+            <SiApple className="size-5" />
+            <span>{t('auth.login.social.apple')}</span>
           </Button>
 
         </div>
@@ -92,7 +89,7 @@ const LoginForm = () => {
           <FormField name="loginName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Login Name</FormLabel>
+                <FormLabel>{t('auth.login.email')}</FormLabel>
                 <FormControl>
                   <InputEmail {...field} placeholder="Enter your email address" />
                 </FormControl>
@@ -129,26 +126,30 @@ const LoginForm = () => {
               )} 
             />
           </div> */}
-          <Button type="submit" variant="brand" disabled={isLoading}>
-            {isLoading ? "Checking..." : "Login"}
+          <Button type="submit" variant="brand" disabled={isLoading} size="lg">
+            {isLoading ? "Checking..." : t('auth.login.submit')}
           </Button>
         </div>
         <Separator />
         <div className="flex flex-col gap-4 items-center">
-          <span className="font-medium text-2xl">Do not have an account?</span>
-          <Button
-            variant="outline"
-            size="sm"
-            className="
-              w-full !border-brand text-brand 
-              hover:text-brand-muted 
-              hover:border-brand-muted
-            "
-            type="button"
-            onClick={() => push("/register")}
+          <span className="font-medium text-2xl">{t('auth.login.noAccount')}{' '}</span>
+          <Link
+            href="/register" 
+            className="flex flex-col w-full items-center"
           >
-            Sign up
-          </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="
+                w-full !border-brand text-brand 
+                hover:text-brand-muted 
+                hover:border-brand-muted
+              "
+              type="button"
+            >
+              {t('auth.login.signUp')}
+            </Button>
+          </Link>
         </div>
       </form>
     </Form>
