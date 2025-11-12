@@ -19,16 +19,16 @@ const DocumentsView: FC = () => {
     isAuthorizedAccess?: boolean;
   }[] = [
     {
+      value: 'verify',
+      labelComponent: 'Verify',
+      content: <VerifyForm />
+    },
+    {
       value: 'upload',
       labelComponent: 'Upload',
       isAuthorizedAccess: true,
       content: <UploadForm />
     },
-    {
-      value: 'verify',
-      labelComponent: 'Verify',
-      content: <VerifyForm />
-    }
   ]
 
   return (

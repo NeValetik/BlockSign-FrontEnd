@@ -7,7 +7,7 @@ import Button from "@/components/Form/Button";
 import LanguageSelector from "@/components/LanguageSelector";
 import Link from "next/link";
 import Profile from "@/components/Profile";
-import { Menu, X, Globe } from "lucide-react";
+import { Menu, X, Globe, FileText } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/client";
 
 const Header:FC = () => {
@@ -31,6 +31,9 @@ const Header:FC = () => {
           </Link>
           
           <div className="hidden md:flex items-center gap-4 lg:gap-6">
+            <Link href="/documents" className="flex items-center gap-2">
+              <span className="text-sm font-medium">Documents</span>
+            </Link>
             <LanguageSelector />
             <Link href="/register">
               <Button variant="ghost" size="sm">
@@ -103,10 +106,12 @@ const Header:FC = () => {
         </Link>
         
         <div className="hidden md:flex items-center gap-4 lg:gap-6">
+          <Link href="/documents" className="flex items-center gap-2">
+            <span className="text-sm font-medium">Documents</span>
+          </Link>
           <LanguageSelector />
           <Profile />
         </div>
-
         <button
           onClick={toggleMobileMenu}
           className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
