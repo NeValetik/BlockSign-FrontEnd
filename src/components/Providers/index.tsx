@@ -3,6 +3,7 @@
 import { FC, ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { CookiesProvider } from "react-cookie";
+import { ThemeProvider } from "next-themes";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { createReactQueryClient } from "../../../reactQueryClient";
 import { UserContextProps, UserContextProvider } from "@/contexts/userContext";
@@ -37,18 +38,20 @@ const Providers: FC<
   return (
     <CookiesProvider>
       <SessionProvider session={ session }>
-        <LocaleProvider defaultLocale={ locale }>
-          <UserContextProvider me={ me }>
-            <TokenContextProvider token={ token }>
-              <DocumentsContextProvider documents={ documents }>
-                <QueryClientProvider client={ client }>
-                  {children}
-                  <Toaster />
-                </QueryClientProvider>
-              </DocumentsContextProvider>
-            </TokenContextProvider>
-          </UserContextProvider>
-        </LocaleProvider>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <LocaleProvider defaultLocale={ locale }>
+            <UserContextProvider me={ me }>
+              <TokenContextProvider token={ token }>
+                <DocumentsContextProvider documents={ documents }>
+                  <QueryClientProvider client={ client }>
+                    {children}
+                    <Toaster />
+                  </QueryClientProvider>
+                </DocumentsContextProvider>
+              </TokenContextProvider>
+            </UserContextProvider>
+          </LocaleProvider>
+        </ThemeProvider>
       </SessionProvider>
     </CookiesProvider>
   )

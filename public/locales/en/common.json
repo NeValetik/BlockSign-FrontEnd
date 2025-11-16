@@ -1,6 +1,17 @@
 {
-  "home.title": "Home",
-  "home.description": "Home description",
+  "home.title": "Secure Document Verification",
+  "home.subtitle": "Blockchain-powered document authentication and digital signatures",
+  "home.cta": "Get Started",
+  "home.features.verify": "Verify documents instantly using blockchain technology",
+  "home.features.sign": "Digital signatures with legal validity",
+  "home.features.secure": "Military-grade encryption for your documents",
+  
+  "nav.home": "Home",
+  "nav.documents": "Documents",
+  "nav.account": "Account",
+  "nav.login": "Login",
+  "nav.register": "Register",
+  "nav.logout": "Logout",
   
   "navigation.home": "Home",
   "navigation.documents": "Documents",

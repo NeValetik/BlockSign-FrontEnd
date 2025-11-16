@@ -1,117 +1,98 @@
 'use client';
 
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useUserContext } from "@/contexts/userContext";
+import { useTheme } from "next-themes";
+import { signOut } from "next-auth/react";
 
 import Button from "@/components/Form/Button";
 import LanguageSelector from "@/components/LanguageSelector";
 import Link from "next/link";
 import Profile from "@/components/Profile";
-import { Menu, X, Globe, FileText } from "lucide-react";
+import { Menu, X, Globe, Shield, ShieldCheck, Moon, Sun } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/client";
+import Container from "@/components/Container";
 
 const Header:FC = () => {
   const { me } = useUserContext();
   const { t } = useTranslation();
+  const { theme, setTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  if (!me) {
-    return (
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="h-16 sm:h-20 flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-          <Link
-            href="/"
-            className="text-xl sm:text-2xl md:text-3xl font-bold text-brand hover:text-brand/80 transition-colors"
-          >
-            BlockSign
-          </Link>
-          
-          <div className="hidden md:flex items-center gap-4 lg:gap-6">
-            <Link href="/documents" className="flex items-center gap-2">
-              <span className="text-sm font-medium">Documents</span>
-            </Link>
-            <LanguageSelector />
-            <Link href="/register">
-              <Button variant="ghost" size="sm">
-                {t('navigation.register')}
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="brand" size="sm">
-                {t('navigation.login')}
-              </Button>
-            </Link>
-          </div>
+  const handleLogout = () => {
+    signOut({ redirect: true, callbackUrl: '/' });
+    localStorage.removeItem('privateKey');
+  };
 
-          <button
-            onClick={toggleMobileMenu}
-            className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
-            aria-label="Toggle mobile menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="size-6" />
-            ) : (
-              <Menu className="size-6" />
-            )}
-          </button>
-        </div>
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
 
-        {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background">
-            <div className="px-4 py-6 space-y-4">
-              <div className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent transition-colors">
-                <Globe className="size-4" />
-                <LanguageSelector />
-              </div>
-              
-              <div className="space-y-2">
-                <Link 
-                  href="/register"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full"
-                >
-                  <Button variant="ghost" size="sm" className="w-full justify-start">
-                    {t('navigation.register')}
-                  </Button>
-                </Link>
-                <Link 
-                  href="/login"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full"
-                >
-                  <Button variant="brand" size="sm" className="w-full">
-                    {t('navigation.login')}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-      </header>
-    )
-  }
+  const currentTheme = mounted ? theme : 'light';
+
+  const isAuthenticated = !!me;
+  const isAdmin = me?.role === 'ADMIN';
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-      <div className="h-16 sm:h-20 flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-        <Link
-          href="/"
-          className="text-xl sm:text-2xl md:text-3xl font-bold text-brand hover:text-brand/80 transition-colors"
-        >
-          BlockSign
+    <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <Container>
+      <div className="container flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center space-x-2">
+          <Shield className="h-6 w-6 text-primary" />
+          <span className="font-bold text-xl">Blocksign</span>
         </Link>
-        
-        <div className="hidden md:flex items-center gap-4 lg:gap-6">
-          <Link href="/documents" className="flex items-center gap-2">
-            <span className="text-sm font-medium">Documents</span>
-          </Link>
+
+        <nav className="flex items-center space-x-6">
+          {isAuthenticated && (
+            <>
+              <Link href="/documents" className="text-sm font-medium transition-colors hover:text-primary">
+                {t('nav.documents') || t('navigation.documents') || 'Documents'}
+              </Link>
+              <Link href="/account/profile" className="text-sm font-medium transition-colors hover:text-primary">
+                {t('nav.account') || t('navigation.profile') || 'Account'}
+              </Link>
+              {isAdmin && (
+                <Link href="/adminconsole" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
+                  <ShieldCheck className="h-4 w-4" />
+                  Admin
+                </Link>
+              )}
+            </>
+          )}
+
           <LanguageSelector />
-          <Profile />
-        </div>
+
+          <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            {currentTheme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+          </Button>
+
+          {isAuthenticated ? (
+            <Button onClick={handleLogout} variant="outline">
+              {t('nav.logout') || t('navigation.logout') || 'Logout'}
+            </Button>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Button asChild variant="ghost">
+                <Link href="/login">{t('nav.login') || t('navigation.login') || 'Login'}</Link>
+              </Button>
+              <Button asChild variant="brand">
+                <Link href="/register">{t('nav.register') || t('navigation.register') || 'Register'}</Link>
+              </Button>
+            </div>
+          )}
+        </nav>
+
+        {/* Mobile menu button */}
         <button
           onClick={toggleMobileMenu}
           className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
@@ -125,19 +106,87 @@ const Header:FC = () => {
         </button>
       </div>
 
+      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-background">
           <div className="px-4 py-6 space-y-4">
+            {isAuthenticated && (
+              <>
+                <Link 
+                  href="/documents"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-sm font-medium transition-colors hover:text-primary"
+                >
+                  {t('nav.documents') || t('navigation.documents') || 'Documents'}
+                </Link>
+                <Link 
+                  href="/account/profile"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block text-sm font-medium transition-colors hover:text-primary"
+                >
+                  {t('nav.account') || t('navigation.profile') || 'Account'}
+                </Link>
+                {isAdmin && (
+                  <Link 
+                    href="/adminconsole"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-sm font-medium transition-colors hover:text-primary flex items-center gap-1"
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                    Admin
+                  </Link>
+                )}
+              </>
+            )}
+            
             <div className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent transition-colors">
+              <Globe className="size-4" />
               <LanguageSelector />
             </div>
             
-            <div onClick={() => setIsMobileMenuOpen(false)}>
-              <Profile />
-            </div>
+            <Button variant="ghost" size="sm" onClick={toggleTheme} className="w-full justify-start">
+              {currentTheme === 'light' ? <Moon className="h-4 w-4 mr-2" /> : <Sun className="h-4 w-4 mr-2" />}
+              {currentTheme === 'light' ? 'Dark Mode' : 'Light Mode'}
+            </Button>
+            
+            {isAuthenticated ? (
+              <Button 
+                onClick={() => {
+                  handleLogout();
+                  setIsMobileMenuOpen(false);
+                }} 
+                variant="outline" 
+                size="sm" 
+                className="w-full"
+              >
+                {t('nav.logout') || t('navigation.logout') || 'Logout'}
+              </Button>
+            ) : (
+              <div className="space-y-2">
+                <Link 
+                  href="/register"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full"
+                >
+                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                    {t('nav.register') || t('navigation.register') || 'Register'}
+                  </Button>
+                </Link>
+                <Link 
+                  href="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full"
+                >
+                  <Button variant="brand" size="sm" className="w-full">
+                    {t('nav.login') || t('navigation.login') || 'Login'}
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
+      </Container>
     </header>
   )
 }
