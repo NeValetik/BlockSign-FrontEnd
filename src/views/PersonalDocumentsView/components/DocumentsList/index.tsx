@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -8,6 +8,8 @@ import { fetchFromServer } from "@/utils/fetchFromServer";
 import { useTokenContext } from "@/contexts/tokenContext";
 import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
 import { Document } from "./components/DocumentCard";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 interface DocumentsListProps {
   data?: Document[];
@@ -19,7 +21,11 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   const { token } = useTokenContext();
   const { me } = useUserContext();
   const [privateKey, setPrivateKey] = useState<string | null>(null);
+  const [documentUrls, setDocumentUrls] = useState<Record<string, string>>({});
+  const timeoutRefs = useRef<Record<string, NodeJS.Timeout>>({});
   const queryClient = useQueryClient();
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
 
   const { mutateAsync: getDocumentUrl } = useMutation({
     mutationFn: async (documentId: string) => {
@@ -50,9 +56,9 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       return response;
     },
     onSuccess: (result) => {
-      toast.success('Document signed successfully!');
+      toast.success(t('documents.sign.success'));
       if (result.status === 'SIGNED') {
-        toast.success('All parties have signed the document!');
+        toast.success(t('documents.sign.allSigned'));
       }
       // Refresh the documents list
       queryClient.invalidateQueries({ queryKey: ['documents'] });
@@ -60,7 +66,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     },
     onError: (error) => {
       console.error('Error signing document:', error);
-      toast.error(error?.message || 'Failed to sign document');
+      toast.error(error?.message || t('documents.sign.failed'));
     },
   });
 
@@ -69,7 +75,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     file: File[]
   ) => {
     if (!privateKey) {
-      toast.error('Please generate a private key to sign the document');
+      toast.error(t('documents.sign.needPrivateKey'));
       return
     } 
     const {signature: signatureB64} = await getSignedKeyPayload(file, document.participants, privateKey, document.title);
@@ -78,7 +84,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
 
   const handleApprove = () => async(document: Document) => {
     if (!privateKey) {
-      toast.error('Please generate a private key to sign the document');
+      toast.error(t('documents.sign.needPrivateKey'));
     } else {
       const { url } = await getDocumentUrl(document.id);
       const fileBlob = await fetch(url).then(res => res.blob());
@@ -86,7 +92,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
         const file = [new File([fileBlob], document.title, { type: fileBlob.type })];
         handleSignDocument(document, file);
       } else {
-        toast.error('Failed to get document file');
+        toast.error(t('documents.view.failed'));
       }
     }
   }
@@ -96,8 +102,26 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   const handleView = (id: string ) => async () =>{
     const response = await getDocumentUrl(id);
     if (!!response.url){
+      // Save the URL in state
+      setDocumentUrls(prev => ({ ...prev, [id]: response.url }));
+      
+      // Clear any existing timeout for this document
+      if (timeoutRefs.current[id]) {
+        clearTimeout(timeoutRefs.current[id]);
+      }
+      
+      // Set a timeout to invalidate the link after 10 minutes (600000 ms)
+      timeoutRefs.current[id] = setTimeout(() => {
+        setDocumentUrls(prev => {
+          const newUrls = { ...prev };
+          delete newUrls[id];
+          return newUrls;
+        });
+        delete timeoutRefs.current[id];
+      }, 10 * 60 * 1000); // 10 minutes
+      
       window.open(response.url, '_blank');
-      toast.success('Document opened successfully!');
+      toast.success(t('documents.view.success'));
     }
   }
 
@@ -108,12 +132,22 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     }
   }, [setPrivateKey])
 
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    const timeouts = timeoutRefs.current;
+    return () => {
+      Object.values(timeouts).forEach(timeout => {
+        clearTimeout(timeout);
+      });
+    };
+  }, []);
+
 
   if (!data?.length) {
     return (
       <div className="w-full flex flex-col gap-16">
         <div className="flex flex-wrap gap-10">
-          <div className="text-center text-sm text-gray-500">No documents found</div>
+          <div className="text-center text-sm text-gray-500">{t('documents.empty.title')}</div>
         </div>
       </div>
     )
@@ -129,6 +163,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
               onApprove={handleApprove()}
               onReject={handleReject(item.id)}
               onView={handleView(item.id)}
+              documentUrl={documentUrls[item.id]}
             />
           ))}
         </div>

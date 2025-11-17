@@ -16,6 +16,8 @@ import Button from "@/components/Form/Button";
 import DatePicker from "@/components/Form/DatePicker";
 import FormPhoneField from "@/components/Form/FormPhoneField";
 import Link from "next/link";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 
 const RegisterIdentityForm = () => {
@@ -23,6 +25,8 @@ const RegisterIdentityForm = () => {
   const email = searchParams.get("email");
   // const { push } = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
 
   const defaultValues: IRegisterIdentityForm = {
     idnp: "",
@@ -70,7 +74,7 @@ const RegisterIdentityForm = () => {
         setIsSuccess(true);
       },
       onError: () => {
-        setError('idnp', { message: 'Invalid IDNP' });
+        setError('idnp', { message: t('auth.identity.invalidIdnp') });
       }
     });
   }
@@ -94,8 +98,7 @@ const RegisterIdentityForm = () => {
             </div>
             <div className="flex-1">
               <p className="text-brand-muted font-medium text-base leading-relaxed">
-                Thank you for completing the registration form! Your request will be processed within 1 business day. 
-                You will receive an additional message regarding account activation via email.
+                {t('auth.identity.success.title')} {t('auth.identity.success.message')}
               </p>
             </div>
           </div>
@@ -103,12 +106,11 @@ const RegisterIdentityForm = () => {
         
         <div className="mt-8 text-center max-w-md">
           <p className="text-foreground mb-4">
-            In the meantime, we encourage you to explore the <Link href="/"><span className="text-brand font-medium">Landing</span></Link>
+            {t('auth.identity.success.explore')} <Link href="/"><span className="text-brand font-medium">{t('auth.identity.success.landing')}</span></Link>
           </p>
           
           <p className="text-foreground">
-            If you wish to verify your account status or have additional questions, please contact us using the contact details 
-            in the <Link href="/"><span className="text-brand font-medium">Contact</span></Link> section.
+            {t('auth.identity.success.contact')} <Link href="/"><span className="text-brand font-medium">{t('auth.identity.success.contactSection')}</span></Link> {t('auth.identity.success.section')}
           </p>
         </div>
       </div>
@@ -125,7 +127,7 @@ const RegisterIdentityForm = () => {
           className="flex flex-col gap-2"
         >
           <h2 className="text-3xl font-medium text-center">
-            Confirm the identity
+            {t('auth.identity.title')}
           </h2>
         </div>
         
@@ -133,9 +135,9 @@ const RegisterIdentityForm = () => {
           <FormField name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>{t('auth.identity.fullName')}</FormLabel>
                 <FormControl>
-                  <InputText {...field} placeholder="Enter your full name" />
+                  <InputText {...field} placeholder={t('auth.identity.fullNamePlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -144,9 +146,9 @@ const RegisterIdentityForm = () => {
           <FormField name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>{t('auth.identity.username')}</FormLabel>
                 <FormControl>
-                  <InputText {...field} placeholder="test_username1234" />
+                  <InputText {...field} placeholder={t('auth.identity.usernamePlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -156,11 +158,11 @@ const RegisterIdentityForm = () => {
           <FormField name="idnp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>IDNP</FormLabel>
+                <FormLabel>{t('auth.identity.idnp')}</FormLabel>
                 <FormControl>
                   <InputText 
                     {...field} 
-                    placeholder="Enter your 13-digit IDNP"
+                    placeholder={t('auth.identity.idnpPlaceholder')}
                     maxLength={13}
                   />
                 </FormControl>
@@ -172,7 +174,7 @@ const RegisterIdentityForm = () => {
           <FormField name="birthDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Birth Date</FormLabel>
+                <FormLabel>{t('auth.identity.birthDate')}</FormLabel>
                 <FormControl>
                   <DatePicker {...field}/>
                 </FormControl>
@@ -184,7 +186,7 @@ const RegisterIdentityForm = () => {
           <FormField name="selfie"
             render={() => (
               <FormItem>
-                <FormLabel>Selfie</FormLabel>
+                <FormLabel>{t('auth.identity.selfie')}</FormLabel>
                 <FormControl>
                   <div className="flex flex-col gap-2">
                     <div className="flex gap-2">
@@ -198,12 +200,12 @@ const RegisterIdentityForm = () => {
                         variant="brand" 
                         onClick={() => fileInputRef.current?.click()}
                       >
-                        Select file
+                        {t('auth.identity.selectFile')}
                       </Button>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">
-                        Accepts only jpeg, jpg, png, pdf, bmp, svg
+                        {t('auth.identity.fileFormats')}
                       </span>
                       
                     </div>
@@ -217,10 +219,10 @@ const RegisterIdentityForm = () => {
 
         <div className="flex flex-col gap-2">
           <span className="text-sm">
-            The credentials are only used to verify the identity, then they are deleted
+            {t('auth.identity.credentialsNote')}
           </span>
           <Button type="submit" variant="brand" disabled={isPending}>
-            {isPending ? "Confirming..." : "Confirm"}
+            {isPending ? t('auth.identity.confirming') : t('auth.identity.submit')}
           </Button>
         </div>
       </form>

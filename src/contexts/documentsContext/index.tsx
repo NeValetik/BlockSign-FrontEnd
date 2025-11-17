@@ -40,7 +40,6 @@ export interface DocumentsContextProps {
       alg: string;
       signedAt: Date;
     }[];
-    bucketLink: string;
   }[] | null;
 }
 

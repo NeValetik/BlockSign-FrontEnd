@@ -14,6 +14,8 @@ import { fetchFromServer } from "@/utils/fetchFromServer";
 import Button from "@/components/Form/Button";
 // import FormPhoneField from "@/components/Form/FormPhoneField";
 import Link from "next/link";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 const DefaultValues: IRegisterForm = {
   email: "",
@@ -34,6 +36,8 @@ const RegisterForm = () => {
 
   const { handleSubmit, setError } = form;
   const { push } = useRouter();
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (data: IRegisterForm) => {
@@ -57,13 +61,13 @@ const RegisterForm = () => {
       onError: (error: any) => {
         // Handle specific error cases
         if (error?.status === 409) {
-          setError('email', { message: 'Email already exists. Please use a different email address.' });
+          setError('email', { message: t('auth.register.emailExists') });
         } else if (error?.status === 400) {
-          setError('email', { message: 'Invalid email format. Please check your email address.' });
+          setError('email', { message: t('auth.register.invalidEmail') });
         } else if (error?.status === 429) {
-          setError('email', { message: 'Too many requests. Please try again later.' });
+          setError('email', { message: t('auth.register.tooManyRequests') });
         } else {
-          setError('email', { message: 'Registration failed. Please try again.' });
+          setError('email', { message: t('auth.register.failed') });
         }
       }
     });
@@ -79,14 +83,14 @@ const RegisterForm = () => {
           className="flex flex-col gap-2"
         >
           <h2 className="text-3xl font-medium text-center">
-            Create an account
+            {t('auth.register.title')}
           </h2>
           <span
             className="text-base text-center"
           >
-            Already have an account?{' '}
+            {t('auth.register.hasAccount')}{' '}
             <Link href="/login">
-              <span className="underline text-brand">Log in</span>
+              <span className="underline text-brand">{t('auth.register.signIn')}</span>
             </Link> 
           </span>
         </div>
@@ -105,9 +109,9 @@ const RegisterForm = () => {
           <FormField name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email address</FormLabel>
+                <FormLabel>{t('auth.register.email')}</FormLabel>
                 <FormControl>
-                  <InputEmail {...field} placeholder="Enter your email address" />
+                  <InputEmail {...field} placeholder={t('auth.register.emailPlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,31 +144,31 @@ const RegisterForm = () => {
             />
           </div> */}
           <Button type="submit" variant="brand" disabled={isPending}>
-            {isPending ? 'Sending verification code...' : 'Sign up'}
+            {isPending ? t('auth.register.sending') : t('auth.register.submit')}
           </Button>
         </div>
         <div className="flex flex-col gap-4">
-          <span className="font-medium text-2xl text-muted-foreground text-center">Or continue with?</span>
+          <span className="font-medium text-2xl text-muted-foreground text-center">{t('auth.register.or')}</span>
           <Button
             variant="outline"
             size="sm"
           >
             <SiFacebook />
-            <span>Continue with Facebook</span>
+            <span>{t('auth.register.social.facebook')}</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
             <SiGoogle />
-            <span>Continue with Google</span>
+            <span>{t('auth.register.social.google')}</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
             <SiApple />
-            <span>Continue with Apple</span>
+            <span>{t('auth.register.social.apple')}</span>
           </Button>
         </div>
       </form>

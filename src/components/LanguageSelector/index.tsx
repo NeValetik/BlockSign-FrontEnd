@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronDown, Globe } from "lucide-react"
+import { Globe } from "lucide-react"
 import { useLocale } from "@/contexts/LocaleContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../Form/DropDown";
 
@@ -11,17 +11,16 @@ const LanguageSelector = () => {
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <div className="group flex items-center gap-2 cursor-pointer">
+      <DropdownMenuTrigger asChild className="hover:bg-accent rounded-md p-2.5 transition-colors duration-200">
+        <div className="group flex items-center gap-2 cursor-pointer ">
           <Globe className="size-4" />
-          <span>{ current.label }</span>
-          <ChevronDown 
+          {/* <ChevronDown 
             className="
               size-4 
               group-data-[state=open]:-rotate-180 transition-transform 
               duration-200
             " 
-          />
+          /> */}
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -30,7 +29,8 @@ const LanguageSelector = () => {
             <DropdownMenuItem 
               key={locale.key}
               onClick={() => { handleChangeLocale(locale.key) }}
-              className="cursor-pointer"
+              data-active={current.key === locale.key}
+              className="cursor-pointer data-[active=true]:bg-accent"
             >
               {locale.label}
             </DropdownMenuItem>

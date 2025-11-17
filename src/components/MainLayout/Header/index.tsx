@@ -53,22 +53,25 @@ const Header:FC = () => {
         </Link>
 
         <nav className="flex items-center space-x-6">
-          {isAuthenticated && (
-            <>
-              <Link href="/documents" className="text-sm font-medium transition-colors hover:text-primary">
-                {t('nav.documents') || t('navigation.documents') || 'Documents'}
-              </Link>
-              <Link href="/account/profile" className="text-sm font-medium transition-colors hover:text-primary">
-                {t('nav.account') || t('navigation.profile') || 'Account'}
-              </Link>
-              {isAdmin && (
-                <Link href="/adminconsole" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
-                  <ShieldCheck className="h-4 w-4" />
-                  Admin
+          <>
+            <Link href="/verify-doc" className="text-sm font-medium transition-colors hover:text-primary">
+              {t('nav.documents') || t('navigation.documents') || 'Verify Document'}
+            </Link>
+            {isAuthenticated && (
+              <>
+                
+                <Link href="/account/profile" className="text-sm font-medium transition-colors hover:text-primary">
+                  {t('nav.account') || t('navigation.profile') || 'Account'}
                 </Link>
-              )}
-            </>
-          )}
+                {isAdmin && (
+                  <Link href="/adminconsole" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
+                    <ShieldCheck className="h-4 w-4" />
+                    Admin
+                  </Link>
+                )}
+              </>
+            )}
+          </>
 
           <LanguageSelector />
 
@@ -113,7 +116,7 @@ const Header:FC = () => {
             {isAuthenticated && (
               <>
                 <Link 
-                  href="/documents"
+                  href="/verify-doc"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block text-sm font-medium transition-colors hover:text-primary"
                 >

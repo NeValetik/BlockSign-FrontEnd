@@ -31,7 +31,7 @@ const LoginForm = () => {
   const { push } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { locale } = useLocale();
-  const { t } = useTranslation(locale);
+  const { t } = useTranslation(locale, ['common']);
   const { handleSubmit, setError } = form;
 
   const onSubmit = async (data: ILoginForm) => {
@@ -41,14 +41,14 @@ const LoginForm = () => {
       const challenge = await getAuthChallenge(data.loginName);
       
       if (!challenge) {
-        setError('loginName', { message: 'Invalid email or user not found' });
+        setError('loginName', { message: t('auth.login.invalidEmail') });
         return;
       }
       
       // Redirect to mnemonic form with email parameter
       push(`/login/mnemonic?email=${encodeURIComponent(data.loginName)}`);
     } catch {
-      setError('loginName', { message: 'Authentication failed. Please check your email.' });
+      setError('loginName', { message: t('auth.login.authFailed') });
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +61,7 @@ const LoginForm = () => {
         className="flex flex-col flex-grow gap-12"
       >
         <h2 className="text-3xl font-medium text-center">
-          Login to your account
+          {t('auth.login.title')}
         </h2>
         <div className="flex flex-col gap-4">
           <Button
@@ -82,7 +82,7 @@ const LoginForm = () => {
         </div>
         <div>
           <SeparatorWithText textClassName="text-muted-foreground uppercase text-base">
-            <span>Or</span>
+            <span>{t('auth.login.or')}</span>
           </SeparatorWithText>
         </div>
         <div className="flex flex-col gap-6">
@@ -91,7 +91,7 @@ const LoginForm = () => {
               <FormItem>
                 <FormLabel>{t('auth.login.email')}</FormLabel>
                 <FormControl>
-                  <InputEmail {...field} placeholder="Enter your email address" />
+                  <InputEmail {...field} placeholder={t('auth.login.emailPlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -127,7 +127,7 @@ const LoginForm = () => {
             />
           </div> */}
           <Button type="submit" variant="brand" disabled={isLoading} size="lg">
-            {isLoading ? "Checking..." : t('auth.login.submit')}
+            {isLoading ? t('auth.login.checking') : t('auth.login.submit')}
           </Button>
         </div>
         <Separator />

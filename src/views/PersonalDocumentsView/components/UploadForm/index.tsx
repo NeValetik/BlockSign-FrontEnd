@@ -13,12 +13,14 @@ import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
 import { sha256Hex } from "@/utils/sha256Hex";
 import { toast } from "sonner";
 import { useTokenContext } from "@/contexts/tokenContext";
-import { Collaborator } from "@/views/DocumentsView/types";
+import { Collaborator } from "@/views/VerifyDocumentView/types";
 
 // import schema from "./schema";
 import FormCollaboratorField from "@/components/Form/FormCollaboratorField";
 import Button from "@/components/Form/Button";
 import MnemonicDialog from "@/components/MnemonicDialog";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 export interface UploadFormFields {
   document: File[];
@@ -34,7 +36,9 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
   const [showMnemonicDialog, setShowMnemonicDialog] = useState(false);
   const [privateKey, setPrivateKey] = useState<string | null>(null);
   const { token } = useTokenContext();
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']); 
 
   const form = useForm<UploadFormFields>({
     // resolver: zodResolver(schema),
@@ -104,14 +108,14 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
       return req;
     },
     onSuccess: () => {
-      toast.success("Document uploaded successfully!");
+      toast.success(t('documents.upload.success'));
       form.reset();
       // Refresh the documents list
       queryClient.invalidateQueries({ queryKey: ['documents'] });
       queryClient.invalidateQueries({ queryKey: ['me'] });
     },
     onError: (error) => {
-      toast.error(error?.message || "Failed to upload document");
+      toast.error(error?.message || t('documents.upload.failed'));
     }
   })
 
@@ -125,7 +129,7 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
     try {
       await uploadDocument(data);
     } catch (error) {
-      toast.error((error as Error).message || "Failed to upload document");
+      toast.error((error as Error).message || t('documents.upload.failed'));
     } finally {
       onClose();
     }
@@ -148,9 +152,9 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
             name="docTitle"
             render={({ field }) => (
               <FormItem>
-                <Label>Document Title</Label>
+                <Label>{t('documents.upload.title')}</Label>
                 <FormControl>
-                  <InputText {...field} placeholder="Document title" />
+                  <InputText {...field} placeholder={t('documents.upload.titlePlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -161,7 +165,7 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
             name="document"
             render={({ field }) => (
               <FormItem>
-                <Label>Upload Document (PDF only)</Label>
+                <Label>{t('documents.upload.label')}</Label>
                 <FormControl>
                   <Dropzone
                     accept={{ 'application/pdf': [] }}
@@ -169,7 +173,7 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
                     maxSize={1024 * 1024 * 500}
                     minSize={1024}
                     onDrop={handleDrop}
-                    onError={() => { setError('document', { message: 'Only PDF files are allowed' }); } }
+                    onError={() => { setError('document', { message: t('documents.upload.pdfOnly') }); } }
                     src={field.value}
                   >
                     <DropzoneEmptyState />
@@ -188,7 +192,7 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
             type="submit"
             disabled={isPending}
           >
-            {isPending ? "Uploading..." : "Upload Document"}
+            {isPending ? t('documents.upload.uploading') : t('documents.upload')}
           </Button>
         </div>
       </form>

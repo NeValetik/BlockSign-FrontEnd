@@ -8,6 +8,8 @@ import { FC, useState } from "react";
 import MnemonicPhraseDisplay from "@/components/MnemonicPhraseDisplay";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 interface FinishRegistrationViewProps {
   mnemonic: string;
@@ -20,6 +22,8 @@ interface FinishRegistrationViewProps {
 const FinishRegistrationView: FC<FinishRegistrationViewProps> = ({ email, mnemonic, publicKey, signature, token }) => {
   const { push, refresh } = useRouter();
   const [ isLoading, setIsLoading ] = useState(false);
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
   const { mutateAsync } = useMutation({
     mutationFn: async () => {
       await fetchFromServer(`/api/v1/registration/complete`,
@@ -66,7 +70,7 @@ const FinishRegistrationView: FC<FinishRegistrationViewProps> = ({ email, mnemon
         setIsLoading(false);
       },
       onError: () => {
-        toast.error("Failed to complete registration");
+        toast.error(t('finishRegistration.completeFailed'));
       }
     })
   }

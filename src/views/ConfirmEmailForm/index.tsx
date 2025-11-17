@@ -11,11 +11,15 @@ import { fetchFromServer } from "@/utils/fetchFromServer";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Button from "@/components/Form/Button";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 
 const ConfirmEmailForm = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
   
   const defaultValues: IConfirmEmailForm = {
     code: "",
@@ -47,7 +51,7 @@ const ConfirmEmailForm = () => {
         push(`/register/identity?email=${email}`);
       },
       onError: () => {
-        setError('code', { message: 'Invalid code' });
+        setError('code', { message: t('auth.confirm.invalidCode') });
       }
     });
   }
@@ -61,10 +65,9 @@ const ConfirmEmailForm = () => {
         <div
           className="flex flex-col flex-grow gap-1 text-center"
         >
-          <span className="text-3xl font-medium">Confirm your email</span>
+          <span className="text-3xl font-medium">{t('auth.confirm.title')}</span>
           <span className="max-w-[510px] text-muted-foreground text-pretty">
-            To finish the first step registration write the code sent 
-            to email <span className="text-brand">&lt;{email}&gt;</span>
+            {t('auth.confirm.subtitle')} <span className="text-brand">&lt;{email}&gt;</span>
           </span>
         </div>
         <FormField 
@@ -98,7 +101,7 @@ const ConfirmEmailForm = () => {
           type="submit"
           disabled={isPending}
         >
-          {isPending ? 'Confirming...' : 'Confirm'}
+          {isPending ? t('auth.confirm.confirming') : t('auth.confirm.submit')}
         </Button>
       </form>
     </Form>

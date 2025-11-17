@@ -10,6 +10,8 @@ import { IResetPasswordForm } from "./types";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import Button from "@/components/Form/Button";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 const DefaultValues: IResetPasswordForm = {
   code: "",
@@ -23,6 +25,8 @@ const ResetPasswordForm = () => {
     resolver: zodResolver(schema)
   });
   const { handleSubmit } = form;
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
   const onSubmit = (data: IResetPasswordForm) => {
     console.log(data);
   }
@@ -33,7 +37,7 @@ const ResetPasswordForm = () => {
         className="flex flex-col flex-grow gap-12"
       >
         <h2 className="text-3xl font-medium text-center">
-          Reset your password
+          {t('auth.reset.title')}
         </h2>
         <div className="flex flex-col gap-4">
           <Button
@@ -41,36 +45,36 @@ const ResetPasswordForm = () => {
             size="sm"
           >
             <SiFacebook />
-            <span>Reset with Facebook</span>
+            <span>{t('auth.reset.social.facebook')}</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
             <SiGoogle />
-            <span>Reset with Google</span>
+            <span>{t('auth.reset.social.google')}</span>
           </Button>
           <Button
             variant="outline"
             size="sm"
           >
             <SiApple />
-            <span>Reset with Apple</span>
+            <span>{t('auth.reset.social.apple')}</span>
           </Button>
 
         </div>
         <div>
           <SeparatorWithText textClassName="text-muted-foreground uppercase text-base">
-            <span>Or</span>
+            <span>{t('auth.reset.or')}</span>
           </SeparatorWithText>
         </div>
         <div className="flex flex-col gap-6">
           <FormField name="code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Code</FormLabel>
+                <FormLabel>{t('auth.reset.code')}</FormLabel>
                 <FormControl>
-                  <InputEmail {...field} placeholder="Enter verification code" />
+                  <InputEmail {...field} placeholder={t('auth.reset.codePlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -80,9 +84,9 @@ const ResetPasswordForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>{t('auth.reset.password')}</FormLabel>
                 <FormControl>
-                  <InputPassword {...field} placeholder="Enter new password" />
+                  <InputPassword {...field} placeholder={t('auth.reset.passwordPlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,21 +96,21 @@ const ResetPasswordForm = () => {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel>{t('auth.reset.confirmPassword')}</FormLabel>
                 <FormControl>
-                  <InputPassword {...field} placeholder="Confirm new password" />
+                  <InputPassword {...field} placeholder={t('auth.reset.confirmPasswordPlaceholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )} 
           />
           <Button type="submit" variant="brand">
-            Reset Password
+            {t('auth.reset.submit')}
           </Button>
         </div>
         <Separator />
         <div className="flex flex-col gap-4 items-center">
-          <span className="font-medium text-2xl">Remember your password?</span>
+          <span className="font-medium text-2xl">{t('auth.reset.rememberPassword')}</span>
           <Button
             variant="outline"
             size="sm"
@@ -116,7 +120,7 @@ const ResetPasswordForm = () => {
               hover:border-brand-muted
             "
           >
-            Back to Login
+            {t('auth.reset.backToLogin')}
           </Button>
         </div>
       </form>

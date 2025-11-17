@@ -13,9 +13,13 @@ import AvatarFallback from "@/components/Avatar/components/AvatarFallback";
 import FormPhoneField from "@/components/Form/FormPhoneField";
 import Button from "@/components/Form/Button";
 import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 const ProfileUpdateForm: FC = () => {
   const { me } = useUserContext();
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
 
   const defaultValues: IProfileUpdateForm = useMemo(() => {
     if (!me) return {
@@ -55,11 +59,11 @@ const ProfileUpdateForm: FC = () => {
     <>
       <div>
         <p className="text-sm text-muted-foreground mb-6">
-          Make changes to your account here. Click save when you are done.
+          {t('profile.description')}
         </p>
         
         <div className="mb-6">
-          <h3 className="text-sm font-medium mb-3">Avatar</h3>
+          <h3 className="text-sm font-medium mb-3">{t('profile.avatar')}</h3>
           <Avatar className="size-16">
             <AvatarImage src={""} />
             <AvatarFallback className="bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 text-white font-semibold text-lg">
@@ -76,10 +80,10 @@ const ProfileUpdateForm: FC = () => {
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>{t('profile.personal.name')}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter your full name"
+                    placeholder={t('profile.personal.namePlaceholder')}
                     {...field}
                   />
                 </FormControl>
@@ -91,10 +95,10 @@ const ProfileUpdateForm: FC = () => {
             name="idnp"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Idnp</FormLabel>
+                <FormLabel>{t('profile.personal.idnp')}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Enter your IDNP (13 digits)"
+                    placeholder={t('profile.personal.idnpPlaceholder')}
                     {...field}
                   />
                 </FormControl>
@@ -106,11 +110,11 @@ const ProfileUpdateForm: FC = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{t('profile.personal.email')}</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder={t('profile.personal.emailPlaceholder')}
                     {...field}
                   />
                 </FormControl>
@@ -123,7 +127,7 @@ const ProfileUpdateForm: FC = () => {
             variant="brand"
             type="submit" 
           >
-Save changes
+            {t('profile.personal.save')}
           </Button>
         </form>
       </Form>

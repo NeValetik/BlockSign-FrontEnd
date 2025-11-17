@@ -1,0 +1,40 @@
+{
+  "title": "Verificare Document",
+  "subtitle": "Verifică autenticitatea și integritatea documentelor tale folosind sistemul nostru de verificare alimentat de blockchain. Încarcă un document PDF pentru a verifica dacă există în baza noastră de date securizată și pentru a vedea istoricul complet al semnăturii.",
+  
+  "form.uploadLabel": "Încarcă Document pentru Verificare",
+  "form.uploadDescription": "Selectează un fișier PDF (max 500MB) pentru a verifica autenticitatea și integritatea acestuia",
+  "form.pdfOnlyError": "Sunt permise doar fișiere PDF",
+  "form.verifying": "Se verifică...",
+  "form.verifyButton": "Verifică Document",
+  
+  "results.title": "Rezultate Verificare",
+  "results.status": "Status Verificare:",
+  "results.verified": "VERIFICAT",
+  "results.notFound": "NU A FOST GĂSIT",
+  "results.hashLabel": "Hash Document (SHA-256):",
+  "results.hashDescription": "Acest hash unic identifică documentul tău și asigură integritatea acestuia",
+  
+  "document.title": "Titlu Document",
+  "document.createdDate": "Data Creării",
+  "document.owner": "Proprietar Document",
+  "document.participants": "Participanți",
+  "document.participantsCount": "Participanți ({count})",
+  "document.required": "Obligatoriu",
+  "document.signatures": "Semnături Digitale",
+  "document.signaturesCount": "Semnături Digitale ({count})",
+  "document.algorithm": "Algoritm: {alg}",
+  
+  "notFound.title": "Acest document nu a fost găsit în sistemul nostru. Acest lucru poate însemna:",
+  "notFound.reason1": "Documentul nu a fost încărcat în BlockSign",
+  "notFound.reason2": "Documentul a fost modificat de la încărcare",
+  "notFound.reason3": "Documentul a fost șters din sistem",
+  
+  "info.title": "Cum funcționează",
+  "info.description": "Încarcă un document PDF pentru a verifica autenticitatea acestuia. Sistemul nostru calculează un hash SHA-256 al documentului tău și îl compară cu baza noastră de date securizată. Dacă se găsește o potrivire, vei vedea istoricul complet al documentului, inclusiv toate semnăturile și participanții.",
+  
+  "toast.success": "Document verificat cu succes!",
+  "toast.notFound": "Documentul nu a fost găsit în sistem",
+  "toast.error": "Nu s-a putut verifica documentul"
+}
+

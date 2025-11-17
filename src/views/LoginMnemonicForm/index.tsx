@@ -12,6 +12,8 @@ import { useState } from "react";
 
 import Button from "@/components/Form/Button";
 import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 const DefaultValues: ILoginMnemonicForm = {
   mnemonic: "",
@@ -26,6 +28,8 @@ const LoginMnemonicForm = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
   const [isLoading, setIsLoading] = useState(false);
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
   
   // If no email parameter, redirect to login
   if (!email) {
@@ -49,14 +53,14 @@ const LoginMnemonicForm = () => {
 
 
       if (result?.error) {
-        setError('mnemonic', { message: 'Authentication failed. Please check your mnemonic phrase.' });
+        setError('mnemonic', { message: t('auth.mnemonic.failed') });
       } else if (result?.ok) {
         // Successful authentication, redirect to profile
         push("/account/profile");
         refresh();
       }
     } catch {
-      setError('mnemonic', { message: 'Authentication failed. Please try again.' });
+      setError('mnemonic', { message: t('auth.mnemonic.failedGeneric') });
     } finally {
       setIsLoading(false);
     }
@@ -69,15 +73,15 @@ const LoginMnemonicForm = () => {
         className="flex flex-col flex-grow gap-12"
       >
         <h2 className="text-3xl font-medium text-center">
-          Enter your mnemonic phrase
+          {t('auth.mnemonic.title')}
         </h2>
         <div className="flex flex-col gap-6">
           <FormField name="mnemonic"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Mnemonic phrase</FormLabel>
+                <FormLabel>{t('auth.mnemonic.label')}</FormLabel>
                 <FormControl>
-                  <InputText {...field} placeholder="Enter your 12-word mnemonic phrase" />
+                  <InputText {...field} placeholder={t('auth.mnemonic.placeholder')} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,7 +89,7 @@ const LoginMnemonicForm = () => {
           />
          
           <Button type="submit" variant="brand" disabled={isLoading}>
-            {isLoading ? "Authenticating..." : "Submit"}
+            {isLoading ? t('auth.mnemonic.authenticating') : t('auth.mnemonic.submit')}
           </Button>
         </div>
       </form>

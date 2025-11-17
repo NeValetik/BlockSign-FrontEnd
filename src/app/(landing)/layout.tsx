@@ -1,13 +1,11 @@
 import { FC, ReactNode } from "react";
 import { cookies } from "next/headers";
 import { Metadata } from "next";
-import { dir } from "i18next";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/lib/auth/authConfig";
 import { fetchFromServer } from "@/utils/fetchFromServer";
 import { QueryClient } from "@tanstack/react-query";
 
-import "../globals.css";
 import Providers from "@/components/Providers";
 import Header from "@/components/MainLayout/Header";
 import Footer from "@/components/MainLayout/Footer";
@@ -65,23 +63,19 @@ const RootLayout:FC<{
   }
 
   return (
-    <html lang="en" dir={dir(cookieLocale)}>
-      <body>
-        <Providers
-          locale={ cookieLocale }
-          token={ token || '' }
-          session={ session }
-          me={ me }
-          documents={ documents }
-        >
-          <Header />
-            {/* <Suspense fallback={ <div>Loading...</div> }> */}
-          { children }
-            {/* </Suspense> */}
-          <Footer />
-        </Providers>
-      </body>
-    </html>
+    <Providers
+      locale={ cookieLocale }
+      token={ token || '' }
+      session={ session }
+      me={ me }
+      documents={ documents }
+    >
+      <Header />
+        {/* <Suspense fallback={ <div>Loading...</div> }> */}
+      { children }
+        {/* </Suspense> */}
+      <Footer />
+    </Providers>
   );
 }
 

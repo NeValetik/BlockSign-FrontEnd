@@ -10,6 +10,9 @@ import { useUserContext } from "@/contexts/userContext";
 // import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/Form/Dropzone";
 import Button from "@/components/Form/Button";
 import DocumentStateTag from "../DocumentStateTag";
+import Link from "next/link";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 export interface Document {
   id: string;
@@ -18,27 +21,31 @@ export interface Document {
   state: DocumentState;
   participants: string[];
   owner: string;
+  updatedAt: Date;
 }
 export interface DocumentCardProps {
   document: Document;
   onApprove: (document: Document) => void;
   onReject: () => void;
   onView?: () => void;
+  documentUrl?: string;
 }
 
 const DocumentCard:FC<DocumentCardProps> = ({ 
   document, 
   onApprove,
   onReject,
-  onView
+  onView,
+  documentUrl
 }) => {
-  // const [ file ] = useState<File[] | undefined>(undefined);
-  // const handleDrop = (acceptedFiles: File[]) => {
-  //   setFile(acceptedFiles);
-  // }
 
   const { me } = useUserContext();
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
   const isOwner = document.owner === me?.id;
+  const availableTill = new Date(document.updatedAt.getTime() + 1000 * 60 * 60 * 24 * 7);
+  const isAvailable = new Date().getTime() - availableTill.getTime() < 0;
+  const dateLocale = locale === 'en' ? 'en-US' : locale === 'ru' ? 'ru-RU' : 'ro-RO';
   return (
     <div
       className="p-2 border rounded-md flex flex-col justify-between w-full"
@@ -46,27 +53,63 @@ const DocumentCard:FC<DocumentCardProps> = ({
       <div
         className="flex items-center justify-between gap-2"
       >
-        <button onClick={onView} className="flex items-center gap-2 cursor-pointer" disabled={!onView}>
-          <FileText className="w-4 h-4"/>
-          <span 
-            className="text-sm font-medium line-clamp-1 leading-none"
+        {documentUrl && isAvailable && (
+          <Link
+            href={documentUrl} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+          >
+            <FileText className="w-4 h-4"/>
+            <span 
+              className="text-sm font-medium line-clamp-1 leading-none"
             >
-            {document.title}
-          </span>
-        </button>
+              {document.title}
+            </span>
+            <span className="text-sm font-medium line-clamp-1 leading-none">
+              {t('documents.availableTill')} {availableTill.toLocaleDateString(dateLocale)}
+            </span>
+          </Link>
+        )}
+        {!documentUrl && isAvailable && (
+          <button onClick={onView} className="flex items-center gap-2 cursor-pointer" disabled={!onView}>
+            <FileText className="w-4 h-4"/>
+            <span 
+              className="text-sm font-medium line-clamp-1 leading-none"
+            >
+              {document.title}
+            </span>
+            <span className="text-sm font-medium line-clamp-1 leading-none">
+              {t('documents.availableTill')} {availableTill.toLocaleDateString(dateLocale)}
+            </span>
+          </button>
+        )}
+        {!isAvailable && (
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4"/>
+            <span 
+              className="text-sm font-medium line-clamp-1 leading-none"
+            >
+              {document.title}
+            </span>
+            <span className="text-sm font-medium line-clamp-1 leading-none">
+              {t('documents.status.expired')}
+            </span>
+          </div>
+        )}
       { ((document.state !== DocumentState.Signed) && !isOwner) && (
         <div className="flex gap-2">
           <Button 
             variant="brand"
             onClick={() => {onApprove(document)}}
           >
-            Approve
+            {t('documents.actions.approve')}
           </Button>
           <Button 
             variant="destructive"
             onClick={onReject}
           >
-            <span>Reject</span>
+            <span>{t('documents.actions.reject')}</span>
           </Button>
         </div>
       )}

@@ -1,0 +1,40 @@
+{
+  "title": "Document Verification",
+  "subtitle": "Verify the authenticity and integrity of your documents using our blockchain-powered verification system. Upload a PDF document to check if it exists in our secure database and view its complete signing history.",
+  
+  "form.uploadLabel": "Upload Document to Verify",
+  "form.uploadDescription": "Select a PDF file (max 500MB) to verify its authenticity and integrity",
+  "form.pdfOnlyError": "Only PDF files are allowed",
+  "form.verifying": "Verifying...",
+  "form.verifyButton": "Verify Document",
+  
+  "results.title": "Verification Results",
+  "results.status": "Verification Status:",
+  "results.verified": "VERIFIED",
+  "results.notFound": "NOT FOUND",
+  "results.hashLabel": "Document Hash (SHA-256):",
+  "results.hashDescription": "This unique hash identifies your document and ensures its integrity",
+  
+  "document.title": "Document Title",
+  "document.createdDate": "Created Date",
+  "document.owner": "Document Owner",
+  "document.participants": "Participants",
+  "document.participantsCount": "Participants ({count})",
+  "document.required": "Required",
+  "document.signatures": "Digital Signatures",
+  "document.signaturesCount": "Digital Signatures ({count})",
+  "document.algorithm": "Algorithm: {alg}",
+  
+  "notFound.title": "This document was not found in our system. This could mean:",
+  "notFound.reason1": "The document has not been uploaded to BlockSign",
+  "notFound.reason2": "The document has been modified since it was uploaded",
+  "notFound.reason3": "The document was deleted from the system",
+  
+  "info.title": "How it works",
+  "info.description": "Upload a PDF document to verify its authenticity. Our system calculates a SHA-256 hash of your document and compares it against our secure database. If a match is found, you'll see the complete document history including all signatures and participants.",
+  
+  "toast.success": "Document verified successfully!",
+  "toast.notFound": "Document not found in the system",
+  "toast.error": "Failed to verify document"
+}
+

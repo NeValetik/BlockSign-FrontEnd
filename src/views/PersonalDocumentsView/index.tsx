@@ -10,10 +10,14 @@ import DocumentsFilters from "./components/DocumentsFilters";
 import DocumentsList from "./components/DocumentsList";
 import Button from "@/components/Form/Button";
 import UploadForm from "./components/UploadForm";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 const PersonalDocumentsView = () => {
   const { documents } = useDocumentsContext();
   const [open, setOpen] = useState(false);
+  const { locale } = useLocale();
+  const { t } = useTranslation(locale, ['common']);
   const processedData: Document[] | undefined = documents?.map((document) => ({
     id: document.id,
     title: document.title,
@@ -22,6 +26,7 @@ const PersonalDocumentsView = () => {
     participants: document.participants?.map((participant) => { return participant.user.username } ) 
       .sort((a, b) => a.localeCompare(b)) || [],
     owner: document.owner?.id || "",
+    updatedAt: new Date(document.updatedAt || new Date()),
   })) satisfies Document[] | undefined;
 
   const handleClose = () => {
@@ -35,7 +40,7 @@ const PersonalDocumentsView = () => {
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="brand">
-              <span>Upload Document</span>
+              <span>{t('documents.upload')}</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="overflow-auto max-h-[80vh]" >

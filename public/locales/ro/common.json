@@ -1,6 +1,17 @@
 {
-  "home.title": "Acasă",
-  "home.description": "Descrierea paginii de acasă",
+  "home.title": "Verificare Sigură a Documentelor",
+  "home.subtitle": "Autentificare documente și semnături digitale alimentate de blockchain",
+  "home.cta": "Începe",
+  "home.features.verify": "Verifică documente instantaneu folosind tehnologia blockchain",
+  "home.features.sign": "Semnături digitale cu valabilitate legală",
+  "home.features.secure": "Criptare de nivel militar pentru documentele tale",
+  
+  "nav.home": "Acasă",
+  "nav.documents": "Verifică Document",
+  "nav.account": "Cont",
+  "nav.login": "Autentificare",
+  "nav.register": "Înregistrare",
+  "nav.logout": "Deconectare",
   
   "navigation.home": "Acasă",
   "navigation.documents": "Documente",
