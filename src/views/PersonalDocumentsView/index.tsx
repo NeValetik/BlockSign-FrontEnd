@@ -16,8 +16,10 @@ import { useLocale } from "@/contexts/LocaleContext";
 const PersonalDocumentsView = () => {
   const { documents } = useDocumentsContext();
   const [open, setOpen] = useState(false);
+  const [selectedStates, setSelectedStates] = useState<DocumentState[]>([]);
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
+  
   const processedData: Document[] | undefined = documents?.map((document) => ({
     id: document.id,
     title: document.title,
@@ -29,6 +31,11 @@ const PersonalDocumentsView = () => {
     updatedAt: new Date(document.updatedAt || new Date()),
   })) satisfies Document[] | undefined;
 
+  // Filter documents based on selected states
+  const filteredData = selectedStates.length > 0
+    ? processedData?.filter((doc) => selectedStates.includes(doc.state))
+    : processedData;
+
   const handleClose = () => {
     setOpen(false);
   }
@@ -36,7 +43,10 @@ const PersonalDocumentsView = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between items-center">
-        <DocumentsFilters />
+        <DocumentsFilters 
+          selectedStates={selectedStates}
+          onStateChange={setSelectedStates}
+        />
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="brand">
@@ -50,7 +60,7 @@ const PersonalDocumentsView = () => {
       </div>
       
       <div className="border rounded-md p-6">
-        <DocumentsList data={processedData} maxCards={20} />
+        <DocumentsList data={filteredData} maxCards={20} />
       </div>
       
     </div>

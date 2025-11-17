@@ -1,6 +1,7 @@
 import { FC, useEffect, useState, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 import DocumentCard from "./components/DocumentCard";
 import { useUserContext } from "@/contexts/userContext";
@@ -152,21 +153,59 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       </div>
     )
   }
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 20,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
+  };
+
   return (
     <>
       <div className="w-full flex flex-col gap-16">
-        <div className="flex flex-wrap gap-2">
+        <motion.div 
+          className="flex flex-col gap-2"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {processedData?.map((item) => (
-            <DocumentCard
+            <motion.div
               key={item.id}
-              document={item}
-              onApprove={handleApprove()}
-              onReject={handleReject(item.id)}
-              onView={handleView(item.id)}
-              documentUrl={documentUrls[item.id]}
-            />
+              variants={cardVariants}
+              layout
+            >
+              <DocumentCard
+                document={item}
+                onApprove={handleApprove()}
+                onReject={handleReject(item.id)}
+                onView={handleView(item.id)}
+                documentUrl={documentUrls[item.id]}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </>
   )

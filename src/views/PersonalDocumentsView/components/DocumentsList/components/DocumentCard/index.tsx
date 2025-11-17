@@ -4,6 +4,7 @@ import { FC } from "react";
 import { DocumentState } from "../../types";
 import { FileText } from "lucide-react";
 import { useUserContext } from "@/contexts/userContext";
+import { motion } from "framer-motion";
 
 // import DocumentStateTag from "../DocumentStateTag";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/Form/DropDown";
@@ -47,8 +48,11 @@ const DocumentCard:FC<DocumentCardProps> = ({
   const isAvailable = new Date().getTime() - availableTill.getTime() < 0;
   const dateLocale = locale === 'en' ? 'en-US' : locale === 'ru' ? 'ru-RU' : 'ro-RO';
   return (
-    <div
+    <motion.div
       className="p-2 border rounded-md flex flex-col justify-between w-full"
+      layout
+      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.2 }}
     >
       <div
         className="flex items-center justify-between gap-2"
@@ -97,29 +101,28 @@ const DocumentCard:FC<DocumentCardProps> = ({
             </span>
           </div>
         )}
-      { ((document.state !== DocumentState.Signed) && !isOwner) && (
-        <div className="flex gap-2">
-          <Button 
-            variant="brand"
-            onClick={() => {onApprove(document)}}
-          >
-            {t('documents.actions.approve')}
-          </Button>
-          <Button 
-            variant="destructive"
-            onClick={onReject}
-          >
-            <span>{t('documents.actions.reject')}</span>
-          </Button>
-        </div>
-      )}
-      { ((document.state !== DocumentState.Pending) || isOwner) && (
+        { ((document.state !== DocumentState.Signed) && !isOwner) && (
+          <div className="flex gap-2">
+            <Button 
+              variant="brand"
+              onClick={() => {onApprove(document)}}
+            >
+              {t('documents.actions.approve')}
+            </Button>
+            <Button 
+              variant="destructive"
+              onClick={onReject}
+            >
+              <span>{t('documents.actions.reject')}</span>
+            </Button>
+          </div>
+        )}
+        { ((document.state !== DocumentState.Pending) || isOwner) && (
           <div>
             <DocumentStateTag state={document.state} />
           </div>
-        )
-      }
-    </div>
+        )}
+      </div>
       {/* <div className="w-full  relative">
         {document.state !== DocumentState.Signed && (
           <Dropzone
@@ -138,7 +141,7 @@ const DocumentCard:FC<DocumentCardProps> = ({
           <DocumentStateTag state={document.state} />
         </div> */}
       {/* </div> */}
-    </div>
+    </motion.div>
   )
 
 }
