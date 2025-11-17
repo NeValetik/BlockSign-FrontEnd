@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import DocumentCard from "./components/DocumentCard";
@@ -19,7 +19,24 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   const { token } = useTokenContext();
   const { me } = useUserContext();
   const [privateKey, setPrivateKey] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
+  const { mutateAsync: getDocumentUrl } = useMutation({
+    mutationFn: async (documentId: string) => {
+      const response = await fetchFromServer(`/api/v1/user/documents/${documentId}/url`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+    }
+  });
   const { mutateAsync: signDocument,  } = useMutation({
     mutationFn: async ({ docId, signatureB64 }: { docId: string; signatureB64: string }) => {
       const response = await fetchFromServer(`/api/v1/user/documents/${docId}/sign`, {
@@ -37,7 +54,9 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       if (result.status === 'SIGNED') {
         toast.success('All parties have signed the document!');
       }
-      // You might want to refresh the documents list here
+      // Refresh the documents list
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: ['me'] });
     },
     onError: (error) => {
       console.error('Error signing document:', error);
@@ -57,18 +76,29 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     signDocument({ docId: document.id, signatureB64: signatureB64 });
   }
 
-  const handleApprove = () => (document: Document, file: File[]) => {
+  const handleApprove = () => async(document: Document) => {
     if (!privateKey) {
       toast.error('Please generate a private key to sign the document');
     } else {
-      handleSignDocument(document, file);
+      const { url } = await getDocumentUrl(document.id);
+      const fileBlob = await fetch(url).then(res => res.blob());
+      if (fileBlob && fileBlob.size > 0) {
+        const file = [new File([fileBlob], document.title, { type: fileBlob.type })];
+        handleSignDocument(document, file);
+      } else {
+        toast.error('Failed to get document file');
+      }
     }
   }
   const handleReject = (id: string) => () => {
     console.log('Approve', id, me?.id);
   }
-  const handleView = (id: string) => () =>{
-    console.log('Approve', id, me?.id);
+  const handleView = (id: string ) => async () =>{
+    const response = await getDocumentUrl(id);
+    if (!!response.url){
+      window.open(response.url, '_blank');
+      toast.success('Document opened successfully!');
+    }
   }
 
   useEffect(()=>{
@@ -91,7 +121,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   return (
     <>
       <div className="w-full flex flex-col gap-16">
-        <div className="flex flex-wrap gap-10">
+        <div className="flex flex-wrap gap-2">
           {processedData?.map((item) => (
             <DocumentCard
               key={item.id}

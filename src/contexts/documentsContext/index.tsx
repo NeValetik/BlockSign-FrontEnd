@@ -1,6 +1,9 @@
 'use client';
 
 import { createContext, useContext, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchFromServer } from "@/utils/fetchFromServer";
+import { useTokenContext } from "@/contexts/tokenContext";
 
 export interface DocumentsContextProps {
   documents: {
@@ -37,6 +40,7 @@ export interface DocumentsContextProps {
       alg: string;
       signedAt: Date;
     }[];
+    bucketLink: string;
   }[] | null;
 }
 
@@ -45,8 +49,35 @@ const DocumentsContext = createContext<DocumentsContextProps>({ documents: null 
 export const DocumentsContextProvider: React.FC<{
   documents: DocumentsContextProps['documents'];
   children: React.ReactNode;
-}> = ({ children, documents }) => {
-  const contextValue = useMemo(() => ({ documents }), [documents]);
+}> = ({ children, documents: initialDocuments }) => {
+  const { token } = useTokenContext();
+  
+  // Fetch documents using React Query so it can be refetched when invalidated
+  const { data: documents } = useQuery({
+    queryKey: ['documents', token],
+    queryFn: async () => {
+      if (!token) return null;
+      try {
+        const response = await fetchFromServer(`/api/v1/user/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        return response.documents || null;
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+        return null;
+      }
+    },
+    enabled: !!token,
+    initialData: initialDocuments,
+    staleTime: 0, // Always consider stale to allow refetching
+  });
+
+  const contextValue = useMemo(() => ({ documents: documents ?? null }), [documents]);
+  console.log(documents);
 
   return (
     <DocumentsContext.Provider value={contextValue}>

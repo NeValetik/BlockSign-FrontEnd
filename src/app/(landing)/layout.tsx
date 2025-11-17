@@ -5,6 +5,7 @@ import { dir } from "i18next";
 import { getServerSession } from "next-auth";
 import { authConfig } from "@/lib/auth/authConfig";
 import { fetchFromServer } from "@/utils/fetchFromServer";
+import { QueryClient } from "@tanstack/react-query";
 
 import "../globals.css";
 import Providers from "@/components/Providers";
@@ -25,28 +26,35 @@ const RootLayout:FC<{
   const cookieLocale = cookieStore.get('locale')?.value || 'en';
   const session = await getServerSession(authConfig);
   const token = session?.user?.token?.accessToken;
+
+  const queryClient = new QueryClient();
   let me = null;
   let documents = null;
   try {
     if (token) {
       let resp = null;
-      resp = await fetchFromServer(`/api/v1/user/me`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      if (!resp.user) {
-        resp = await fetchFromServer(`/api/v1/admin/me`, {
+      resp = await queryClient.fetchQuery({
+        queryKey: ['me', token],
+        queryFn: () => fetchFromServer(`/api/v1/user/me`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
+        }),
+      });
+      if (!resp.user) {
+        resp = await queryClient.fetchQuery({
+          queryKey: ['admin', token],
+          queryFn: () => fetchFromServer(`/api/v1/admin/me`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          }),
         });
         me = resp.admin;
-        // documents = resp.documents;
       } else {
         me = resp.user;
         documents = resp.documents;

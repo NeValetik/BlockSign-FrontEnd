@@ -14,7 +14,7 @@ import { fetchFromServer } from "@/utils/fetchFromServer";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useTokenContext } from "@/contexts/tokenContext";
-import { VerifyFormFields } from "../../types";
+import { VerifyFormFields } from "../types";
 
 
 interface VerificationResult {

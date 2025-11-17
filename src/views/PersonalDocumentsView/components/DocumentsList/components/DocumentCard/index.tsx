@@ -1,12 +1,15 @@
 'use client'
 
-import { FC, useState } from "react";
+import { FC } from "react";
 import { DocumentState } from "../../types";
-import { EllipsisVertical, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
+import { useUserContext } from "@/contexts/userContext";
 
+// import DocumentStateTag from "../DocumentStateTag";
+// import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/Form/DropDown";
+// import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/Form/Dropzone";
+import Button from "@/components/Form/Button";
 import DocumentStateTag from "../DocumentStateTag";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/Form/DropDown";
-import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/Form/Dropzone";
 
 export interface Document {
   id: string;
@@ -14,10 +17,11 @@ export interface Document {
   image: string;
   state: DocumentState;
   participants: string[];
+  owner: string;
 }
 export interface DocumentCardProps {
   document: Document;
-  onApprove: (document: Document, file: File[]) => void;
+  onApprove: (document: Document) => void;
   onReject: () => void;
   onView?: () => void;
 }
@@ -26,51 +30,54 @@ const DocumentCard:FC<DocumentCardProps> = ({
   document, 
   onApprove,
   onReject,
-  // onView
+  onView
 }) => {
-  const [file, setFile] = useState<File[] | undefined>(undefined);
-  const handleDrop = (acceptedFiles: File[]) => {
-    setFile(acceptedFiles);
-  }
+  // const [ file ] = useState<File[] | undefined>(undefined);
+  // const handleDrop = (acceptedFiles: File[]) => {
+  //   setFile(acceptedFiles);
+  // }
+
+  const { me } = useUserContext();
+  const isOwner = document.owner === me?.id;
   return (
     <div
-      className="p-4 border rounded-md flex flex-col gap-2 w-full max-w-[260px]"
+      className="p-2 border rounded-md flex flex-col justify-between w-full"
     >
       <div
         className="flex items-center justify-between gap-2"
       >
-        <FileText className="w-4 h-4"/>
-        <span 
-          className="text-sm font-medium line-clamp-1 leading-none"
-        >
-          {document.title}
-        </span>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="cursor-pointer">
-            <EllipsisVertical className="w-4 h-4"/>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent side="bottom" align="end">
-            <DropdownMenuItem className="cursor-pointer" variant="default">
-              <span>View</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              className="cursor-pointer" 
-              variant="default"
-              onClick={() => {onApprove(document, file || [])}}
+        <button onClick={onView} className="flex items-center gap-2 cursor-pointer" disabled={!onView}>
+          <FileText className="w-4 h-4"/>
+          <span 
+            className="text-sm font-medium line-clamp-1 leading-none"
             >
-              <span className="text-brand">Approve</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              className="cursor-pointer" 
-              variant="destructive"
-              onClick={onReject}
-            >
-              <span>Reject</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="w-full h-[250px] relative">
+            {document.title}
+          </span>
+        </button>
+      { ((document.state !== DocumentState.Signed) && !isOwner) && (
+        <div className="flex gap-2">
+          <Button 
+            variant="brand"
+            onClick={() => {onApprove(document)}}
+          >
+            Approve
+          </Button>
+          <Button 
+            variant="destructive"
+            onClick={onReject}
+          >
+            <span>Reject</span>
+          </Button>
+        </div>
+      )}
+      { ((document.state !== DocumentState.Pending) || isOwner) && (
+          <div>
+            <DocumentStateTag state={document.state} />
+          </div>
+        )
+      }
+    </div>
+      {/* <div className="w-full  relative">
         {document.state !== DocumentState.Signed && (
           <Dropzone
             accept={{ 'application/pdf': [] }}
@@ -83,18 +90,11 @@ const DocumentCard:FC<DocumentCardProps> = ({
             <DropzoneEmptyState text="Upload the designated file"/>
             <DropzoneContent />
           </Dropzone>
-        )}
-        {document.state === DocumentState.Signed && (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="text-2xl font-medium text-brand">
-              Validated
-            </span>
-          </div>
-        )}
-        <div className="absolute bottom-0 right-0">
+        )} */}
+        {/* <div className="absolute bottom-0 right-0">
           <DocumentStateTag state={document.state} />
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </div>
   )
 

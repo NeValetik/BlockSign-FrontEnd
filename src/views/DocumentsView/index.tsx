@@ -1,46 +1,46 @@
 'use client';
 
 import { FC } from "react";
-import { useUserContext } from "@/contexts/userContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs";
+// import { useUserContext } from "@/contexts/userContext";
 
-import UploadForm from "./components/UploadForm";
-import VerifyForm from "./components/VerifyForm";
+// import UploadForm from "../PersonalDocumentsView/UploadForm";
+import VerifyForm from "./VerifyForm";
 
-type DocumentViewState = 'upload' | 'verify';
+// type DocumentViewState = 'upload' | 'verify';
 
 const DocumentsView: FC = () => {
 
-  const { me } = useUserContext();
-  const tabs: {
-    value: DocumentViewState;
-    labelComponent: string | React.ReactNode;
-    content: React.ReactNode;
-    isAuthorizedAccess?: boolean;
-  }[] = [
-    {
-      value: 'verify',
-      labelComponent: 'Verify',
-      content: <VerifyForm />
-    },
-    {
-      value: 'upload',
-      labelComponent: 'Upload',
-      isAuthorizedAccess: true,
-      content: <UploadForm />
-    },
-  ]
+  // const { me } = useUserContext();
+  // const tabs: {
+  //   value: DocumentViewState;
+  //   labelComponent: string | React.ReactNode;
+  //   content: React.ReactNode;
+  //   isAuthorizedAccess?: boolean;
+  // }[] = [
+  //   {
+  //     value: 'verify',
+  //     labelComponent: 'Verify',
+  //     content: <VerifyForm />
+  //   },
+  //   // {
+  //   //   value: 'upload',
+  //   //   labelComponent: 'Upload',
+  //   //   isAuthorizedAccess: true,
+  //   //   content: <UploadForm />
+  //   // },
+  // ]
 
   return (
     <div>
-      <Tabs
+      <VerifyForm />
+      {/* <Tabs
         defaultValue={tabs[1].value}
         className="gap-20"
       >
         <TabsList
           className="w-full gap-2 bg-brand"
-        >
-          {tabs.map((tab) => (
+        > */}
+          {/* {tabs.map((tab) => (
             <TabsTrigger 
               key={tab.value} 
               value={tab.value} 
@@ -49,14 +49,14 @@ const DocumentsView: FC = () => {
             >
               {tab.labelComponent}
             </TabsTrigger>
-          ))}
-        </TabsList>
+          ))} */}
+        {/* </TabsList>
         {tabs.map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
             {tab.content}
           </TabsContent>
         ))}
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 }

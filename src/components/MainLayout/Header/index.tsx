@@ -8,7 +8,7 @@ import { signOut } from "next-auth/react";
 import Button from "@/components/Form/Button";
 import LanguageSelector from "@/components/LanguageSelector";
 import Link from "next/link";
-import Profile from "@/components/Profile";
+// import Profile from "@/components/Profile";
 import { Menu, X, Globe, Shield, ShieldCheck, Moon, Sun } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/client";
 import Container from "@/components/Container";

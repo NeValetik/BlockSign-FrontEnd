@@ -1,29 +1,40 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from "@/components/Form/Dropzone";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 // import { zodResolver } from "@hookform/resolvers/zod";
-import { UploadFormFields } from "../../types";
 import { InputText } from "@/components/Form/Input";
 import { Label } from "@/components/Form/Label";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchFromServer } from "@/utils/fetchFromServer";
 import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
 import { sha256Hex } from "@/utils/sha256Hex";
 import { toast } from "sonner";
 import { useTokenContext } from "@/contexts/tokenContext";
+import { Collaborator } from "@/views/DocumentsView/types";
 
 // import schema from "./schema";
 import FormCollaboratorField from "@/components/Form/FormCollaboratorField";
 import Button from "@/components/Form/Button";
 import MnemonicDialog from "@/components/MnemonicDialog";
 
-const UploadForm = () => {
+export interface UploadFormFields {
+  document: File[];
+  collaborators: Collaborator[];
+  docTitle: string;
+};
+
+interface UploadFormProps {
+  onClose: () => void;
+}
+
+const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
   const [showMnemonicDialog, setShowMnemonicDialog] = useState(false);
   const [privateKey, setPrivateKey] = useState<string | null>(null);
-  const { token } = useTokenContext(); 
+  const { token } = useTokenContext();
+  const queryClient = useQueryClient(); 
 
   const form = useForm<UploadFormFields>({
     // resolver: zodResolver(schema),
@@ -83,7 +94,6 @@ const UploadForm = () => {
        formData.append('participantsUsernames', JSON.stringify(participantsUsernames));
        formData.append('creatorSignatureB64', creatorSignatureB64);
        
-       console.log(token)
        const req = await fetchFromServer('/api/v1/user/documents', {
          method: 'POST',
          body: formData,
@@ -91,12 +101,14 @@ const UploadForm = () => {
            'Authorization': `Bearer ${token}`,
          }
        });
-      console.log(req);
       return req;
     },
     onSuccess: () => {
       toast.success("Document uploaded successfully!");
       form.reset();
+      // Refresh the documents list
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: ['me'] });
     },
     onError: (error) => {
       toast.error(error?.message || "Failed to upload document");
@@ -113,7 +125,9 @@ const UploadForm = () => {
     try {
       await uploadDocument(data);
     } catch (error) {
-      console.error('Upload failed:', error);
+      toast.error((error as Error).message || "Failed to upload document");
+    } finally {
+      onClose();
     }
   }
 

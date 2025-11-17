@@ -40,16 +40,16 @@ const Providers: FC<
       <SessionProvider session={ session }>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <LocaleProvider defaultLocale={ locale }>
-            <UserContextProvider me={ me }>
               <TokenContextProvider token={ token }>
-                <DocumentsContextProvider documents={ documents }>
-                  <QueryClientProvider client={ client }>
-                    {children}
-                    <Toaster />
-                  </QueryClientProvider>
-                </DocumentsContextProvider>
+                <QueryClientProvider client={ client }>
+                  <DocumentsContextProvider documents={ documents }>
+                    <UserContextProvider me={ me }>
+                      {children}
+                      <Toaster />
+                    </UserContextProvider>
+                  </DocumentsContextProvider>
+                </QueryClientProvider>
               </TokenContextProvider>
-            </UserContextProvider>
           </LocaleProvider>
         </ThemeProvider>
       </SessionProvider>
