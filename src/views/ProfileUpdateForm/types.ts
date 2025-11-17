@@ -1,10 +1,6 @@
 export interface IProfileUpdateForm {
   fullName: string;
-  idnp: string;
+  username: string;
   email: string;
   avatar?: string;
-  phone: {
-    code: string;
-    number: string;
-  };
 }

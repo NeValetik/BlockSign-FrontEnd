@@ -11,7 +11,7 @@ const DocumentsFilters: FC = () => {
     <div
       className="flex gap-4"
     >
-      <SearchBar href="/account/documents" />
+      <SearchBar href="/account/documents" placeholder={'Search documents'} />
       <Button
         variant="default"
       >

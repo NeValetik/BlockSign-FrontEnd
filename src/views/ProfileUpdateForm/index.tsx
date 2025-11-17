@@ -7,14 +7,13 @@ import { Input } from "@/components/Form/Input";
 import { AvatarImage } from "@/components/Avatar/components/AvatarImage";
 import { useUserContext } from "@/contexts/userContext";
 import { IProfileUpdateForm } from "./types";
+import { useTranslation } from "@/lib/i18n/client";
+import { useLocale } from "@/contexts/LocaleContext";
 
 import Avatar from "@/components/Avatar";
 import AvatarFallback from "@/components/Avatar/components/AvatarFallback";
-import FormPhoneField from "@/components/Form/FormPhoneField";
 import Button from "@/components/Form/Button";
 import getUserShortFromFullName from "@/utils/getUserShortFromFullName";
-import { useTranslation } from "@/lib/i18n/client";
-import { useLocale } from "@/contexts/LocaleContext";
 
 const ProfileUpdateForm: FC = () => {
   const { me } = useUserContext();
@@ -24,23 +23,15 @@ const ProfileUpdateForm: FC = () => {
   const defaultValues: IProfileUpdateForm = useMemo(() => {
     if (!me) return {
       fullName: '',
-      idnp: '',
+      username: '',
       email: '',
       avatar: '',
-      phone: {
-        code: '+373',
-        number: ''
-      },
     }
     return {
       fullName: me.fullName,
-      idnp: '',
+      username: me.username,
       email: me.email,
       avatar: "",
-      phone: {
-        code: '+373',
-        number: '',
-      },
     }
   }, [ me ]);
 
@@ -84,6 +75,7 @@ const ProfileUpdateForm: FC = () => {
                 <FormControl>
                   <Input
                     placeholder={t('profile.personal.namePlaceholder')}
+                    disabled
                     {...field}
                   />
                 </FormControl>
@@ -92,13 +84,14 @@ const ProfileUpdateForm: FC = () => {
           />
           <FormField
             control={control}
-            name="idnp"
+            name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('profile.personal.idnp')}</FormLabel>
+                <FormLabel>{t('profile.personal.username') || 'Username'}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t('profile.personal.idnpPlaceholder')}
+                    placeholder={t('profile.personal.usernamePlaceholder') || 'Username'}
+                    disabled
                     {...field}
                   />
                 </FormControl>
@@ -115,14 +108,13 @@ const ProfileUpdateForm: FC = () => {
                   <Input
                     type="email"
                     placeholder={t('profile.personal.emailPlaceholder')}
+                    disabled
                     {...field}
                   />
                 </FormControl>
               </FormItem>
             )}
           />
-
-          <FormPhoneField name="phone" />
           <Button 
             variant="brand"
             type="submit" 

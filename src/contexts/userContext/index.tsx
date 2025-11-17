@@ -9,6 +9,7 @@ export interface UserContextProps {
     id: string;
     createdAt: Date;
     fullName: string;
+    username: string;
     status: string;
     updatedAt: Date;
   } | null;

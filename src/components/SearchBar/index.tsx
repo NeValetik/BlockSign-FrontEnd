@@ -42,7 +42,7 @@ const SearchBar: FC<SearchBarProps> = ( props ) => {
         value={search} 
         onChange={handleSearchChange} 
         onFocus={()=>setIsFocused(true)} 
-        onBlur={()=>setIsFocused(false)} 
+        onBlur={()=>setIsFocused(false)}
       />
     </div>
   );
