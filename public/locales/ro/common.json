@@ -177,6 +177,7 @@
   "profile.personal.firstName": "Prenume",
   "profile.personal.lastName": "Nume",
   "profile.personal.email": "Adresă email",
+  "profile.personal.username": "Username",
   "profile.personal.phone": "Număr de telefon",
   "profile.personal.company": "Companie",
   "profile.personal.position": "Poziție",

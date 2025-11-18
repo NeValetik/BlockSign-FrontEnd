@@ -87,7 +87,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0.028 261.692);
   --font-brand: "DM Sans", sans-serif;
-  --brand: theme(colors.teal.600);
+  --brand: #6266ea;
   --brand-foreground: oklch(0.985 0.002 247.839);
   --brand-muted: theme(colors.teal.700);
   --primary: oklch(0.21 0.034 264.665);
@@ -125,9 +125,9 @@
   --popover: oklch(0.21 0.034 264.665);
   --popover-foreground: oklch(0.985 0.002 247.839);
   --font-brand: "DM Sans", sans-serif;
-  --brand: theme(colors.teal.600);
+  --brand: #6266ea;
   --brand-foreground: oklch(0.985 0.002 247.839);
-  --brand-muted: theme(colors.teal.700);
+  --brand-muted: #6267eaE6;
   --primary: oklch(0.928 0.006 264.531);
   --primary-foreground: oklch(0.21 0.034 264.665);
   --secondary: oklch(0.278 0.033 256.848);

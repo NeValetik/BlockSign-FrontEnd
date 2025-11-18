@@ -3,6 +3,7 @@
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/FormWrapper";
 import { FC, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { motion } from "framer-motion";
 import { Input } from "@/components/Form/Input";
 import { AvatarImage } from "@/components/Avatar/components/AvatarImage";
 import { useUserContext } from "@/contexts/userContext";
@@ -46,9 +47,41 @@ const ProfileUpdateForm: FC = () => {
     console.log(data);
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const fieldVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 20,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
+  };
+
   return (
-    <>
-      <div>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={fieldVariants}>
         <p className="text-sm text-muted-foreground mb-6">
           {t('profile.description')}
         </p>
@@ -62,68 +95,80 @@ const ProfileUpdateForm: FC = () => {
             </AvatarFallback>
           </Avatar>
         </div>
-      </div>
+      </motion.div>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('profile.personal.name')}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={t('profile.personal.namePlaceholder')}
-                    disabled
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('profile.personal.username') || 'Username'}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={t('profile.personal.usernamePlaceholder') || 'Username'}
-                    disabled
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('profile.personal.email')}</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder={t('profile.personal.emailPlaceholder')}
-                    disabled
-                    {...field}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button 
-            variant="brand"
-            type="submit" 
-          >
-            {t('profile.personal.save')}
-          </Button>
-        </form>
+        <motion.form 
+          onSubmit={handleSubmit(onSubmit)} 
+          className="space-y-4"
+          variants={containerVariants}
+        >
+          <motion.div variants={fieldVariants}>
+            <FormField
+              control={control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('profile.personal.name')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t('profile.personal.namePlaceholder')}
+                      disabled
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </motion.div>
+          <motion.div variants={fieldVariants}>
+            <FormField
+              control={control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('profile.personal.username') || 'Username'}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t('profile.personal.usernamePlaceholder') || 'Username'}
+                      disabled
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </motion.div>
+          <motion.div variants={fieldVariants}>
+            <FormField
+              control={control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('profile.personal.email')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder={t('profile.personal.emailPlaceholder')}
+                      disabled
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </motion.div>
+          <motion.div variants={fieldVariants}>
+            <Button 
+              variant="brand"
+              type="submit" 
+            >
+              {t('profile.personal.save')}
+            </Button>
+          </motion.div>
+        </motion.form>
       </Form>
-    </>
+    </motion.div>
   )
 }
 

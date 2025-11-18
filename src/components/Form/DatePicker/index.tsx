@@ -32,7 +32,13 @@ const DatePicker:FC<DatePickerProps> = ({value, onChange}) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar mode="single" selected={value} onSelect={onChange} required />
+        <Calendar 
+          mode="single" 
+          selected={value} 
+          onSelect={onChange}
+          required 
+          captionLayout="dropdown"
+        />
       </PopoverContent>
     </Popover>
   )

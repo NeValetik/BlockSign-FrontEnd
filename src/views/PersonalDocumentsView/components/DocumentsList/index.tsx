@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useRef } from "react";
+import { FC, useEffect, useState, useRef, useMemo } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -28,6 +28,12 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
 
+  // Create a key that changes when data changes to reset animations
+  const dataKey = useMemo(() => {
+    if (!processedData || processedData.length === 0) return 'empty';
+    return processedData.map(doc => doc.id).join(',');
+  }, [processedData]);
+
   const { mutateAsync: getDocumentUrl } = useMutation({
     mutationFn: async (documentId: string) => {
       const response = await fetchFromServer(`/api/v1/user/documents/${documentId}/url`, {
@@ -44,7 +50,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
     }
   });
-  const { mutateAsync: signDocument,  } = useMutation({
+  const { mutateAsync: signDocument, isPending: isSigningDocument } = useMutation({
     mutationFn: async ({ docId, signatureB64 }: { docId: string; signatureB64: string }) => {
       const response = await fetchFromServer(`/api/v1/user/documents/${docId}/sign`, {
         method: 'POST',
@@ -56,14 +62,16 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       });
       return response;
     },
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
       toast.success(t('documents.sign.success'));
       if (result.status === 'SIGNED') {
         toast.success(t('documents.sign.allSigned'));
       }
       // Refresh the documents list
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
-      queryClient.invalidateQueries({ queryKey: ['me'] });
+      await queryClient.invalidateQueries({ queryKey: ['documents'] });
+      await queryClient.invalidateQueries({ queryKey: ['me'] });
+      await queryClient.refetchQueries({ queryKey: ['documents'] });
+
     },
     onError: (error) => {
       console.error('Error signing document:', error);
@@ -185,6 +193,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     <>
       <div className="w-full flex flex-col gap-16">
         <motion.div 
+          key={dataKey}
           className="flex flex-col gap-2"
           variants={containerVariants}
           initial="hidden"
@@ -198,6 +207,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
             >
               <DocumentCard
                 document={item}
+                isSigningDocument={isSigningDocument}
                 onApprove={handleApprove()}
                 onReject={handleReject(item.id)}
                 onView={handleView(item.id)}

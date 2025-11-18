@@ -9,7 +9,7 @@ import Button from "@/components/Form/Button";
 import LanguageSelector from "@/components/LanguageSelector";
 import Link from "next/link";
 // import Profile from "@/components/Profile";
-import { Menu, X, Globe, Shield, ShieldCheck, Moon, Sun } from "lucide-react";
+import { Menu, X, Shield, ShieldCheck, Moon, Sun } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/client";
 import Container from "@/components/Container";
 
@@ -48,25 +48,31 @@ const Header:FC = () => {
       <Container>
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          <Shield className="h-6 w-6 text-primary" />
+          <Shield className="h-6 w-6 text-brand" />
           <span className="font-bold text-xl">Blocksign</span>
         </Link>
 
         <nav className="flex items-center space-x-6">
           <>
-            <Link href="/verify-doc" className="text-sm font-medium transition-colors hover:text-primary">
-              {t('nav.documents') || t('navigation.documents') || 'Verify Document'}
+            <Link href="/verify-doc">
+              <Button variant="ghost" size="default">
+                  {t('nav.documents') || t('navigation.documents') || 'Verify Document'}
+              </Button>
             </Link>
             {isAuthenticated && (
               <>
                 
                 <Link href="/account/profile" className="text-sm font-medium transition-colors hover:text-primary">
-                  {t('nav.account') || t('navigation.profile') || 'Account'}
+                  <Button variant="ghost" size="default">
+                    {t('nav.account') || t('navigation.profile') || 'Account'}
+                  </Button>
                 </Link>
                 {isAdmin && (
                   <Link href="/adminconsole" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
-                    <ShieldCheck className="h-4 w-4" />
-                    Admin
+                    <Button variant="ghost" size="default">
+                      <ShieldCheck className="size-4" />
+                      Admin
+                    </Button>
                   </Link>
                 )}
               </>
@@ -76,7 +82,7 @@ const Header:FC = () => {
           <LanguageSelector />
 
           <Button variant="ghost" size="icon" onClick={toggleTheme}>
-            {currentTheme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            {currentTheme === 'light' ? <Moon className="size-4" /> : <Sun className="size-4" />}
           </Button>
 
           {isAuthenticated ? (
@@ -118,7 +124,7 @@ const Header:FC = () => {
                 <Link 
                   href="/verify-doc"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-sm font-medium transition-colors hover:text-primary"
+                  className="block text-sm font-medium transition-colors hover:text-primary hover:bg-"
                 >
                   {t('nav.documents') || t('navigation.documents') || 'Documents'}
                 </Link>
@@ -141,14 +147,9 @@ const Header:FC = () => {
                 )}
               </>
             )}
-            
-            <div className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-accent transition-colors">
-              <Globe className="size-4" />
-              <LanguageSelector />
-            </div>
-            
+            <LanguageSelector />
             <Button variant="ghost" size="sm" onClick={toggleTheme} className="w-full justify-start">
-              {currentTheme === 'light' ? <Moon className="h-4 w-4 mr-2" /> : <Sun className="h-4 w-4 mr-2" />}
+              {currentTheme === 'light' ? <Moon className="size-4" /> : <Sun className="size-4" />}
               {currentTheme === 'light' ? 'Dark Mode' : 'Light Mode'}
             </Button>
             
@@ -171,7 +172,7 @@ const Header:FC = () => {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="block w-full"
                 >
-                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Button variant="ghost" size="sm" className="w-full">
                     {t('nav.register') || t('navigation.register') || 'Register'}
                   </Button>
                 </Link>

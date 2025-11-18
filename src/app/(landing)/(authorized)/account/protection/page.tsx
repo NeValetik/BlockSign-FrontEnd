@@ -1,12 +1,46 @@
 "use client"
 
 import { FC } from 'react';
+import { motion } from 'framer-motion';
 import Button from '@/components/Form/Button';
 
 const ProfileSettingsPage: FC = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const fieldVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 20,
+      scale: 0.95,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.4,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
+    },
+  };
+
   return (
-    <div className="p-6 border rounded-md flex flex-col gap-4">
-      <div>
+    <motion.div 
+      className="p-6 border rounded-md flex flex-col gap-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={fieldVariants}>
         <h2 className="text-2xl font-semibold text-foreground mb-1">Protection</h2>
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-medium text-foreground">Password</h3>
@@ -19,29 +53,35 @@ const ProfileSettingsPage: FC = () => {
             </Button>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col gap-2">
+      </motion.div>
+      <motion.div 
+        className="flex flex-col gap-2"
+        variants={fieldVariants}
+      >
         <h3 className="text-base font-medium text-foreground">Multi-factor</h3>
-        <div className="flex flex-col gap-2">
-          <div>
+        <motion.div 
+          className="flex flex-col gap-2"
+          variants={containerVariants}
+        >
+          <motion.div variants={fieldVariants}>
             <Button 
               variant="brand"
               size="default"
             >
               Confirm phone
             </Button>
-          </div>
-          <div>
+          </motion.div>
+          <motion.div variants={fieldVariants}>
             <Button 
               variant="brand"
               size="default"
             >
               Enable authenticator
             </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 

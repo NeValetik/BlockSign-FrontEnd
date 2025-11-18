@@ -4,13 +4,15 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputText, InputFile } from "@/components/Form/Input";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/Form/Card";
+import { Loader2, Check } from "lucide-react";
+import { motion } from "framer-motion";
 import { schema } from "./schema";
 import { IRegisterIdentityForm } from "./types";
 import { useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchFromServer } from "@/utils/fetchFromServer";
 import { useMutation } from "@tanstack/react-query";
-import { Check } from "lucide-react";
 
 import Button from "@/components/Form/Button";
 import DatePicker from "@/components/Form/DatePicker";
@@ -90,143 +92,169 @@ const RegisterIdentityForm = () => {
 
   if (isSuccess) {
     return (
-      <div className="flex flex-col items-center justify-center">
-        <div className="bg-green-100 border border-green-200 rounded-lg p-6 max-w-md w-full">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-1">
-              <Check className="text-white size-4" />
-            </div>
-            <div className="flex-1">
-              <p className="text-brand-muted font-medium text-base leading-relaxed">
-                {t('auth.identity.success.title')} {t('auth.identity.success.message')}
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-8 text-center max-w-md">
-          <p className="text-foreground mb-4">
-            {t('auth.identity.success.explore')} <Link href="/"><span className="text-brand font-medium">{t('auth.identity.success.landing')}</span></Link>
-          </p>
-          
-          <p className="text-foreground">
-            {t('auth.identity.success.contact')} <Link href="/"><span className="text-brand font-medium">{t('auth.identity.success.contactSection')}</span></Link> {t('auth.identity.success.section')}
-          </p>
-        </div>
-      </div>
+      <main className="flex-1 flex items-center justify-center py-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md px-4"
+        >
+          <Card>
+            <CardContent className="pt-6">
+              <div className="bg-green-100 border border-green-200 rounded-lg p-6">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-1">
+                    <Check className="text-white size-4" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-brand-muted font-medium text-base leading-relaxed">
+                      {t('auth.identity.success.title')} {t('auth.identity.success.message')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-8 text-center">
+                <p className="text-foreground mb-4">
+                  {t('auth.identity.success.explore')} <Link href="/" className="text-primary hover:underline font-medium">{t('auth.identity.success.landing')}</Link>
+                </p>
+                
+                <p className="text-foreground">
+                  {t('auth.identity.success.contact')} <Link href="/" className="text-primary hover:underline font-medium">{t('auth.identity.success.contactSection')}</Link> {t('auth.identity.success.section')}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </main>
     )
   }
   
   return (
-    <Form {...form}>
-      <form 
-        onSubmit={handleSubmit(onSubmit)} 
-        className="flex flex-col flex-grow gap-12"
+    <main className="flex-1 flex items-center justify-center py-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md px-4"
       >
-        <div
-          className="flex flex-col gap-2"
-        >
-          <h2 className="text-3xl font-medium text-center">
-            {t('auth.identity.title')}
-          </h2>
-        </div>
-        
-        <div className="flex flex-col gap-6">
-          <FormField name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('auth.identity.fullName')}</FormLabel>
-                <FormControl>
-                  <InputText {...field} placeholder={t('auth.identity.fullNamePlaceholder')} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-          <FormField name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('auth.identity.username')}</FormLabel>
-                <FormControl>
-                  <InputText {...field} placeholder={t('auth.identity.usernamePlaceholder')} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-          <FormPhoneField name="phone" />
-          <FormField name="idnp"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('auth.identity.idnp')}</FormLabel>
-                <FormControl>
-                  <InputText 
-                    {...field} 
-                    placeholder={t('auth.identity.idnpPlaceholder')}
-                    maxLength={13}
+        <Card>
+          <CardHeader className="space-y-1">
+            <CardTitle>{t('auth.identity.title')}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="space-y-2">
+                  <FormField 
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('auth.identity.fullName')}</FormLabel>
+                        <FormControl>
+                          <InputText {...field} placeholder={t('auth.identity.fullNamePlaceholder')} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} 
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-          
-          <FormField name="birthDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('auth.identity.birthDate')}</FormLabel>
-                <FormControl>
-                  <DatePicker {...field}/>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-          
-          <FormField name="selfie"
-            render={() => (
-              <FormItem>
-                <FormLabel>{t('auth.identity.selfie')}</FormLabel>
-                <FormControl>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex gap-2">
-                      <InputFile 
-                        accept="image/jpeg,image/jpg,image/png,image/bmp,image/svg+xml,application/pdf"
-                        onChange={handleFileChange}
-                        ref={fileInputRef}
-                      />
-                      <Button 
-                        type="button"
-                        variant="brand" 
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        {t('auth.identity.selectFile')}
-                      </Button>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        {t('auth.identity.fileFormats')}
-                      </span>
-                      
-                    </div>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <span className="text-sm">
-            {t('auth.identity.credentialsNote')}
-          </span>
-          <Button type="submit" variant="brand" disabled={isPending}>
-            {isPending ? t('auth.identity.confirming') : t('auth.identity.submit')}
-          </Button>
-        </div>
-      </form>
-    </Form>
+                </div>
+                <div className="space-y-2">
+                  <FormField 
+                    name="username"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('auth.identity.username')}</FormLabel>
+                        <FormControl>
+                          <InputText {...field} placeholder={t('auth.identity.usernamePlaceholder')} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <FormPhoneField name="phone" />
+                </div>
+                <div className="space-y-2">
+                  <FormField 
+                    name="idnp"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('auth.identity.idnp')}</FormLabel>
+                        <FormControl>
+                          <InputText 
+                            {...field} 
+                            placeholder={t('auth.identity.idnpPlaceholder')}
+                            maxLength={13}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <FormField 
+                    name="birthDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('auth.identity.birthDate')}</FormLabel>
+                        <FormControl>
+                          <DatePicker {...field}/>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <FormField 
+                    name="selfie"
+                    render={() => (
+                      <FormItem>
+                        <FormLabel>{t('auth.identity.selfie')}</FormLabel>
+                        <FormControl>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex gap-2">
+                              <InputFile 
+                                accept="image/jpeg,image/jpg,image/png,image/bmp,image/svg+xml,application/pdf"
+                                onChange={handleFileChange}
+                                ref={fileInputRef}
+                              />
+                              <Button 
+                                type="button"
+                                variant="brand" 
+                                onClick={() => fileInputRef.current?.click()}
+                              >
+                                {t('auth.identity.selectFile')}
+                              </Button>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">
+                                {t('auth.identity.fileFormats')}
+                              </span>
+                            </div>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <span className="text-sm text-muted-foreground">
+                    {t('auth.identity.credentialsNote')}
+                  </span>
+                  <Button type="submit" className="w-full" variant="brand" disabled={isPending}>
+                    {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isPending ? t('auth.identity.confirming') : t('auth.identity.submit')}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </main>
   )
 }
 

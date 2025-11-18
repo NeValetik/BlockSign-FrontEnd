@@ -119,6 +119,8 @@ const VerifyForm = () => {
     }
   }
 
+  console.log(verificationResult);
+
   return (
     <div className="flex flex-col gap-8">
       <Form {...form}>

@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { DocumentState } from "../../types";
-import { FileText } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 import { useUserContext } from "@/contexts/userContext";
 import { motion } from "framer-motion";
 
@@ -30,6 +30,7 @@ export interface DocumentCardProps {
   onReject: () => void;
   onView?: () => void;
   documentUrl?: string;
+  isSigningDocument: boolean;
 }
 
 const DocumentCard:FC<DocumentCardProps> = ({ 
@@ -37,7 +38,8 @@ const DocumentCard:FC<DocumentCardProps> = ({
   onApprove,
   onReject,
   onView,
-  documentUrl
+  documentUrl,
+  isSigningDocument
 }) => {
 
   const { me } = useUserContext();
@@ -106,12 +108,14 @@ const DocumentCard:FC<DocumentCardProps> = ({
             <Button 
               variant="brand"
               onClick={() => {onApprove(document)}}
+              disabled={isSigningDocument}
             >
-              {t('documents.actions.approve')}
+              {isSigningDocument ? <Loader2 className="w-4 h-4 animate-spin" /> : t('documents.actions.approve')}
             </Button>
             <Button 
               variant="destructive"
               onClick={onReject}
+              disabled={isSigningDocument}
             >
               <span>{t('documents.actions.reject')}</span>
             </Button>

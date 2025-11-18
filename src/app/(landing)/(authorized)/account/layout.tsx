@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { FC } from "react";
+import { motion } from 'framer-motion';
 
 import Container from '@/components/Container';
 import { Tabs, TabsList, TabsTrigger } from '@/components/Tabs';
@@ -15,7 +16,7 @@ interface TabConfig {
 const tabs: TabConfig[] = [
   { label: 'Profile', href: '/account/profile', value: 'profile' },
   { label: 'Protection', href: '/account/protection', value: 'protection' },
-  { label: 'Documents - pending', href: '/account/documents', value: 'documents' },
+  { label: 'Personal Documents', href: '/account/documents', value: 'documents' },
 ];
 
 const ProfileLayout: FC<{ 
@@ -37,6 +38,11 @@ const ProfileLayout: FC<{
   return (
     <Container className="md:py-[96px] py-12 lg:px-[144px]">
       <div className="w-full">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <Tabs defaultValue={activeTab}>
             <TabsList>
               {tabs.map((tab) => {
@@ -45,6 +51,7 @@ const ProfileLayout: FC<{
                     key={tab.value}
                     href={tab.href}
                     isActiveValue={tab.value === activeTab}
+                    className="px-12"
                   >
                     {tab.label}
                   </TabsTrigger>
@@ -52,9 +59,15 @@ const ProfileLayout: FC<{
               })}
             </TabsList>
           </Tabs>
-        <div className="mt-6">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-6"
+        >
           {children}
-        </div>
+        </motion.div>
       </div>
     </Container>
   );

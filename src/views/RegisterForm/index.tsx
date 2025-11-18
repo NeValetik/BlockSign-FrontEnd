@@ -4,7 +4,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputEmail } from "@/components/Form/Input";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/Form/Card";
 import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 import { schema } from "./schema";
 import { IRegisterForm } from "./types";
 import { useMutation } from "@tanstack/react-query";
@@ -12,7 +15,6 @@ import { useRouter } from "next/navigation";
 import { fetchFromServer } from "@/utils/fetchFromServer";
 
 import Button from "@/components/Form/Button";
-// import FormPhoneField from "@/components/Form/FormPhoneField";
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
@@ -74,105 +76,84 @@ const RegisterForm = () => {
   }
   
   return (
-    <Form {...form}>
-      <form 
-        onSubmit={handleSubmit(onSubmit)} 
-        className="flex flex-col flex-grow gap-12"
+    <main className="flex-1 flex items-center justify-center py-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md px-4"
       >
-        <div
-          className="flex flex-col gap-2"
-        >
-          <h2 className="text-3xl font-medium text-center">
-            {t('auth.register.title')}
-          </h2>
-          <span
-            className="text-base text-center"
-          >
-            {t('auth.register.hasAccount')}{' '}
-            <Link href="/login">
-              <span className="underline text-brand">{t('auth.register.signIn')}</span>
-            </Link> 
-          </span>
-        </div>
-        <div className="flex flex-col gap-6">
-          {/* <FormField name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <InputText {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          /> */}
-          <FormField name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('auth.register.email')}</FormLabel>
-                <FormControl>
-                  <InputEmail {...field} placeholder={t('auth.register.emailPlaceholder')} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-          {/* <FormPhoneField name="phone" /> */}
-          {/* <div className="flex flex-col gap-4">
-            <FormField 
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <InputPassword {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} 
-            />
-            <FormField name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm password</FormLabel>
-                  <FormControl>
-                    <InputPassword {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} 
-            />
-          </div> */}
-          <Button type="submit" variant="brand" disabled={isPending}>
-            {isPending ? t('auth.register.sending') : t('auth.register.submit')}
-          </Button>
-        </div>
-        <div className="flex flex-col gap-4">
-          <span className="font-medium text-2xl text-muted-foreground text-center">{t('auth.register.or')}</span>
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            <SiFacebook />
-            <span>{t('auth.register.social.facebook')}</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            <SiGoogle />
-            <span>{t('auth.register.social.google')}</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            <SiApple />
-            <span>{t('auth.register.social.apple')}</span>
-          </Button>
-        </div>
-      </form>
-    </Form>
+        <Card>
+          <CardHeader className="space-y-1">
+            <CardTitle>{t('auth.register.title')}</CardTitle>
+            <CardDescription>
+              {t('auth.register.hasAccount')}{' '}
+              <Link href="/login" className="text-primary hover:underline">
+                {t('auth.register.signIn')}
+              </Link>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="space-y-2">
+                  <FormField 
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('auth.register.email')}</FormLabel>
+                        <FormControl>
+                          <InputEmail 
+                            id="email"
+                            {...field} 
+                            placeholder={t('auth.register.emailPlaceholder')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} 
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={isPending} variant="brand">
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isPending ? t('auth.register.sending') : t('auth.register.submit')}
+                </Button>
+              </form>
+            </Form>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">
+                  {t('auth.register.or')}
+                </span>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              className="w-full"
+            >
+              <SiFacebook />
+              <span>{t('auth.register.social.facebook')}</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+            >
+              <SiGoogle />
+              <span>{t('auth.register.social.google')}</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+            >
+              <SiApple />
+              <span>{t('auth.register.social.apple')}</span>
+            </Button>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </main>
   )
 }
 

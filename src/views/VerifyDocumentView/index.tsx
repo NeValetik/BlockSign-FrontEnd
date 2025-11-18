@@ -2,9 +2,9 @@
 
 import { FC } from "react";
 import { motion } from 'framer-motion';
-import VerifyForm from "./VerifyForm";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
+import VerifyForm from "./VerifyForm";
 
 const VerifyDocumentView: FC = () => {
   const { locale } = useLocale();

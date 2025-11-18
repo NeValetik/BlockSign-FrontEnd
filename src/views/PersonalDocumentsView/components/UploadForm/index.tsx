@@ -107,12 +107,14 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
        });
       return req;
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success(t('documents.upload.success'));
       form.reset();
-      // Refresh the documents list
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
-      queryClient.invalidateQueries({ queryKey: ['me'] });
+      // Refresh the documents list - invalidate and refetch immediately
+      await queryClient.invalidateQueries({ queryKey: ['documents'] });
+      await queryClient.invalidateQueries({ queryKey: ['me'] });
+      // Explicitly refetch to ensure data is updated
+      await queryClient.refetchQueries({ queryKey: ['documents'] });
     },
     onError: (error) => {
       toast.error(error?.message || t('documents.upload.failed'));

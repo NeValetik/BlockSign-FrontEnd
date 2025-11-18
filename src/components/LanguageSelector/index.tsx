@@ -3,6 +3,7 @@
 import { Globe } from "lucide-react"
 import { useLocale } from "@/contexts/LocaleContext";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../Form/DropDown";
+import Button from "../Form/Button";
 
 const LanguageSelector = () => {
   const { locales, setLocale, current } = useLocale();
@@ -11,8 +12,8 @@ const LanguageSelector = () => {
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="hover:bg-accent rounded-md p-2.5 transition-colors duration-200">
-        <div className="group flex items-center gap-2 cursor-pointer ">
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
           <Globe className="size-4" />
           {/* <ChevronDown 
             className="
@@ -21,7 +22,7 @@ const LanguageSelector = () => {
               duration-200
             " 
           /> */}
-        </div>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         { locales.map((locale) => {

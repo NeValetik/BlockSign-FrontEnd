@@ -225,6 +225,7 @@
   "profile.personal.idnp": "Idnp",
   "profile.personal.idnpPlaceholder": "Enter your IDNP (13 digits)",
   "profile.personal.firstName": "First name",
+  "profile.personal.username": "Username",
   "profile.personal.lastName": "Last name",
   "profile.personal.email": "Email",
   "profile.personal.emailPlaceholder": "Enter your email address",

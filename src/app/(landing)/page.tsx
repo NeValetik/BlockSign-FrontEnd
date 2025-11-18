@@ -52,17 +52,17 @@ const LandingPage = () => {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 {isAuthenticated ? (
-                  <Button asChild size="lg" className="shadow-glow">
-                    <Link href="/documents">
+                  <Button asChild size="lg" variant="brand" className="shadow-glow">
+                    <Link href="/verify-doc">
                       {t('nav.documents') || 'Documents'}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 ) : (
                   <>
-                    <Button asChild size="lg" className="shadow-glow" variant="brand">
-                      <Link href="/register">
-                        {t('home.cta') || 'Get Started'}
+                    <Button asChild size="lg" variant="brand" className="shadow-glow">
+                      <Link href="/verify-doc">
+                        {t('nav.documents') || 'Documents'}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
                     </Button>

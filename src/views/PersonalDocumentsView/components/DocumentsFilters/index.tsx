@@ -16,7 +16,7 @@ interface DocumentsFiltersProps {
 }
 
 const DocumentsFilters: FC<DocumentsFiltersProps> = ({ selectedStates, onStateChange }) => {
-  const [open, setOpen] = useState(false);
+  const [ open, setOpen ] = useState(false);
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
 

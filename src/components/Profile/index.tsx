@@ -38,7 +38,7 @@ const Profile:FC = () => {
           <span>Documents</span>
         </div>
       ),
-      onClick: () => {push('/documents')},
+      onClick: () => {push('/verify-doc')},
     },
     ...(isAdmin ? [
       {

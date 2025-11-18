@@ -4,6 +4,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputText } from "@/components/Form/Input";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/Form/Card";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 import { schema } from "./schema";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ILoginMnemonicForm } from "./types";
@@ -67,33 +70,50 @@ const LoginMnemonicForm = () => {
   }
 
   return (
-    <Form {...form}>
-      <form 
-        onSubmit={handleSubmit(onSubmit)} 
-        className="flex flex-col flex-grow gap-12"
+    <main className="flex-1 flex items-center justify-center py-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md px-4"
       >
-        <h2 className="text-3xl font-medium text-center">
-          {t('auth.mnemonic.title')}
-        </h2>
-        <div className="flex flex-col gap-6">
-          <FormField name="mnemonic"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('auth.mnemonic.label')}</FormLabel>
-                <FormControl>
-                  <InputText {...field} placeholder={t('auth.mnemonic.placeholder')} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} 
-          />
-         
-          <Button type="submit" variant="brand" disabled={isLoading}>
-            {isLoading ? t('auth.mnemonic.authenticating') : t('auth.mnemonic.submit')}
-          </Button>
-        </div>
-      </form>
-    </Form>
+        <Card>
+          <CardHeader className="space-y-1">
+            <CardTitle>{t('auth.mnemonic.title')}</CardTitle>
+            <CardDescription>
+              {t('auth.mnemonic.label')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Form {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="space-y-2">
+                  <FormField 
+                    name="mnemonic"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('auth.mnemonic.label')}</FormLabel>
+                        <FormControl>
+                          <InputText 
+                            id="mnemonic"
+                            {...field} 
+                            placeholder={t('auth.mnemonic.placeholder')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )} 
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={isLoading} variant="brand">
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isLoading ? t('auth.mnemonic.authenticating') : t('auth.mnemonic.submit')}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </main>
   )
 }
 
