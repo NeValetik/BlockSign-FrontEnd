@@ -35,13 +35,13 @@ const ProfileSettingsPage: FC = () => {
 
   return (
     <motion.div 
-      className="p-6 border rounded-md flex flex-col gap-4"
+      className="p-6 border rounded-md flex flex-col gap-4 bg-muted/50"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
     >
       <motion.div variants={fieldVariants}>
-        <h2 className="text-2xl font-semibold text-foreground mb-1">Protection</h2>
+        <h2 className="text-3xl font-semibold text-foreground mb-6">Protection</h2>
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-medium text-foreground">Password</h3>
           <div>

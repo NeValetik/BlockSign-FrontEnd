@@ -59,7 +59,7 @@ const LoginMnemonicForm = () => {
         setError('mnemonic', { message: t('auth.mnemonic.failed') });
       } else if (result?.ok) {
         // Successful authentication, redirect to profile
-        push("/account/profile");
+        push("/account/documents");
         refresh();
       }
     } catch {

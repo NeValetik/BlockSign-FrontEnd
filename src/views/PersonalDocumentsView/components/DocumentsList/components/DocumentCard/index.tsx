@@ -66,41 +66,47 @@ const DocumentCard:FC<DocumentCardProps> = ({
             rel="noopener noreferrer"
             className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
           >
-            <FileText className="w-4 h-4"/>
-            <span 
-              className="text-sm font-medium line-clamp-1 leading-none"
-            >
-              {document.title}
-            </span>
-            <span className="text-sm font-medium line-clamp-1 leading-none">
-              {t('documents.availableTill')} {availableTill.toLocaleDateString(dateLocale)}
-            </span>
+            <FileText className="h-8 w-8 text-brand"/>
+            <div className="flex flex-col items-start gap-2">
+              <span 
+                className="text-sm font-medium line-clamp-1 leading-none"
+              >
+                {document.title}
+              </span>
+              <span className="text-sm font-medium line-clamp-1 leading-none">
+                {t('documents.availableTill')} {availableTill.toLocaleDateString(dateLocale)}
+              </span>
+            </div>
           </Link>
         )}
         {!documentUrl && isAvailable && (
           <button onClick={onView} className="flex items-center gap-2 cursor-pointer" disabled={!onView}>
-            <FileText className="w-4 h-4"/>
-            <span 
-              className="text-sm font-medium line-clamp-1 leading-none"
-            >
-              {document.title}
-            </span>
-            <span className="text-sm font-medium line-clamp-1 leading-none">
-              {t('documents.availableTill')} {availableTill.toLocaleDateString(dateLocale)}
-            </span>
+            <FileText className="h-8 w-8 text-brand"/>
+            <div className="flex flex-col items-start gap-2">
+              <span 
+                className="text-sm font-medium line-clamp-1 leading-none truncate"
+              >
+                {document.title}
+              </span>
+              <span className="text-sm font-medium line-clamp-1 leading-none">
+                {t('documents.availableTill')} {availableTill.toLocaleDateString(dateLocale)}
+              </span>
+            </div>
           </button>
         )}
         {!isAvailable && (
           <div className="flex items-center gap-2">
-            <FileText className="w-4 h-4"/>
-            <span 
-              className="text-sm font-medium line-clamp-1 leading-none"
-            >
-              {document.title}
-            </span>
-            <span className="text-sm font-medium line-clamp-1 leading-none">
-              {t('documents.status.expired')}
-            </span>
+            <FileText className="h-8 w-8 text-brand"/>
+            <div className="flex flex-col items-start gap-2">
+              <span 
+                className="text-sm font-medium line-clamp-1 leading-none truncate"
+              >
+                {document.title}
+              </span>
+              <span className="text-sm font-medium line-clamp-1 leading-none">
+                {t('documents.status.expired')}
+              </span>
+            </div>
           </div>
         )}
         { ((document.state !== DocumentState.Signed) && !isOwner) && (

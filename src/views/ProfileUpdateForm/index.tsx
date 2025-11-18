@@ -82,7 +82,7 @@ const ProfileUpdateForm: FC = () => {
       animate="visible"
     >
       <motion.div variants={fieldVariants}>
-        <p className="text-sm text-muted-foreground mb-6">
+        <p className="text-3xl font-semibold text-foreground mb-6">
           {t('profile.description')}
         </p>
         
@@ -103,42 +103,44 @@ const ProfileUpdateForm: FC = () => {
           className="space-y-4"
           variants={containerVariants}
         >
-          <motion.div variants={fieldVariants}>
-            <FormField
-              control={control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('profile.personal.name')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={t('profile.personal.namePlaceholder')}
-                      disabled
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </motion.div>
-          <motion.div variants={fieldVariants}>
-            <FormField
-              control={control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('profile.personal.username') || 'Username'}</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={t('profile.personal.usernamePlaceholder') || 'Username'}
-                      disabled
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <motion.div variants={fieldVariants}>
+              <FormField
+                control={control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('profile.personal.name')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t('profile.personal.namePlaceholder')}
+                        disabled
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+            <motion.div variants={fieldVariants}>
+              <FormField
+                control={control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('profile.personal.username') || 'Username'}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t('profile.personal.usernamePlaceholder') || 'Username'}
+                        disabled
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+          </div>
           <motion.div variants={fieldVariants}>
             <FormField
               control={control}

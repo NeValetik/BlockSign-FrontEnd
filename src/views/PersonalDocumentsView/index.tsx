@@ -55,9 +55,6 @@ const PersonalDocumentsView = () => {
     return matchesState && matchesSearch;
   });
 
-  console.log(processedData?.filter((doc) => (!!search && doc.title.includes(search))))
-  console.log(filteredData)
-
   const handleClose = () => {
     setOpen(false);
   }
@@ -81,7 +78,7 @@ const PersonalDocumentsView = () => {
         </Dialog>
       </div>
       
-      <div className="border rounded-md p-6">
+      <div className="border rounded-md p-6 bg-muted/50">
         <DocumentsList data={filteredData} maxCards={20} />
       </div>
       

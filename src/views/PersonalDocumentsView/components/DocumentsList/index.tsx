@@ -199,6 +199,9 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
           initial="hidden"
           animate="visible"
         >
+          <p className="text-3xl font-semibold text-foreground mb-6">
+            Personal Documents
+          </p>
           {processedData?.map((item) => (
             <motion.div
               key={item.id}

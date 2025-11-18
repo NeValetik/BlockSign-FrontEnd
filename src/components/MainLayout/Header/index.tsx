@@ -11,7 +11,6 @@ import Link from "next/link";
 // import Profile from "@/components/Profile";
 import { Menu, X, Shield, ShieldCheck, Moon, Sun } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/client";
-import Container from "@/components/Container";
 
 const Header:FC = () => {
   const { me } = useUserContext();
@@ -44,9 +43,8 @@ const Header:FC = () => {
   const isAdmin = me?.role === 'ADMIN';
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <Container>
-      <div className="container flex h-16 items-center justify-between">
+    <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-accent">
+      <div className="flex h-16 items-center justify-between md:mx-24">
         <Link href="/" className="flex items-center space-x-2">
           <Shield className="h-6 w-6 text-brand" />
           <span className="font-bold text-xl">Blocksign</span>
@@ -190,7 +188,6 @@ const Header:FC = () => {
           </div>
         </div>
       )}
-      </Container>
     </header>
   )
 }

@@ -53,7 +53,7 @@ const FinishRegistrationView: FC<FinishRegistrationViewProps> = ({ email, mnemon
 
       if (result?.ok) {
         // Successful authentication, redirect to profile
-        push("/account/profile");
+        push("/account/documents");
         refresh();
       } else {
         push("/login");

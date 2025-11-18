@@ -14,9 +14,9 @@ interface TabConfig {
 }
 
 const tabs: TabConfig[] = [
+  { label: 'Personal Documents', href: '/account/documents', value: 'documents' },
   { label: 'Profile', href: '/account/profile', value: 'profile' },
   { label: 'Protection', href: '/account/protection', value: 'protection' },
-  { label: 'Personal Documents', href: '/account/documents', value: 'documents' },
 ];
 
 const ProfileLayout: FC<{ 
