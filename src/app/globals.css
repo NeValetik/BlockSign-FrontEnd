@@ -89,7 +89,7 @@
   --font-brand: "DM Sans", sans-serif;
   --brand: #6266ea;
   --brand-foreground: oklch(0.985 0.002 247.839);
-  --brand-muted: theme(colors.teal.700);
+  --brand-muted: #6267eaE6;
   --primary: oklch(0.21 0.034 264.665);
   --primary-foreground: oklch(0.985 0.002 247.839);
   --secondary: oklch(0.967 0.003 264.542);

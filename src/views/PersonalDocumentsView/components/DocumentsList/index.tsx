@@ -50,6 +50,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
     }
   });
+  
   const { mutateAsync: signDocument, isPending: isSigningDocument } = useMutation({
     mutationFn: async ({ docId, signatureB64 }: { docId: string; signatureB64: string }) => {
       const response = await fetchFromServer(`/api/v1/user/documents/${docId}/sign`, {
@@ -79,6 +80,34 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     },
   });
 
+  const { mutateAsync: reject, isPending: isRejectingDocument } = useMutation({
+    mutationFn: async ({ docId, reason }: { docId: string; reason?: string }) => {
+      const response = await fetchFromServer(`/api/v1/user/documents/${docId}/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ reason }),
+      });
+      return response;
+    },
+    onSuccess: async (result) => {
+      toast.success(t('documents.reject.success'));
+      if (result.status === 'REJECTED') {
+        toast.success(t('documents.reject.allRejected'));
+      }
+      // Refresh the documents list
+      await queryClient.invalidateQueries({ queryKey: ['documents'] });
+      await queryClient.invalidateQueries({ queryKey: ['me'] });
+      await queryClient.refetchQueries({ queryKey: ['documents'] });
+    },
+    onError: (error) => {
+      console.error('Error rejecting document:', error);
+      toast.error(error?.message || t('documents.reject.failed'));
+    },
+  });
+
   const handleSignDocument = async (
     document: Document,
     file: File[]
@@ -105,8 +134,12 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       }
     }
   }
-  const handleReject = (id: string) => () => {
-    console.log('Approve', id, me?.id);
+  const handleReject = (id: string) => (reason?: string) => {
+    if (!privateKey) {
+      toast.error(t('documents.sign.needPrivateKey'));
+    } else {
+      reject({ docId: id, reason: reason });
+    }
   }
   const handleView = (id: string ) => async () =>{
     const response = await getDocumentUrl(id);
@@ -211,6 +244,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
               <DocumentCard
                 document={item}
                 isSigningDocument={isSigningDocument}
+                isRejectingDocument={isRejectingDocument}
                 onApprove={handleApprove()}
                 onReject={handleReject(item.id)}
                 onView={handleView(item.id)}

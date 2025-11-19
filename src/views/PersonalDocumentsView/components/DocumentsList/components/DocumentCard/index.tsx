@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import { DocumentState } from "../../types";
 import { FileText, Loader2 } from "lucide-react";
 import { useUserContext } from "@/contexts/userContext";
@@ -14,6 +14,7 @@ import DocumentStateTag from "../DocumentStateTag";
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
+import RejectSignModal from "../RejectSignModal";
 
 export interface Document {
   id: string;
@@ -27,10 +28,11 @@ export interface Document {
 export interface DocumentCardProps {
   document: Document;
   onApprove: (document: Document) => void;
-  onReject: () => void;
+  onReject: (reason?: string) => void;
   onView?: () => void;
   documentUrl?: string;
   isSigningDocument: boolean;
+  isRejectingDocument?: boolean;
 }
 
 const DocumentCard:FC<DocumentCardProps> = ({ 
@@ -39,12 +41,14 @@ const DocumentCard:FC<DocumentCardProps> = ({
   onReject,
   onView,
   documentUrl,
-  isSigningDocument
+  isSigningDocument,
+  isRejectingDocument = false
 }) => {
-
   const { me } = useUserContext();
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  
   const isOwner = document.owner === me?.id;
   const availableTill = new Date(document.updatedAt.getTime() + 1000 * 60 * 60 * 24 * 7);
   const isAvailable = new Date().getTime() - availableTill.getTime() < 0;
@@ -109,7 +113,7 @@ const DocumentCard:FC<DocumentCardProps> = ({
             </div>
           </div>
         )}
-        { ((document.state !== DocumentState.Signed) && !isOwner) && (
+        { ((document.state !== DocumentState.Signed && document.state !== DocumentState.Rejected) && !isOwner) && (
           <div className="flex gap-2">
             <Button 
               variant="brand"
@@ -120,10 +124,10 @@ const DocumentCard:FC<DocumentCardProps> = ({
             </Button>
             <Button 
               variant="destructive"
-              onClick={onReject}
-              disabled={isSigningDocument}
+              onClick={() => setIsRejectModalOpen(true)}
+              disabled={isSigningDocument || isRejectingDocument}
             >
-              <span>{t('documents.actions.reject')}</span>
+              {isRejectingDocument ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>{t('documents.actions.reject')}</span>}
             </Button>
           </div>
         )}
@@ -133,6 +137,12 @@ const DocumentCard:FC<DocumentCardProps> = ({
           </div>
         )}
       </div>
+      <RejectSignModal
+        open={isRejectModalOpen}
+        onOpenChange={setIsRejectModalOpen}
+        onReject={onReject}
+        isRejecting={isRejectingDocument}
+      />
       {/* <div className="w-full  relative">
         {document.state !== DocumentState.Signed && (
           <Dropzone
