@@ -50,7 +50,6 @@ interface VerificationResult {
         username: string;
         fullName: string;
       };
-      alg: string;
       signedAt: string;
     }>;
   };
@@ -367,7 +366,7 @@ const VerifyForm = () => {
                               </div>
                             </div>
                             <div className="mt-1 text-xs text-muted-foreground">
-                              {t('verify:document.algorithm', { alg: signature.alg })}
+                              {t('verify:document.algorithm', { alg: 'SHA-256' })}
                             </div>
                           </motion.li>
                         ))}
