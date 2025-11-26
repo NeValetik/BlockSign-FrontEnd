@@ -8,7 +8,7 @@ const Footer: FC = () => {
 
   return (
     <footer className="border-t bg-muted/50">
-      <div className="py-8 mx-24">
+      <div className="py-8 md:mx-24 mx-6">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           <div className="text-sm text-muted-foreground">
             {`© ${year} Blocksign. All rights reserved.`}
