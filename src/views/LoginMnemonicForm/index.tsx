@@ -3,7 +3,6 @@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/FormWrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputText } from "@/components/Form/Input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/Form/Card";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -12,11 +11,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ILoginMnemonicForm } from "./types";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-
-import Button from "@/components/Form/Button";
 import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
+
+import Button from "@/components/Form/Button";
+import MnemonicInput from "@/components/MnemonicInput";
 
 const DefaultValues: ILoginMnemonicForm = {
   mnemonic: "",
@@ -93,10 +93,10 @@ const LoginMnemonicForm = () => {
                       <FormItem>
                         <FormLabel>{t('auth.mnemonic.label')}</FormLabel>
                         <FormControl>
-                          <InputText 
-                            id="mnemonic"
-                            {...field} 
-                            placeholder={t('auth.mnemonic.placeholder')}
+                          <MnemonicInput
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
                           />
                         </FormControl>
                         <FormMessage />
