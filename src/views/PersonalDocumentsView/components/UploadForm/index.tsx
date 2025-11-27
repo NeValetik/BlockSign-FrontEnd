@@ -119,8 +119,6 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
     },
     onError: async (error) => {
       toast.error(error?.message || t('documents.upload.failed'));
-      await queryClient.refetchQueries({ queryKey: ['me'] });
-      await queryClient.refetchQueries({ queryKey: ['documents'] });
     }
   })
 

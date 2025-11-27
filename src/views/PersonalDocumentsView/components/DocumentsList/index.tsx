@@ -23,6 +23,8 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   const { me } = useUserContext();
   const [privateKey, setPrivateKey] = useState<string | null>(null);
   const [documentUrls, setDocumentUrls] = useState<Record<string, string>>({});
+  const [signingDocumentId, setSigningDocumentId] = useState<string | null>(null);
+  const [rejectingDocumentId, setRejectingDocumentId] = useState<string | null>(null);
   const timeoutRefs = useRef<Record<string, NodeJS.Timeout>>({});
   const queryClient = useQueryClient();
   const { locale } = useLocale();
@@ -51,7 +53,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     }
   });
   
-  const { mutateAsync: signDocument, isPending: isSigningDocument } = useMutation({
+  const { mutateAsync: signDocument } = useMutation({
     mutationFn: async ({ docId, signatureB64 }: { docId: string; signatureB64: string }) => {
       const response = await fetchFromServer(`/api/v1/user/documents/${docId}/sign`, {
         method: 'POST',
@@ -63,7 +65,11 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       });
       return response;
     },
+    onMutate: async ({ docId }) => {
+      setSigningDocumentId(docId);
+    },
     onSuccess: async (result) => {
+      setSigningDocumentId(null);
       toast.success(t('documents.sign.success'));
       if (result.status === 'SIGNED') {
         toast.success(t('documents.sign.allSigned'));
@@ -71,16 +77,17 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       // Refresh the documents list
       await queryClient.invalidateQueries({ queryKey: ['documents'] });
       await queryClient.invalidateQueries({ queryKey: ['me'] });
-      await queryClient.refetchQueries({ queryKey: ['documents'] });
-
+      await queryClient.refetchQueries({ queryKey: ['documents'] })
+      await queryClient.refetchQueries({ queryKey: ['me'] });
     },
     onError: (error) => {
+      setSigningDocumentId(null);
       console.error('Error signing document:', error);
       toast.error(error?.message || t('documents.sign.failed'));
     },
   });
 
-  const { mutateAsync: reject, isPending: isRejectingDocument } = useMutation({
+  const { mutateAsync: reject } = useMutation({
     mutationFn: async ({ docId, reason }: { docId: string; reason?: string }) => {
       const response = await fetchFromServer(`/api/v1/user/documents/${docId}/reject`, {
         method: 'POST',
@@ -92,7 +99,11 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       });
       return response;
     },
+    onMutate: async ({ docId }) => {
+      setRejectingDocumentId(docId);
+    },
     onSuccess: async (result) => {
+      setRejectingDocumentId(null);
       toast.success(t('documents.reject.success'));
       if (result.status === 'REJECTED') {
         toast.success(t('documents.reject.allRejected'));
@@ -101,8 +112,10 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       await queryClient.invalidateQueries({ queryKey: ['documents'] });
       await queryClient.invalidateQueries({ queryKey: ['me'] });
       await queryClient.refetchQueries({ queryKey: ['documents'] });
+      await queryClient.refetchQueries({ queryKey: ['me'] });
     },
     onError: (error) => {
+      setRejectingDocumentId(null);
       console.error('Error rejecting document:', error);
       toast.error(error?.message || t('documents.reject.failed'));
     },
@@ -243,8 +256,8 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
             >
               <DocumentCard
                 document={item}
-                isSigningDocument={isSigningDocument}
-                isRejectingDocument={isRejectingDocument}
+                isSigningDocument={signingDocumentId === item.id}
+                isRejectingDocument={rejectingDocumentId === item.id}
                 onApprove={handleApprove()}
                 onReject={handleReject(item.id)}
                 onView={handleView(item.id)}

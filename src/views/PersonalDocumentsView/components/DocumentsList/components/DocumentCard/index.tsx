@@ -42,13 +42,12 @@ const DocumentCard:FC<DocumentCardProps> = ({
   onView,
   documentUrl,
   isSigningDocument,
-  isRejectingDocument = false
+  isRejectingDocument,
 }) => {
   const { me } = useUserContext();
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-  
   const isOwner = document.owner === me?.id;
   const availableTill = new Date(document.updatedAt.getTime() + 1000 * 60 * 60 * 24 * 7);
   const isAvailable = new Date().getTime() - availableTill.getTime() < 0;
