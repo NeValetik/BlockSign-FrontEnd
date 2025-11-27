@@ -114,10 +114,13 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
       await queryClient.invalidateQueries({ queryKey: ['documents'] });
       await queryClient.invalidateQueries({ queryKey: ['me'] });
       // Explicitly refetch to ensure data is updated
+      await queryClient.refetchQueries({ queryKey: ['me'] });
       await queryClient.refetchQueries({ queryKey: ['documents'] });
     },
-    onError: (error) => {
+    onError: async (error) => {
       toast.error(error?.message || t('documents.upload.failed'));
+      await queryClient.refetchQueries({ queryKey: ['me'] });
+      await queryClient.refetchQueries({ queryKey: ['documents'] });
     }
   })
 
