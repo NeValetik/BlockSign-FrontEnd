@@ -87,7 +87,7 @@ const VerifyForm = () => {
       const formData = new FormData();
       formData.append('file', document![0]);
       
-      const response = await fetchFromServer('/api/v1/user/documents/verify', {
+      const response = await fetchFromServer('/api/v1/documents/verify', {
         method: 'POST',
         body: formData,
         headers: {
@@ -177,8 +177,6 @@ const VerifyForm = () => {
           </motion.div>
         </form>
       </Form>
-
-      {/* Verification Results */}
       <AnimatePresence>
         {verificationResult && (
           <motion.div
