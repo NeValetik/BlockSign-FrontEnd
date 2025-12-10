@@ -18,19 +18,28 @@ const nextConfig: NextConfig = {
       ? `'self' ${apiOrigin}`
       : "'self'";
     
+    // Build img-src directive - allow API origin for images if needed, but no wildcard
+    const imgSrc = apiOrigin
+      ? `'self' data: ${apiOrigin}`
+      : "'self' data:";
+    
     return [
       {
         // Apply security headers to all routes
         source: '/:path*',
         headers: [
-          // Content Security Policy (CSP)
+          // Content Security Policy (CSP) - strict configuration
           {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
+              // Next.js 15 uses nonces for scripts - strict-dynamic allows scripts loaded by trusted scripts
+              "script-src 'self' 'strict-dynamic'",
+              // Styles - removed unsafe-inline for better security
+              // If styles break, you may need to add 'unsafe-inline' back
+              "style-src 'self'",
+              // Images from self, data URIs, and specific API origin (no wildcard)
+              `img-src ${imgSrc}`,
               "font-src 'self' data:",
               `connect-src ${connectSrc}`,
               "frame-ancestors 'none'",

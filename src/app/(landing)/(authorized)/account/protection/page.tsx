@@ -4,6 +4,9 @@ import { FC } from 'react';
 import { motion } from 'framer-motion';
 import Button from '@/components/Form/Button';
 
+// Note: Metadata cannot be exported from client components
+// Metadata is handled by the parent layout
+
 const ProfileSettingsPage: FC = () => {
   const containerVariants = {
     hidden: { opacity: 0 },

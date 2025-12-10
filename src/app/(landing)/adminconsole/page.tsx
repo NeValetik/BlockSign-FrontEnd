@@ -13,6 +13,9 @@ import { cn } from "@/utils/cn";
 import Container from "@/components/Container";
 import Button from "@/components/Form/Button";
 
+// Note: Metadata cannot be exported from client components
+// Metadata is handled by the parent layout
+
 interface UserRequest {
   id: string;
   email: string;

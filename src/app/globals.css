@@ -162,4 +162,11 @@
   body {
     @apply bg-background text-foreground font-brand;
   }
+  
+  /* Sonner toast component CSS variables */
+  .sonner-custom-vars {
+    --normal-bg: var(--popover);
+    --normal-text: var(--popover-foreground);
+    --normal-border: var(--border);
+  }
 }
