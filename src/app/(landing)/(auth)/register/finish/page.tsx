@@ -1,5 +1,3 @@
-'use server'
-
 import { Metadata } from "next";
 import { generateKey } from "@/utils/generateKey";
 import { getSignature } from "@/utils/getSignature";
