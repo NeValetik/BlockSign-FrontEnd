@@ -24,7 +24,23 @@ const Profile:FC = () => {
     localStorage.removeItem('privateKey');
   }
    
-  const links = [
+  const links = isAdmin ? [
+    {
+      key: 'admin',
+      component: (<div> Admin Console </div>),
+      onClick: () => {push('/adminconsole')},
+    },
+    {
+      key: 'logout',
+      component: (
+        <div className="flex items-center gap-2 text-destructive">
+          <LogOut className="size-4" />
+          <span>Logout</span>
+        </div>
+      ),
+      onClick: handleLogout,
+    },
+  ] : [
     {
       key: 'profile',
       component: (<div> Profile </div>),
@@ -40,13 +56,6 @@ const Profile:FC = () => {
       ),
       onClick: () => {push('/verify-doc')},
     },
-    ...(isAdmin ? [
-      {
-        key: 'admin',
-        component: (<div> Admin Console </div>),
-        onClick: () => {push('/adminconsole')},
-      },
-    ] : []),
     {
       key: 'logout',
       component: (

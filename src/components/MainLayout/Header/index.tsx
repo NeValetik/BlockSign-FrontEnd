@@ -52,19 +52,22 @@ const Header:FC = () => {
 
         <nav className="items-center space-x-6 hidden md:flex">
           <>
-            <Link href="/verify-doc">
-              <Button variant="ghost" size="default">
-                  {t('nav.documents') || t('navigation.documents') || 'Verify Document'}
-              </Button>
-            </Link>
+            {isAuthenticated && !isAdmin && (
+              <Link href="/verify-doc">
+                <Button variant="ghost" size="default">
+                    {t('nav.documents') || t('navigation.documents') || 'Verify Document'}
+                </Button>
+              </Link>
+            )}
             {isAuthenticated && (
               <>
-                
-                <Link href="/account/profile" className="text-sm font-medium transition-colors hover:text-primary">
-                  <Button variant="ghost" size="default">
-                    {t('nav.account') || t('navigation.profile') || 'Account'}
-                  </Button>
-                </Link>
+                {!isAdmin && (
+                  <Link href="/account/profile" className="text-sm font-medium transition-colors hover:text-primary">
+                    <Button variant="ghost" size="default">
+                      {t('nav.account') || t('navigation.profile') || 'Account'}
+                    </Button>
+                  </Link>
+                )}
                 {isAdmin && (
                   <Link href="/adminconsole" className="text-sm font-medium transition-colors hover:text-primary flex items-center gap-1">
                     <Button variant="ghost" size="default">
@@ -119,20 +122,24 @@ const Header:FC = () => {
           <div className="px-4 py-6 space-y-4">
             {isAuthenticated && (
               <>
-                <Link 
-                  href="/verify-doc"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-sm font-medium transition-colors hover:text-primary hover:bg-"
-                >
-                  {t('nav.documents') || t('navigation.documents') || 'Documents'}
-                </Link>
-                <Link 
-                  href="/account/profile"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-sm font-medium transition-colors hover:text-primary"
-                >
-                  {t('nav.account') || t('navigation.profile') || 'Account'}
-                </Link>
+                {!isAdmin && (
+                  <>
+                    <Link 
+                      href="/verify-doc"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-sm font-medium transition-colors hover:text-primary hover:bg-"
+                    >
+                      {t('nav.documents') || t('navigation.documents') || 'Documents'}
+                    </Link>
+                    <Link 
+                      href="/account/profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-sm font-medium transition-colors hover:text-primary"
+                    >
+                      {t('nav.account') || t('navigation.profile') || 'Account'}
+                    </Link>
+                  </>
+                )}
                 {isAdmin && (
                   <Link 
                     href="/adminconsole"

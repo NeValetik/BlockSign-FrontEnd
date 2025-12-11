@@ -10,10 +10,11 @@ import { schema } from "./schema";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ILoginMnemonicForm } from "./types";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
+import { useUserContext } from "@/contexts/userContext";
 
 import Button from "@/components/Form/Button";
 import MnemonicInput from "@/components/MnemonicInput";
@@ -31,8 +32,22 @@ const LoginMnemonicForm = () => {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
+  const { me } = useUserContext();
+  
+  // Handle redirect after user data is loaded
+  useEffect(() => {
+    if (shouldRedirect && me) {
+      if (me.role === 'ADMIN') {
+        push('/adminconsole');
+      } else {
+        push('/account/documents');
+      }
+      setShouldRedirect(false);
+    }
+  }, [shouldRedirect, me, push]);
   
   // If no email parameter, redirect to login
   if (!email) {
@@ -58,9 +73,10 @@ const LoginMnemonicForm = () => {
       if (result?.error) {
         setError('mnemonic', { message: t('auth.mnemonic.failed') });
       } else if (result?.ok) {
-        // Successful authentication, redirect to profile
-        push("/account/documents");
+        // Refresh to get updated session and user data
         refresh();
+        // Set flag to trigger redirect after user data is loaded
+        setShouldRedirect(true);
       }
     } catch {
       setError('mnemonic', { message: t('auth.mnemonic.failedGeneric') });

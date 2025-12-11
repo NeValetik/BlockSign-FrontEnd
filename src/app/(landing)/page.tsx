@@ -2,6 +2,8 @@
 
 import { ArrowRight, Shield, FileCheck, Lock } from "lucide-react";
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useLocale } from "@/contexts/LocaleContext";
 import { useTranslation } from "../../lib/i18n/client";
 import { useUserContext } from "@/contexts/userContext";
@@ -14,7 +16,16 @@ const LandingPage = () => {
   const { locale } = useLocale();
   const { t } = useTranslation( locale, [ 'landing', 'common' ] );
   const { me } = useUserContext();
+  const router = useRouter();
   const isAuthenticated = !!me;
+  const isAdmin = me?.role === 'ADMIN';
+
+  // Redirect admin users to admin console
+  useEffect(() => {
+    if (isAdmin) {
+      router.push('/adminconsole');
+    }
+  }, [isAdmin, router]);
 
   const features = [
     {
