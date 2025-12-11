@@ -44,6 +44,12 @@ const ConfirmEmailForm = () => {
         },
         body: JSON.stringify(data),
       });
+      
+      // Check if the API returned ok: false
+      if (response.ok === false) {
+        throw new Error('Verification failed');
+      }
+      
       return response;
     },
   });
