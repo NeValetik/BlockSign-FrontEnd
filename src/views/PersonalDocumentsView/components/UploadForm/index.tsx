@@ -88,8 +88,6 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
          docTitle
        );
 
-      console.log(creatorSignatureB64);
-      
        // Create FormData for file upload
        const formData = new FormData();
        formData.append('file', document![0]);

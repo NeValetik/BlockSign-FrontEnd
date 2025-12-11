@@ -76,7 +76,6 @@ export const DocumentsContextProvider: React.FC<{
   });
 
   const contextValue = useMemo(() => ({ documents: documents ?? null }), [documents]);
-  console.log(documents);
 
   return (
     <DocumentsContext.Provider value={contextValue}>

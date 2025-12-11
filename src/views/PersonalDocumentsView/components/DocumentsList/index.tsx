@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 import DocumentCard from "./components/DocumentCard";
 import { useUserContext } from "@/contexts/userContext";
-import { fetchFromServer } from "@/utils/fetchFromServer";
+import { fetchFromServer, fetchFromServerBlob } from "@/utils/fetchFromServer";
 import { useTokenContext } from "@/contexts/tokenContext";
 import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
 import { Document } from "./components/DocumentCard";
@@ -138,7 +138,9 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
       toast.error(t('documents.sign.needPrivateKey'));
     } else {
       const { url } = await getDocumentUrl(document.id);
-      const fileBlob = await fetch(url).then(res => res.blob());
+      // Use API route to proxy the blob fetch to avoid CSP violations
+      const proxyUrl = `/api/proxy/blob?url=${encodeURIComponent(url)}`;
+      const fileBlob = await fetch(proxyUrl).then(res => res.blob());
       if (fileBlob && fileBlob.size > 0) {
         const file = [new File([fileBlob], document.title, { type: fileBlob.type })];
         handleSignDocument(document, file);
