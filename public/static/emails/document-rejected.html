@@ -8,57 +8,53 @@
 <body style="margin: 0; padding: 0; font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f5f5;">
         <tr>
-            <td align="center" style="padding: 40px 20px;">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <td align="center" style="padding: 30px 20px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="800" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
                     <!-- Header -->
                     <tr>
-                        <td style="padding: 40px 40px 30px; text-align: center; border-bottom: 1px solid #e5e5e5;">
-                            <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: #6266ea; letter-spacing: -0.5px;">BlockSign</h1>
+                        <td style="padding: 30px 40px; text-align: center; border-bottom: 1px solid #e5e5e5;">
+                            <h1 style="margin: 0; font-size: 36px; font-weight: 700; color: #6266ea; letter-spacing: -0.5px;">BlockSign</h1>
                         </td>
                     </tr>
                     
                     <!-- Content -->
                     <tr>
-                        <td style="padding: 40px 40px 30px;">
-                            <div style="text-align: center; margin-bottom: 30px;">
-                                <div style="display: inline-block; width: 64px; height: 64px; background-color: #ef4444; border-radius: 50%; line-height: 64px; font-size: 32px; color: #ffffff;">✕</div>
+                        <td style="padding: 40px 40px;">
+                            <div style="text-align: center; margin-bottom: 40px;">
+                                <div style="display: inline-block; width: 80px; height: 80px; background-color: #ef4444; border-radius: 50%; line-height: 80px; font-size: 40px; color: #ffffff;">✕</div>
                             </div>
                             
-                            <h2 style="margin: 0 0 20px; font-size: 24px; font-weight: 600; color: #1a1a1a; line-height: 1.3; text-align: center;">Document Rejected</h2>
-                            <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.6; color: #4a4a4a; text-align: center;">A document you were involved with has been rejected by a participant.</p>
+                            <h2 style="margin: 0 0 24px; font-size: 32px; font-weight: 600; color: #1a1a1a; line-height: 1.3; text-align: center;">Document Rejected</h2>
+                            <p style="margin: 0 0 32px; font-size: 20px; line-height: 1.6; color: #4a4a4a; text-align: center;">A document you were involved with has been rejected by a participant.</p>
                             
                             <!-- Document Info Box -->
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #fef2f2; border-left: 4px solid #ef4444; border-radius: 6px; margin: 20px 0;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #fef2f2; border-left: 4px solid #ef4444; border-radius: 6px;">
                                 <tr>
                                     <td style="padding: 20px;">
-                                        <p style="margin: 0 0 10px; font-size: 18px; font-weight: 600; color: #1a1a1a;">{{DOCUMENT_TITLE}}</p>
-                                        <p style="margin: 0 0 10px; font-size: 14px; color: #991b1b;">Status: <strong>Rejected</strong></p>
-                                        {{#REJECTER_NAME}}
-                                        <p style="margin: 10px 0 0; font-size: 14px; color: #4a4a4a;">Rejected by: <strong>{{REJECTER_NAME}}</strong></p>
-                                        {{/REJECTER_NAME}}
+                                        <p style="margin: 0 0 12px; font-size: 24px; font-weight: 600; color: #1a1a1a;">Service Agreement - Terms & Conditions</p>
+                                        <p style="margin: 0 0 0; font-size: 18px; color: #991b1b;">Status: <strong>Rejected</strong></p>
+                                        <p style="margin: 16px 0 0; font-size: 18px; color: #4a4a4a;">Rejected by: <strong>John Doe</strong></p>
                                     </td>
                                 </tr>
                             </table>
                             
-                            {{#REJECTION_REASON}}
                             <!-- Rejection Reason Box -->
-                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f9fa; border-radius: 6px; margin: 20px 0;">
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8f9fa; border-radius: 6px;">
                                 <tr>
                                     <td style="padding: 20px;">
-                                        <p style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #1a1a1a;">Reason:</p>
-                                        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #4a4a4a;">{{REJECTION_REASON}}</p>
+                                        <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #1a1a1a;">Reason:</p>
+                                        <p style="margin: 0; font-size: 18px; line-height: 1.6; color: #4a4a4a;">The terms in section 3.2 are not acceptable and need to be revised before I can sign this document.</p>
                                     </td>
                                 </tr>
                             </table>
-                            {{/REJECTION_REASON}}
                             
-                            <p style="margin: 20px 0 0; font-size: 14px; line-height: 1.6; color: #6b6b6b;">The document signing process has been cancelled. If you have any questions, please contact the document owner or our support team.</p>
+                            <p style="margin: 32px 0 0; font-size: 18px; line-height: 1.6; color: #6b6b6b; text-align: center;">The document signing process has been cancelled. If you have any questions, please contact the document owner or our support team.</p>
                             
                             <!-- CTA Button -->
                             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                 <tr>
                                     <td align="center" style="padding: 20px 0 0;">
-                                        <a href="{{APP_URL}}" style="display: inline-block; background-color: #6266ea; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 10px; font-size: 16px; font-weight: 600; letter-spacing: 0.3px;">View Details</a>
+                                        <a href="https://blocksign.app" style="display: inline-block; background-color: #6266ea; color: #ffffff; text-decoration: none; padding: 18px 40px; border-radius: 10px; font-size: 20px; font-weight: 600; letter-spacing: 0.3px;">View Details</a>
                                     </td>
                                 </tr>
                             </table>
@@ -67,9 +63,9 @@
                     
                     <!-- Footer -->
                     <tr>
-                        <td style="padding: 30px 40px 40px; text-align: center; border-top: 1px solid #e5e5e5; background-color: #fafafa; border-radius: 0 0 10px 10px;">
-                            <p style="margin: 0 0 10px; font-size: 12px; color: #8b8b8b; line-height: 1.5;">This email was sent by BlockSign</p>
-                            <p style="margin: 0; font-size: 12px; color: #8b8b8b;">If you have any questions, please contact our support team.</p>
+                        <td style="padding: 30px 40px; text-align: center; border-top: 1px solid #e5e5e5; background-color: #fafafa; border-radius: 0 0 10px 10px;">
+                            <p style="margin: 0 0 12px; font-size: 14px; color: #8b8b8b; line-height: 1.5;">This email was sent by BlockSign</p>
+                            <p style="margin: 0; font-size: 14px; color: #8b8b8b;">If you have any questions, please contact our support team.</p>
                         </td>
                     </tr>
                 </table>
@@ -78,4 +74,3 @@
     </table>
 </body>
 </html>
-
