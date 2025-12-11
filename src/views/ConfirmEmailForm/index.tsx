@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "./schema";
 import { IConfirmEmailForm } from "./types";
-import { Form, FormControl, FormField, FormItem } from "@/components/FormWrapper";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/FormWrapper";
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/Form/InputOTP";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/Form/Card";
 import { Loader2 } from "lucide-react";
@@ -45,8 +45,7 @@ const ConfirmEmailForm = () => {
         body: JSON.stringify(data),
       });
       
-      // Check if the API returned ok: false
-      if (response.ok === false) {
+      if (!!response.error) {
         throw new Error('Verification failed');
       }
       
@@ -55,14 +54,12 @@ const ConfirmEmailForm = () => {
   });
 
   const onSubmit = async (data: IConfirmEmailForm) => {
-    await mutateAsync(data, {
-      onSuccess: () => {
-        push(`/register/identity?email=${email}`);
-      },
-      onError: () => {
-        setError('code', { message: t('auth.confirm.invalidCode') });
-      }
-    });
+    try {
+      await mutateAsync(data);
+      push(`/register/identity?email=${email}`);
+    } catch {
+      setError('code', { message: t('auth.confirm.invalidCode') });
+    }
   }
 
   return (
@@ -105,6 +102,7 @@ const ConfirmEmailForm = () => {
                             </InputOTPGroup>
                           </InputOTP>
                         </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
