@@ -15,6 +15,9 @@ import { getPkFromMnemonic } from "@/utils/getPkFromMnemonic";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
 import { useUserContext } from "@/contexts/userContext";
+import { hasEncryptedKey } from "@/lib/auth/indexedDB";
+import { PasswordSetupDialog } from "@/components/PasswordSetupDialog";
+import { SessionUnlockDialog } from "@/components/SessionUnlockDialog";
 
 import Button from "@/components/Form/Button";
 import MnemonicInput from "@/components/MnemonicInput";
@@ -33,11 +36,15 @@ const LoginMnemonicForm = () => {
   const email = searchParams.get('email');
   const [isLoading, setIsLoading] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(false);
+  const [needsKeyCheck, setNeedsKeyCheck] = useState(false);
+  const [showPasswordSetup, setShowPasswordSetup] = useState(false);
+  const [showUnlockDialog, setShowUnlockDialog] = useState(false);
+  const [privateKeyHex, setPrivateKeyHex] = useState<string | null>(null);
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
   const { me } = useUserContext();
   
-  // Handle redirect after user data is loaded
+  // Handle redirect after user data is loaded and key is created/unlocked
   useEffect(() => {
     if (shouldRedirect && me) {
       if (me.role === 'ADMIN') {
@@ -48,6 +55,22 @@ const LoginMnemonicForm = () => {
       setShouldRedirect(false);
     }
   }, [shouldRedirect, me, push]);
+
+  useEffect(() => {
+    const checkAndShowDialogs = async () => {
+      if (needsKeyCheck && me?.id && privateKeyHex) {
+        const hasKey = await hasEncryptedKey(me.id);
+        if (!hasKey) {
+          setShowPasswordSetup(true);
+          setNeedsKeyCheck(false); // Reset flag, wait for password setup to complete
+        } else {
+          setShowUnlockDialog(true);
+          setNeedsKeyCheck(false); // Reset flag, wait for unlock to complete
+        }
+      }
+    };
+    checkAndShowDialogs();
+  }, [needsKeyCheck, me, privateKeyHex]);
   
   // If no email parameter, redirect to login
   if (!email) {
@@ -66,23 +89,44 @@ const LoginMnemonicForm = () => {
         mnemonic: data.mnemonic,
         redirect: false,
       });
-      const privateKey = await getPkFromMnemonic(data.mnemonic);
-      await localStorage.setItem('privateKey', privateKey);
-
 
       if (result?.error) {
         setError('mnemonic', { message: t('auth.mnemonic.failed') });
-      } else if (result?.ok) {
+        setIsLoading(false);
+        return;
+      }
+
+      if (result?.ok) {
+        // Derive private key from mnemonic
+        const privateKey = await getPkFromMnemonic(data.mnemonic);
+        setPrivateKeyHex(privateKey);
+
         // Refresh to get updated session and user data
         refresh();
-        // Set flag to trigger redirect after user data is loaded
-        setShouldRedirect(true);
+        
+        // Set flag to check for encrypted key after user data loads
+        setNeedsKeyCheck(true);
       }
-    } catch {
+    } catch (error) {
+      console.error('Login error:', error);
       setError('mnemonic', { message: t('auth.mnemonic.failedGeneric') });
     } finally {
       setIsLoading(false);
     }
+  }
+
+  // Handle password setup completion
+  const handlePasswordSetupComplete = () => {
+    setShowPasswordSetup(false);
+    setPrivateKeyHex(null);
+    setShouldRedirect(true);
+  }
+
+  // Handle session unlock completion
+  const handleUnlockComplete = () => {
+    setShowUnlockDialog(false);
+    setPrivateKeyHex(null);
+    setShouldRedirect(true);
   }
 
   return (
@@ -129,6 +173,27 @@ const LoginMnemonicForm = () => {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Password Setup Dialog */}
+      {me?.id && privateKeyHex && (
+        <PasswordSetupDialog
+          open={showPasswordSetup}
+          onOpenChange={setShowPasswordSetup}
+          userId={me.id}
+          privateKeyHex={privateKeyHex}
+          onComplete={handlePasswordSetupComplete}
+        />
+      )}
+
+      {/* Session Unlock Dialog */}
+      {me?.id && (
+        <SessionUnlockDialog
+          open={showUnlockDialog}
+          onOpenChange={setShowUnlockDialog}
+          userId={me.id}
+          onUnlocked={handleUnlockComplete}
+        />
+      )}
     </main>
   )
 }

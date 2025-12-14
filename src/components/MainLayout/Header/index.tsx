@@ -45,7 +45,7 @@ const Header:FC = () => {
   return (
     <header className="sticky top-0 z-50 w-full bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-accent">
       <div className="flex h-16 items-center justify-between md:mx-24 mx-6">
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href={!isAdmin ? "/" : "#"} className="flex items-center space-x-2">
           <Shield className="h-6 w-6 text-brand" />
           <span className="font-bold text-xl">Blocksign</span>
         </Link>

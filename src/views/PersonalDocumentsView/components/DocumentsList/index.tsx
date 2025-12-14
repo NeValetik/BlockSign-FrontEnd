@@ -7,10 +7,13 @@ import DocumentCard from "./components/DocumentCard";
 import { useUserContext } from "@/contexts/userContext";
 import { fetchFromServer, fetchFromServerBlob } from "@/utils/fetchFromServer";
 import { useTokenContext } from "@/contexts/tokenContext";
-import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
+import { getSignedKeyPayloadClient } from "@/utils/getSignedKeyPayloadClient";
 import { Document } from "./components/DocumentCard";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
+import { useSession } from "@/hooks/useSession";
+import { SessionUnlockDialog } from "@/components/SessionUnlockDialog";
+import { sessionActive } from "@/lib/auth/sessionManager";
 
 interface DocumentsListProps {
   data?: Document[];
@@ -21,7 +24,8 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   const processedData = data?.slice(0, maxCards);
   const { token } = useTokenContext();
   const { me } = useUserContext();
-  const [privateKey, setPrivateKey] = useState<string | null>(null);
+  const { isUnlocked } = useSession();
+  const [showUnlockDialog, setShowUnlockDialog] = useState(false);
   const [documentUrls, setDocumentUrls] = useState<Record<string, string>>({});
   const [signingDocumentId, setSigningDocumentId] = useState<string | null>(null);
   const [rejectingDocumentId, setRejectingDocumentId] = useState<string | null>(null);
@@ -125,36 +129,51 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     document: Document,
     file: File[]
   ) => {
-    if (!privateKey) {
-      toast.error(t('documents.sign.needPrivateKey'));
-      return
-    } 
-    const {signature: signatureB64} = await getSignedKeyPayload(file, document.participants, privateKey, document.title);
-    signDocument({ docId: document.id, signatureB64: signatureB64 });
-  }
+    // Check if session is active
+    if (!sessionActive()) {
+      toast.error(t('documents.sign.sessionLocked') || 'Session is locked. Please unlock to sign documents.');
+      setShowUnlockDialog(true);
+      return;
+    }
 
-  const handleApprove = () => async(document: Document) => {
-    if (!privateKey) {
-      toast.error(t('documents.sign.needPrivateKey'));
-    } else {
-      const { url } = await getDocumentUrl(document.id);
-      // Use API route to proxy the blob fetch to avoid CSP violations
-      const proxyUrl = `/api/proxy/blob?url=${encodeURIComponent(url)}`;
-      const fileBlob = await fetch(proxyUrl).then(res => res.blob());
-      if (fileBlob && fileBlob.size > 0) {
-        const file = [new File([fileBlob], document.title, { type: fileBlob.type })];
-        handleSignDocument(document, file);
+    try {
+      const { signature: signatureB64 } = await getSignedKeyPayloadClient(
+        file,
+        document.participants,
+        document.title
+      );
+      signDocument({ docId: document.id, signatureB64: signatureB64 });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to sign document';
+      if (errorMessage.includes('Session is not active')) {
+        toast.error(t('documents.sign.sessionLocked') || 'Session is locked. Please unlock to sign documents.');
+        setShowUnlockDialog(true);
       } else {
-        toast.error(t('documents.view.failed'));
+        toast.error(errorMessage);
       }
     }
   }
-  const handleReject = (id: string) => (reason?: string) => {
-    if (!privateKey) {
-      toast.error(t('documents.sign.needPrivateKey'));
-    } else {
-      reject({ docId: id, reason: reason });
+
+  const handleApprove = () => async(document: Document) => {
+    if (!sessionActive()) {
+      toast.error(t('documents.sign.sessionLocked') || 'Session is locked. Please unlock to sign documents.');
+      setShowUnlockDialog(true);
+      return;
     }
+
+    const { url } = await getDocumentUrl(document.id);
+    // Use API route to proxy the blob fetch to avoid CSP violations
+    const proxyUrl = `/api/proxy/blob?url=${encodeURIComponent(url)}`;
+    const fileBlob = await fetch(proxyUrl).then(res => res.blob());
+    if (fileBlob && fileBlob.size > 0) {
+      const file = [new File([fileBlob], document.title, { type: fileBlob.type })];
+      handleSignDocument(document, file);
+    } else {
+      toast.error(t('documents.view.failed'));
+    }
+  }
+  const handleReject = (id: string) => (reason?: string) => {
+    reject({ docId: id, reason: reason });
   }
   const handleView = (id: string ) => async () =>{
     const response = await getDocumentUrl(id);
@@ -182,12 +201,6 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     }
   }
 
-  useEffect(()=>{
-    const pk = localStorage.getItem("privateKey")
-    if (pk) {
-      setPrivateKey(pk)
-    }
-  }, [setPrivateKey])
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -239,6 +252,14 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
 
   return (
     <>
+      {/* Session Unlock Dialog */}
+      {me?.id && (
+        <SessionUnlockDialog
+          open={showUnlockDialog}
+          onOpenChange={setShowUnlockDialog}
+          userId={me.id}
+        />
+      )}
       <div className="w-full flex flex-col gap-16">
         <motion.div 
           key={dataKey}

@@ -9,7 +9,7 @@ import { InputText } from "@/components/Form/Input";
 import { Label } from "@/components/Form/Label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchFromServer } from "@/utils/fetchFromServer";
-import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
+import { getSignedKeyPayloadClient } from "@/utils/getSignedKeyPayloadClient";
 import { sha256Hex } from "@/utils/sha256Hex";
 import { toast } from "sonner";
 import { useTokenContext } from "@/contexts/tokenContext";
@@ -18,9 +18,12 @@ import { Collaborator } from "@/views/VerifyDocumentView/types";
 // import schema from "./schema";
 import FormCollaboratorField from "@/components/Form/FormCollaboratorField";
 import Button from "@/components/Form/Button";
-import MnemonicDialog from "@/components/MnemonicDialog";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
+import { useSession } from "@/hooks/useSession";
+import { sessionActive } from "@/lib/auth/sessionManager";
+import { SessionUnlockDialog } from "@/components/SessionUnlockDialog";
+import { useUserContext } from "@/contexts/userContext";
 
 export interface UploadFormFields {
   document: File[];
@@ -33,9 +36,10 @@ interface UploadFormProps {
 }
 
 const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
-  const [showMnemonicDialog, setShowMnemonicDialog] = useState(false);
-  const [privateKey, setPrivateKey] = useState<string | null>(null);
+  const [showUnlockDialog, setShowUnlockDialog] = useState(false);
   const { token } = useTokenContext();
+  const { me } = useUserContext();
+  const { isUnlocked } = useSession();
   const queryClient = useQueryClient();
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']); 
@@ -51,14 +55,6 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
 
   const { setError, clearErrors, setValue } = form;
 
-  // Check for private key cookie on component mount
-  useEffect(() => {
-    const existingPrivateKey = localStorage.getItem('privateKey');
-    if (existingPrivateKey) {
-      setPrivateKey(existingPrivateKey);
-    }
-  }, []);
-
   const handleDrop = (acceptedFiles: File[]) => {
     setValue('document', acceptedFiles);
     clearErrors('document')
@@ -68,8 +64,8 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
     mutationFn: async (data: UploadFormFields) => {
       const { document, collaborators, docTitle } = data;
       
-      if (!privateKey) {
-        throw new Error('Private key is required for signing');
+      if (!sessionActive()) {
+        throw new Error('Session is locked. Please unlock to sign documents.');
       }
       
       // Get file hash
@@ -80,11 +76,10 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
         ?.filter(c => c.username.trim())
         .map(c => c.username.trim()) || [];
       
-       // Generate signature
-       const { signature: creatorSignatureB64 } = await getSignedKeyPayload(
+       // Generate signature using session manager
+       const { signature: creatorSignatureB64 } = await getSignedKeyPayloadClient(
          document!,
          participantsUsernames,
-         privateKey,
          docTitle
        );
 
@@ -121,25 +116,25 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
   })
 
   const onSubmit = async (data: UploadFormFields) => {
-    // Check if private key exists, if not show mnemonic dialog
-    if (!privateKey) {
-      setShowMnemonicDialog(true);
+    // Check if session is active, if not show unlock dialog
+    if (!sessionActive()) {
+      toast.error(t('documents.sign.sessionLocked') || 'Session is locked. Please unlock to sign documents.');
+      setShowUnlockDialog(true);
       return;
     }
     
     try {
       await uploadDocument(data);
-    } catch (error) {
-      toast.error((error as Error).message || t('documents.upload.failed'));
-    } finally {
       onClose();
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      if (errorMessage.includes('Session is not active')) {
+        toast.error(t('documents.sign.sessionLocked') || 'Session is locked. Please unlock to sign documents.');
+        setShowUnlockDialog(true);
+      } else {
+        toast.error(errorMessage || t('documents.upload.failed'));
+      }
     }
-  }
-
-  const handlePrivateKeyGenerated = (newPrivateKey: string) => {
-    setPrivateKey(newPrivateKey);
-    // Retry the form submission after private key is generated
-    form.handleSubmit(onSubmit)();
   }
 
   return (
@@ -198,11 +193,18 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
         </div>
       </form>
       
-      <MnemonicDialog
-        isOpen={showMnemonicDialog}
-        onClose={() => setShowMnemonicDialog(false)}
-        onPrivateKeyGenerated={handlePrivateKeyGenerated}
-      />
+      {/* Session Unlock Dialog */}
+      {me?.id && (
+        <SessionUnlockDialog
+          open={showUnlockDialog}
+          onOpenChange={setShowUnlockDialog}
+          userId={me.id}
+          onUnlocked={() => {
+            // Retry form submission after unlock
+            form.handleSubmit(onSubmit)();
+          }}
+        />
+      )}
     </Form>
   );
 }
