@@ -24,6 +24,11 @@
   "document.signatures": "Цифровые Подписи",
   "document.signaturesCount": "Цифровые Подписи ({{count}})",
   "document.algorithm": "Алгоритм: {{alg}}",
+  "document.blockchain": "Проверка Блокчейна",
+  "document.blockchainNetwork": "Сеть",
+  "document.blockchainAnchoredAt": "Закреплено",
+  "document.blockchainTxId": "ID Транзакции",
+  "document.viewOnExplorer": "Посмотреть в Обозревателе Блокчейна",
   
   "notFound.title": "Этот документ не найден в нашей системе. Это может означать:",
   "notFound.reason1": "Документ не был загружен в BlockSign",

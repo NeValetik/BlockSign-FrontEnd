@@ -24,6 +24,11 @@
   "document.signatures": "Digital Signatures",
   "document.signaturesCount": "Digital Signatures ({{count}})",
   "document.algorithm": "Algorithm: {{alg}}",
+  "document.blockchain": "Blockchain Verification",
+  "document.blockchainNetwork": "Network",
+  "document.blockchainAnchoredAt": "Anchored At",
+  "document.blockchainTxId": "Transaction ID",
+  "document.viewOnExplorer": "View on Blockchain Explorer",
   
   "notFound.title": "This document was not found in our system. This could mean:",
   "notFound.reason1": "The document has not been uploaded to BlockSign",

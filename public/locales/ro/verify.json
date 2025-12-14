@@ -24,6 +24,11 @@
   "document.signatures": "Semnături Digitale",
   "document.signaturesCount": "Semnături Digitale ({{count}})",
   "document.algorithm": "Algoritm: {{alg}}",
+  "document.blockchain": "Verificare Blockchain",
+  "document.blockchainNetwork": "Rețea",
+  "document.blockchainAnchoredAt": "Ancorat La",
+  "document.blockchainTxId": "ID Tranzacție",
+  "document.viewOnExplorer": "Vezi în Exploratorul Blockchain",
   
   "notFound.title": "Acest document nu a fost găsit în sistemul nostru. Acest lucru poate însemna:",
   "notFound.reason1": "Documentul nu a fost încărcat în BlockSign",

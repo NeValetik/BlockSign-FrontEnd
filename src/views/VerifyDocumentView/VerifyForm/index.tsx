@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useTokenContext } from "@/contexts/tokenContext";
 import { VerifyFormFields } from "../types";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, FileText, Calendar, User, Users, PenTool, Info } from "lucide-react";
+import { CheckCircle2, XCircle, FileText, Calendar, User, Users, PenTool, Info, Link2 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
 
@@ -52,6 +52,12 @@ interface VerificationResult {
       };
       signedAt: string;
     }>;
+    blockchain: {
+      txId: string;
+      network: string;
+      anchoredAt: string;
+      explorerUrl: string;
+    } | null;
   };
 }
 
@@ -368,6 +374,57 @@ const VerifyForm = () => {
                           </motion.li>
                         ))}
                       </ul>
+                    </div>
+                  )}
+
+                  {/* Blockchain Information */}
+                  {verificationResult.document.blockchain && (
+                    <div className="space-y-2 pt-4 border-t border-border">
+                      <div className="flex items-center gap-2">
+                        <Link2 className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium">{t('verify:document.blockchain')}</span>
+                      </div>
+                      <div className="pl-6 space-y-3">
+                        <div className="p-3 bg-muted/50 rounded-lg border border-border space-y-2">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
+                            <div className="space-y-1">
+                              <p className="text-xs text-muted-foreground">{t('verify:document.blockchainNetwork')}</p>
+                              <p className="text-sm font-medium">{verificationResult.document.blockchain.network}</p>
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-xs text-muted-foreground">{t('verify:document.blockchainAnchoredAt')}</p>
+                              <p className="text-sm font-medium">
+                                {new Date(verificationResult.document.blockchain.anchoredAt).toLocaleDateString(dateLocale, {
+                                  year: 'numeric',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-xs text-muted-foreground">{t('verify:document.blockchainTxId')}</p>
+                            <code className="block px-2 py-1 bg-background rounded text-xs break-all font-mono border border-border">
+                              {verificationResult.document.blockchain.txId}
+                            </code>
+                          </div>
+                          {verificationResult.document.blockchain.explorerUrl && (
+                            <div className="pt-2">
+                              <a
+                                href={verificationResult.document.blockchain.explorerUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+                              >
+                                <Link2 className="h-3 w-3" />
+                                {t('verify:document.viewOnExplorer')}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
                 </motion.div>
