@@ -36,10 +36,13 @@ export async function deriveKeyFromPassword(
     ['deriveBits', 'deriveKey']
   );
 
+  // Ensure salt has an ArrayBuffer buffer (not SharedArrayBuffer)
+  const saltBuffer = new Uint8Array(salt);
+
   return crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: salt,
+      salt: saltBuffer,
       iterations: iterations,
       hash: 'SHA-256',
     },
@@ -91,15 +94,21 @@ export async function encryptPrivateKey(
   // Generate IV
   const iv = generateIV();
   
+  // Ensure IV has an ArrayBuffer buffer (not SharedArrayBuffer)
+  const ivBuffer = new Uint8Array(iv);
+  
+  // Ensure privateKeyBytes has an ArrayBuffer buffer (not SharedArrayBuffer)
+  const privateKeyBuffer = new Uint8Array(privateKeyBytes);
+  
   // Encrypt the private key
   const encryptedKey = await crypto.subtle.encrypt(
     {
       name: AES_ALGORITHM,
-      iv: iv,
+      iv: ivBuffer,
       tagLength: 128, // 128-bit authentication tag
     },
     encryptionKey,
-    privateKeyBytes
+    privateKeyBuffer
   );
 
   return {
@@ -124,11 +133,14 @@ export async function decryptPrivateKey(
   // Derive decryption key from password
   const decryptionKey = await deriveKeyFromPassword(password, salt, iterations);
   
+  // Ensure IV has an ArrayBuffer buffer (not SharedArrayBuffer)
+  const ivBuffer = new Uint8Array(iv);
+  
   // Decrypt the private key
   const decryptedKey = await crypto.subtle.decrypt(
     {
       name: AES_ALGORITHM,
-      iv: iv,
+      iv: ivBuffer,
       tagLength: 128,
     },
     decryptionKey,
@@ -154,9 +166,12 @@ export async function importEd25519PrivateKey(
   // and use @noble/ed25519 for actual signing operations
   // This function exists for API consistency but returns a wrapped key
   
+  // Ensure privateKeyBytes has an ArrayBuffer buffer (not SharedArrayBuffer)
+  const privateKeyBuffer = new Uint8Array(privateKeyBytes);
+  
   return crypto.subtle.importKey(
     'raw',
-    privateKeyBytes,
+    privateKeyBuffer,
     {
       name: 'HKDF', // Using HKDF as a container (not used for signing)
     },

@@ -204,8 +204,8 @@ export async function sign(data: ArrayBuffer): Promise<ArrayBuffer> {
   // Sign using @noble/ed25519
   const signature = await ed.signAsync(dataBytes, sessionState.privateKeyBytes);
 
-  // Return as ArrayBuffer
-  return signature.buffer;
+  // Return as ArrayBuffer (ensure it's ArrayBuffer, not SharedArrayBuffer)
+  return new Uint8Array(signature).buffer;
 }
 
 /**
