@@ -166,6 +166,14 @@ export async function storePrivateKey(
   }
 }
 
+export function getPrivateKeyHex(): string | null {
+  if (sessionState.privateKeyBytes === null) {
+    return null;
+  }
+
+  return bytesToHex(sessionState.privateKeyBytes);
+}
+
 /**
  * Check if session is currently active
  */

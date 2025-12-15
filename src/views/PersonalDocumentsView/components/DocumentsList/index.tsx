@@ -24,7 +24,6 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
   const processedData = data?.slice(0, maxCards);
   const { token } = useTokenContext();
   const { me } = useUserContext();
-  const { isUnlocked } = useSession();
   const [showUnlockDialog, setShowUnlockDialog] = useState(false);
   const [documentUrls, setDocumentUrls] = useState<Record<string, string>>({});
   const [signingDocumentId, setSigningDocumentId] = useState<string | null>(null);
@@ -201,6 +200,10 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
     }
   }
 
+  const isSignedByMe = (document: Document) => {
+    return document.signatures?.some((signature) => { return signature === me?.id });
+  }
+
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -285,6 +288,7 @@ const DocumentsList: FC<DocumentsListProps> = ({ data, maxCards }) => {
                 onReject={handleReject(item.id)}
                 onView={handleView(item.id)}
                 documentUrl={documentUrls[item.id]}
+                isSignedByMe={isSignedByMe(item)}
               />
             </motion.div>
           ))}

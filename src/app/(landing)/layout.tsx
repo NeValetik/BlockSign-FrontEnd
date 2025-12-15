@@ -65,6 +65,8 @@ const RootLayout:FC<{
     console.error('Error fetching user profile:', error);
   }
 
+  console.log(documents);
+
   return (
     <Providers
       locale={ cookieLocale }

@@ -21,9 +21,10 @@ import Button from "@/components/Form/Button";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
 import { useSession } from "@/hooks/useSession";
-import { sessionActive } from "@/lib/auth/sessionManager";
+import { getPrivateKeyHex, sessionActive } from "@/lib/auth/sessionManager";
 import { SessionUnlockDialog } from "@/components/SessionUnlockDialog";
 import { useUserContext } from "@/contexts/userContext";
+import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
 
 export interface UploadFormFields {
   document: File[];
@@ -70,16 +71,23 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
       
       // Get file hash
       const fileHash = await sha256Hex(document![0]);
+
       
       // Get participant usernames
       const participantsUsernames = collaborators
         ?.filter(c => c.username.trim())
         .map(c => c.username.trim()) || [];
+
+      const privateKeyHex = await getPrivateKeyHex();
+      if (!privateKeyHex) {
+        throw new Error('Private key not available');
+      }
       
        // Generate signature using session manager
-       const { signature: creatorSignatureB64 } = await getSignedKeyPayloadClient(
+       const { signature: creatorSignatureB64, message } = await getSignedKeyPayload(
          document!,
          participantsUsernames,
+         privateKeyHex,
          docTitle
        );
 
@@ -90,6 +98,7 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
        formData.append('docTitle', docTitle);
        formData.append('participantsUsernames', JSON.stringify(participantsUsernames));
        formData.append('creatorSignatureB64', creatorSignatureB64);
+       formData.append('message', message);
        
        const req = await fetchFromServer('/api/v1/user/documents', {
          method: 'POST',

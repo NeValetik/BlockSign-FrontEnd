@@ -46,6 +46,7 @@ const PersonalDocumentsView = () => {
         .sort((a, b) => a.localeCompare(b)) || [],
       owner: document.owner?.id || "",
       updatedAt: new Date(document.updatedAt || new Date()),
+      signatures: document.signatures?.map((signature) => { return signature.user.id } ) || [],
     })) satisfies Document[] | undefined;
 
   // Filter documents based on selected states and search

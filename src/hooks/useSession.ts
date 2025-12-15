@@ -15,6 +15,7 @@ import {
   getRemainingSessionTime,
   extendSession,
   storePrivateKey,
+  getPrivateKeyHex,
 } from '@/lib/auth/sessionManager';
 
 interface UseSessionReturn {
@@ -26,6 +27,7 @@ interface UseSessionReturn {
   signMessage: (message: string | ArrayBuffer) => Promise<string>;
   extend: (timeoutMs?: number) => void;
   storeKey: (privateKeyHex: string, password: string, userId: string) => Promise<void>;
+  getPrivateKeyHex: () => Promise<string | null>;
 }
 
 /**
@@ -102,6 +104,10 @@ export function useSession(): UseSessionReturn {
     await storePrivateKey(privateKeyHex, password, userId);
   }, []);
 
+  const getPrivateKeyHex = useCallback(async () => {
+    return getPrivateKeyHex();
+  }, []);
+
   return {
     isUnlocked,
     remainingTime,
@@ -111,6 +117,7 @@ export function useSession(): UseSessionReturn {
     signMessage: signMsg,
     extend,
     storeKey,
+    getPrivateKeyHex,
   };
 }
 

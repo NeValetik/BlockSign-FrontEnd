@@ -24,6 +24,7 @@ export interface Document {
   participants: string[];
   owner: string;
   updatedAt: Date;
+  signatures: string[] 
 }
 export interface DocumentCardProps {
   document: Document;
@@ -33,6 +34,7 @@ export interface DocumentCardProps {
   documentUrl?: string;
   isSigningDocument: boolean;
   isRejectingDocument?: boolean;
+  isSignedByMe?: boolean;
 }
 
 const DocumentCard:FC<DocumentCardProps> = ({ 
@@ -43,6 +45,7 @@ const DocumentCard:FC<DocumentCardProps> = ({
   documentUrl,
   isSigningDocument,
   isRejectingDocument,
+  isSignedByMe,
 }) => {
   const { me } = useUserContext();
   const { locale } = useLocale();
@@ -112,7 +115,7 @@ const DocumentCard:FC<DocumentCardProps> = ({
             </div>
           </div>
         )}
-        { ((document.state !== DocumentState.Signed && document.state !== DocumentState.Rejected) && !isOwner) && (
+        { ((document.state !== DocumentState.Signed && document.state !== DocumentState.Rejected) && !isSignedByMe) && (
           <div className="flex gap-2">
             <Button 
               variant="brand"
@@ -130,7 +133,7 @@ const DocumentCard:FC<DocumentCardProps> = ({
             </Button>
           </div>
         )}
-        { ((document.state !== DocumentState.Pending) || isOwner) && (
+        { ((document.state !== DocumentState.Pending) || isSignedByMe) && (
           <div>
             <DocumentStateTag state={document.state} />
           </div>
