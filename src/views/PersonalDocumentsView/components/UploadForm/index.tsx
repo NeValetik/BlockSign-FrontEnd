@@ -9,7 +9,6 @@ import { InputText } from "@/components/Form/Input";
 import { Label } from "@/components/Form/Label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchFromServer } from "@/utils/fetchFromServer";
-import { getSignedKeyPayloadClient } from "@/utils/getSignedKeyPayloadClient";
 import { sha256Hex } from "@/utils/sha256Hex";
 import { toast } from "sonner";
 import { useTokenContext } from "@/contexts/tokenContext";
@@ -25,6 +24,7 @@ import { getPrivateKeyHex, sessionActive } from "@/lib/auth/sessionManager";
 import { SessionUnlockDialog } from "@/components/SessionUnlockDialog";
 import { useUserContext } from "@/contexts/userContext";
 import { getSignedKeyPayload } from "@/utils/getSignedKeyPayload";
+import { fetchFromClient } from "@/utils/fetchFromClient";
 
 export interface UploadFormFields {
   document: File[];
@@ -100,7 +100,7 @@ const UploadForm: FC<UploadFormProps> = ({ onClose }) => {
        formData.append('creatorSignatureB64', creatorSignatureB64);
        formData.append('message', message);
        
-       const req = await fetchFromServer('/api/v1/user/documents', {
+       const req = await fetchFromClient('/api/v1/user/documents', {
          method: 'POST',
          body: formData,
          headers: {

@@ -10,7 +10,6 @@ import schema from "./schema";
 import Button from "@/components/Form/Button";
 import { Label } from "@/components/Form/Label";
 import { useMutation } from "@tanstack/react-query";
-import { fetchFromServer } from "@/utils/fetchFromServer";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useTokenContext } from "@/contexts/tokenContext";
@@ -19,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, FileText, Calendar, User, Users, PenTool, Info, Link2 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
+import { fetchFromClient } from "@/utils/fetchFromClient";
 
 
 interface VerificationResult {
@@ -92,8 +92,8 @@ const VerifyForm = () => {
       // Create FormData for file upload
       const formData = new FormData();
       formData.append('file', document![0]);
-      
-      const response = await fetchFromServer('/api/v1/documents/verify', {
+      console.log("here")
+      const response = await fetchFromClient('/api/v1/documents/verify', {
         method: 'POST',
         body: formData,
         headers: {
