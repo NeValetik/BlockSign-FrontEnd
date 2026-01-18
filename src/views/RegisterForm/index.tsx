@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputEmail } from "@/components/Form/Input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/Form/Card";
-import { SiApple, SiFacebook, SiGoogle } from '@icons-pack/react-simple-icons';
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { schema } from "./schema";
@@ -119,37 +118,6 @@ const RegisterForm = () => {
                 </Button>
               </form>
             </Form>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  {t('auth.register.or')}
-                </span>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              className="w-full"
-            >
-              <SiFacebook />
-              <span>{t('auth.register.social.facebook')}</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-            >
-              <SiGoogle />
-              <span>{t('auth.register.social.google')}</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-            >
-              <SiApple />
-              <span>{t('auth.register.social.apple')}</span>
-            </Button>
           </CardContent>
         </Card>
       </motion.div>

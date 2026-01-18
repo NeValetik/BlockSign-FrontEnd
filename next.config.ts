@@ -8,37 +8,35 @@ const nextConfig: NextConfig = {
     },
   },
   // Security headers configuration
+  // Note: Main CSP headers are now set in middleware.ts for nonce support
+  // These headers apply to static files that bypass middleware
   async headers() {
-    // Get API URL from environment variable for CSP
-    const apiUrl = process.env.API_URL;
-    const apiOrigin = apiUrl ? new URL(apiUrl).origin : '';
-    
-    // Build connect-src directive for CSP
-    const connectSrc = apiOrigin 
-      ? `'self' ${apiOrigin}`
-      : "'self'";
-    
     return [
       {
-        // Apply security headers to all routes
-        source: '/:path*',
+        // Security headers for static files (middleware doesn't run for these)
+        source: '/_next/static/:path*',
         headers: [
-          // Content Security Policy (CSP) - strict configuration
+          // Restrict CORS for static files - only allow same origin
           {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
-              "font-src 'self' data:",
-              `connect-src ${connectSrc}`,
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "upgrade-insecure-requests",
-            ].join('; '),
+            key: 'Access-Control-Allow-Origin',
+            value: '', // Empty value effectively disables CORS
           },
+          // X-Content-Type-Options header
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          // Cache control for static assets
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        // Security headers for API routes
+        source: '/api/:path*',
+        headers: [
           // Anti-clickjacking header (X-Frame-Options)
           {
             key: 'X-Frame-Options',
@@ -58,16 +56,6 @@ const nextConfig: NextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
-          },
-          // Permissions-Policy header
-          {
-            key: 'Permissions-Policy',
-            value: [
-              'camera=()',
-              'microphone=()',
-              'geolocation=()',
-              'interest-cohort=()',
-            ].join(', '),
           },
           // Strict-Transport-Security (HSTS)
           {

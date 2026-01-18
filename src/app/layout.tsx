@@ -54,6 +54,7 @@ const RootLayout:FC<{
 }) => {
   const cookieStore = await cookies();
   const cookieLocale = cookieStore.get('locale')?.value || 'en';
+  
   return (
     <html lang="en" dir={dir(cookieLocale)}>
       <body>

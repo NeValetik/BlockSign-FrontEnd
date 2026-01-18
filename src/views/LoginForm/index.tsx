@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InputEmail } from "@/components/Form/Input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/Form/Card";
-import { SiApple, SiGoogle } from '@icons-pack/react-simple-icons';
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { schema } from "./schema";
@@ -18,7 +17,6 @@ import Button from "@/components/Form/Button";
 import Link from "next/link";
 import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
-import { signIn } from "next-auth/react";
 
 const DefaultValues: ILoginForm = {
   loginName: "",
@@ -34,14 +32,6 @@ const LoginForm = () => {
   const { locale } = useLocale();
   const { t } = useTranslation(locale, ['common']);
   const { handleSubmit, setError } = form;
-
-  const handleGoogleSignIn = async () => {
-    try {
-      await signIn('google');
-    } catch (error) {
-      console.error('Google sign in error:', error);
-    }
-  }
 
   const onSubmit = async (data: ILoginForm) => {
     setIsLoading(true);
@@ -107,31 +97,6 @@ const LoginForm = () => {
                 </Button>
               </form>
             </Form>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
-                  {t('auth.login.or')}
-                </span>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleGoogleSignIn}
-            >
-              <SiGoogle className="size-5" />
-              <span>{t('auth.login.social.google')}</span>
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full"
-            >
-              <SiApple className="size-5" />
-              <span>{t('auth.login.social.apple')}</span>
-            </Button>
           </CardContent>
         </Card>
       </motion.div>
