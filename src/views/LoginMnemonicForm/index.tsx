@@ -16,8 +16,8 @@ import { useTranslation } from "@/lib/i18n/client";
 import { useLocale } from "@/contexts/LocaleContext";
 import { useUserContext } from "@/contexts/userContext";
 import { hasEncryptedKey } from "@/lib/auth/indexedDB";
-import { PasswordSetupDialog } from "@/components/PasswordSetupDialog";
 import { SessionUnlockDialog } from "@/components/SessionUnlockDialog";
+import { setSessionKeyDirect } from "@/lib/auth/sessionManager";
 
 import Button from "@/components/Form/Button";
 import MnemonicInput from "@/components/MnemonicInput";
@@ -37,7 +37,6 @@ const LoginMnemonicForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [needsKeyCheck, setNeedsKeyCheck] = useState(false);
-  const [showPasswordSetup, setShowPasswordSetup] = useState(false);
   const [showUnlockDialog, setShowUnlockDialog] = useState(false);
   const [privateKeyHex, setPrivateKeyHex] = useState<string | null>(null);
   const { locale } = useLocale();
@@ -61,11 +60,15 @@ const LoginMnemonicForm = () => {
       if (needsKeyCheck && me?.id && privateKeyHex) {
         const hasKey = await hasEncryptedKey(me.id);
         if (!hasKey) {
-          setShowPasswordSetup(true);
-          setNeedsKeyCheck(false); // Reset flag, wait for password setup to complete
+          // No PIN set - use seed phrase directly to unlock session
+          setSessionKeyDirect(privateKeyHex);
+          setPrivateKeyHex(null);
+          setShouldRedirect(true);
+          setNeedsKeyCheck(false);
         } else {
+          // PIN is set - show unlock dialog
           setShowUnlockDialog(true);
-          setNeedsKeyCheck(false); // Reset flag, wait for unlock to complete
+          setNeedsKeyCheck(false);
         }
       }
     };
@@ -113,13 +116,6 @@ const LoginMnemonicForm = () => {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  // Handle password setup completion
-  const handlePasswordSetupComplete = () => {
-    setShowPasswordSetup(false);
-    setPrivateKeyHex(null);
-    setShouldRedirect(true);
   }
 
   // Handle session unlock completion
@@ -173,17 +169,6 @@ const LoginMnemonicForm = () => {
           </CardContent>
         </Card>
       </motion.div>
-
-      {/* Password Setup Dialog */}
-      {me?.id && privateKeyHex && (
-        <PasswordSetupDialog
-          open={showPasswordSetup}
-          onOpenChange={setShowPasswordSetup}
-          userId={me.id}
-          privateKeyHex={privateKeyHex}
-          onComplete={handlePasswordSetupComplete}
-        />
-      )}
 
       {/* Session Unlock Dialog */}
       {me?.id && (

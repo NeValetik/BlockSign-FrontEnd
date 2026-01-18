@@ -175,6 +175,27 @@ export function getPrivateKeyHex(): string | null {
 }
 
 /**
+ * Set session key directly from private key hex (without storing encrypted key)
+ * Used when PIN is not set up and user enters seed phrase directly
+ * 
+ * @param privateKeyHex - Private key as hex string
+ * @param timeoutMs - Session timeout in milliseconds (default: 15 minutes)
+ */
+export function setSessionKeyDirect(
+  privateKeyHex: string,
+  timeoutMs: number = DEFAULT_SESSION_TIMEOUT
+): void {
+  // Clear existing session
+  clearSession();
+  
+  // Convert hex to bytes and store in memory
+  sessionState.privateKeyBytes = hexToBytes(privateKeyHex);
+  
+  // Set up automatic expiration
+  setupExpiration(timeoutMs);
+}
+
+/**
  * Check if session is currently active
  */
 export function sessionActive(): boolean {
