@@ -1,12 +1,21 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 
 function CompleteRegistrationContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
+  
+  // Auto-redirect to app using custom URL scheme
+  useEffect(() => {
+    if (token) {
+      // Try to open the app with blocksign:// scheme
+      // iOS will show the native "Open in BlockSign?" popup
+      window.location.href = `blocksign://complete-registration?token=${encodeURIComponent(token)}`;
+    }
+  }, [token]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
