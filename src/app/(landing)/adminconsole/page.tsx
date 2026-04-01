@@ -445,10 +445,10 @@ const AdminConsolePage = () => {
                   )}
                 >
                   <div className="flex flex-col gap-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 space-y-3">
-                        <div className="flex items-center gap-3">
-                          <User className="h-5 w-5 text-brand" />
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                      <div className="flex-1 space-y-3 min-w-0">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <User className="h-5 w-5 text-brand shrink-0" />
                           <h2 className="text-xl font-semibold text-foreground">
                             {item.fullName}
                           </h2>
@@ -456,15 +456,15 @@ const AdminConsolePage = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-8">
-                          <div className="flex items-center gap-2 text-sm">
-                            <Mail className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-muted-foreground">Email:</span>
-                            <span className="text-foreground font-medium">{item.email}</span>
+                          <div className="flex items-center gap-2 text-sm min-w-0">
+                            <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+                            <span className="text-muted-foreground shrink-0">Email:</span>
+                            <span className="text-foreground font-medium truncate">{item.email}</span>
                           </div>
 
                           {item.phone && (
                             <div className="flex items-center gap-2 text-sm">
-                              <Phone className="h-4 w-4 text-muted-foreground" />
+                              <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
                               <span className="text-muted-foreground">Phone:</span>
                               <span className="text-foreground font-medium">{item.phone}</span>
                             </div>
@@ -472,14 +472,14 @@ const AdminConsolePage = () => {
 
                           {item.idnp && (
                             <div className="flex items-center gap-2 text-sm">
-                              <Shield className="h-4 w-4 text-muted-foreground" />
+                              <Shield className="h-4 w-4 text-muted-foreground shrink-0" />
                               <span className="text-muted-foreground">IDNP:</span>
                               <span className="text-foreground font-medium">{item.idnp}</span>
                             </div>
                           )}
 
                           <div className="flex items-center gap-2 text-sm">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                            <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
                             <span className="text-muted-foreground">Created:</span>
                             <span className="text-foreground font-medium">
                               {new Date(item.createdAt).toLocaleDateString()}
@@ -492,9 +492,9 @@ const AdminConsolePage = () => {
                         <motion.div
                           initial={{ opacity: 0, x: 10 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="flex gap-2 shrink-0"
+                          className="flex gap-2 shrink-0 ml-8 md:ml-0"
                         >
-                          <Button 
+                          <Button
                             onClick={() => handleApprove(item.id)}
                             variant="brand"
                             size="sm"
@@ -513,7 +513,7 @@ const AdminConsolePage = () => {
                               </>
                             )}
                           </Button>
-                          <Button 
+                          <Button
                             onClick={() => handleDecline(item.id)}
                             variant="destructive"
                             size="sm"
@@ -720,43 +720,41 @@ const AdminConsolePage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="p-4 border rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-foreground">{doc.title}</h3>
-                          <span className={cn(
-                            "px-2 py-0.5 rounded text-xs font-medium",
-                            doc.status === "SIGNED" ? "bg-green-500/20 text-green-600" : "bg-yellow-500/20 text-yellow-600"
-                          )}>
-                            {doc.status}
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-semibold text-foreground">{doc.title}</h3>
+                        <span className={cn(
+                          "px-2 py-0.5 rounded text-xs font-medium",
+                          doc.status === "SIGNED" ? "bg-green-500/20 text-green-600" : "bg-yellow-500/20 text-yellow-600"
+                        )}>
+                          {doc.status}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm min-w-0">
+                        <div>
+                          <span className="text-muted-foreground">Owner: </span>
+                          <span className="text-foreground font-medium">{doc.owner.fullName}</span>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Anchored: </span>
+                          <span className="text-foreground">
+                            {new Date(doc.anchoredAt).toLocaleString()}
                           </span>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <span className="text-muted-foreground">Owner: </span>
-                            <span className="text-foreground font-medium">{doc.owner.fullName}</span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Anchored: </span>
-                            <span className="text-foreground">
-                              {new Date(doc.anchoredAt).toLocaleString()}
-                            </span>
-                          </div>
-                          <div className="md:col-span-2">
-                            <span className="text-muted-foreground">Transaction ID: </span>
-                            <code className="text-xs font-mono bg-background px-2 py-1 rounded">
-                              {doc.blockchainTxId}
-                            </code>
-                          </div>
-                          <div className="md:col-span-2">
-                            <span className="text-muted-foreground">SHA256: </span>
-                            <code className="text-xs font-mono bg-background px-2 py-1 rounded break-all">
-                              {doc.sha256Hex}
-                            </code>
-                          </div>
+                        <div className="md:col-span-2 min-w-0">
+                          <span className="text-muted-foreground">Transaction ID: </span>
+                          <code className="text-xs font-mono bg-background px-2 py-1 rounded break-all inline-block max-w-full">
+                            {doc.blockchainTxId}
+                          </code>
+                        </div>
+                        <div className="md:col-span-2 min-w-0">
+                          <span className="text-muted-foreground">SHA256: </span>
+                          <code className="text-xs font-mono bg-background px-2 py-1 rounded break-all inline-block max-w-full">
+                            {doc.sha256Hex}
+                          </code>
                         </div>
                       </div>
-                      <div className="flex flex-col gap-2 shrink-0">
+                      <div className="flex gap-2 flex-wrap">
                         {doc.explorerUrl && (
                           <Button
                             variant="outline"

@@ -175,7 +175,7 @@ const ProfileSettingsPage: FC = () => {
         </div>
       </motion.div>
 
-      {/* Account Password Section */}
+      {/* Account Password Section
       <motion.div variants={fieldVariants}>
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
@@ -191,10 +191,10 @@ const ProfileSettingsPage: FC = () => {
             </Button>
           </div>
         </div>
-      </motion.div>
+      </motion.div> */}
 
       {/* Multi-factor Section */}
-      <motion.div 
+      {/* <motion.div 
         className="flex flex-col gap-4"
         variants={fieldVariants}
       >
@@ -220,7 +220,7 @@ const ProfileSettingsPage: FC = () => {
             </Button>
           </motion.div>
         </motion.div>
-      </motion.div>
+      </motion.div> */}
 
       {/* Seed Phrase Dialog for getting private key */}
       <SeedPhraseUnlockDialog

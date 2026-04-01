@@ -404,9 +404,9 @@ const VerifyForm = () => {
                               </p>
                             </div>
                           </div>
-                          <div className="space-y-1">
+                          <div className="space-y-1 min-w-0">
                             <p className="text-xs text-muted-foreground">{t('verify:document.blockchainTxId')}</p>
-                            <code className="block px-2 py-1 bg-background rounded text-xs break-all font-mono border border-border">
+                            <code className="block px-2 py-1 bg-background rounded text-xs break-all font-mono border border-border overflow-hidden">
                               {verificationResult.document.blockchain.txId}
                             </code>
                           </div>

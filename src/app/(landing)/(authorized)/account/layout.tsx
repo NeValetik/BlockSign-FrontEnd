@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import { FC, useLayoutEffect } from "react";
+import { usePathname } from 'next/navigation';
+import { FC } from "react";
 import { motion } from 'framer-motion';
 import { useUserContext } from '@/contexts/userContext';
 
@@ -14,28 +14,24 @@ interface TabConfig {
   value: string;
 }
 
-const tabs: TabConfig[] = [
+const allTabs: TabConfig[] = [
   { label: 'Personal Documents', href: '/account/documents', value: 'documents' },
   { label: 'Profile', href: '/account/profile', value: 'profile' },
   { label: 'Protection', href: '/account/protection', value: 'protection' },
 ];
 
-const ProfileLayout: FC<{ 
-  children: React.ReactNode 
-}> = ({ 
-  children 
+const ProfileLayout: FC<{
+  children: React.ReactNode
+}> = ({
+  children
 }) => {
   const pathname = usePathname();
-  const router = useRouter();
   const { me } = useUserContext();
   const isAdmin = me?.role === 'ADMIN';
 
-  // Redirect admin users to admin console
-  useLayoutEffect(() => {
-    if (isAdmin) {
-      router.push('/adminconsole');
-    }
-  }, [isAdmin, router]);
+  const tabs = isAdmin
+    ? allTabs.filter((tab) => tab.value !== 'documents')
+    : allTabs;
 
   const getActiveTab = () => {
     if (pathname === '/account/profile') return 'profile';
@@ -45,11 +41,6 @@ const ProfileLayout: FC<{
   };
 
   const activeTab = getActiveTab();
-
-// Don't render account pages for admin users
-  if (isAdmin) {
-    return null;
-  }
 
   return (
     <Container className="md:py-[96px] py-12 lg:px-[144px]">
