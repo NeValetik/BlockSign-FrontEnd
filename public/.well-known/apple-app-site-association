@@ -1,0 +1,20 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["WSFZDZZ6S3.md.blocksign.BlockSign"],
+        "components": [
+          {
+            "/": "/app/complete-registration",
+            "comment": "Complete registration deep link"
+          },
+          {
+            "/": "/app/*",
+            "comment": "All app deep links"
+          }
+        ]
+      }
+    ]
+  }
+}
